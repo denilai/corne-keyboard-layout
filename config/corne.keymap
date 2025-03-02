@@ -50,85 +50,85 @@
         combo_para_left {
             bindings = <&kp LEFT_PARENTHESIS>;
             key-positions = <4 5>;
-            timeout-ms = <20>;
+            timeout-ms = <30>;
         };
 
         combo_para_right {
             bindings = <&kp RIGHT_PARENTHESIS>;
             key-positions = <6 7>;
-            timeout-ms = <20>;
+            timeout-ms = <30>;
         };
 
         combo_brack_left {
             bindings = <&kp LEFT_BRACKET>;
             key-positions = <16 17>;
-            timeout-ms = <20>;
+            timeout-ms = <30>;
         };
 
         combo_brack_right {
             bindings = <&kp RIGHT_BRACKET>;
             key-positions = <18 19>;
-            timeout-ms = <20>;
+            timeout-ms = <30>;
         };
 
         combo_brace_left {
             bindings = <&kp LEFT_BRACE>;
             key-positions = <28 29>;
-            timeout-ms = <20>;
+            timeout-ms = <30>;
         };
 
         combo_brace_right {
             bindings = <&kp RIGHT_BRACE>;
             key-positions = <30 31>;
-            timeout-ms = <20>;
+            timeout-ms = <30>;
         };
 
         combo_double_quote {
             bindings = <&kp DOUBLE_QUOTES>;
             key-positions = <15 16>;
-            timeout-ms = <20>;
+            timeout-ms = <30>;
         };
 
         combo_apostr {
             bindings = <&kp APOSTROPHE>;
             key-positions = <19 20>;
-            timeout-ms = <20>;
+            timeout-ms = <30>;
         };
 
         combo_tilda {
             bindings = <&kp TILDE>;
             key-positions = <0 12>;
-            timeout-ms = <20>;
+            timeout-ms = <30>;
         };
 
         combo_grave {
             bindings = <&kp GRAVE>;
             key-positions = <12 24>;
-            timeout-ms = <20>;
+            timeout-ms = <30>;
         };
 
         combo_minus {
             bindings = <&kp MINUS>;
             key-positions = <3 4>;
-            timeout-ms = <20>;
+            timeout-ms = <30>;
         };
 
         combo_plus {
             bindings = <&kp PLUS>;
             key-positions = <2 3>;
-            timeout-ms = <20>;
+            timeout-ms = <30>;
         };
 
         combo_underscore {
             bindings = <&kp UNDERSCORE>;
             key-positions = <7 8>;
-            timeout-ms = <20>;
+            timeout-ms = <30>;
         };
 
         combo_pipe {
             bindings = <&kp PIPE>;
             key-positions = <8 9>;
-            timeout-ms = <20>;
+            timeout-ms = <30>;
         };
     };
 };
