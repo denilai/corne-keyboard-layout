@@ -27,23 +27,19 @@
             tapping-term-ms = <100>;
             bindings = <&kp F>, <&kp LG(F11)>;
         };
-
         tdJ: tap_dance_lang2 {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <100>;
             bindings = <&kp J>, <&kp LG(F12)>;
         };
-
         // tap-dance copy-cut
         tdC: tap_dance_cc {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <100>;
-            bindings = <&kp CTRL(C)>, <&kp CTRL(X)>;
-
+            bindings = <&kp LCTRL(C)>, <&kp LCTRL(X)>;
         };
-
         // https://zmk.dev/docs/keymaps/behaviors/hold-tap?examples=homerow_mods#example-use-cases
         lh_pht: left_positional_hold_tap {
             compatible = "zmk,behavior-hold-tap";
@@ -194,7 +190,7 @@
     // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
            &none          &none      &kp LEFT       &kp DOWN      &kp RIGHT     &kp END           &kp MINUS     &kp LEFT      &kp DOWN      &kp RIGHT     &kp END      &kp F9
     // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-            &trans        &none         &none      &tdC         &kp CTRL(v)     &kp F15           &kp F16       &kp F23       &none         &none         &none        &kp F10
+            &trans        &none         &none      &tdC         &kp LCTRL(v)     &kp F15           &kp F16       &kp F23       &none         &none         &none        &kp F10
     // ╰─────────────┴─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┴─────────────╯
                                                       &trans      &kp LG(F11)   &kp LG(F12)        &trans         &trans         &trans 
     //                                           ╰─────────────┴─────────────┴─────────────╯   ╰─────────────┴─────────────┴─────────────╯
