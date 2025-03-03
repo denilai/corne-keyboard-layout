@@ -44,7 +44,7 @@
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <100>;
-            bindings = <&kp V>, <&kp LC(CV)>;
+            bindings = <&kp V>, <&kp LC(V)>;
         };
         // https://zmk.dev/docs/keymaps/behaviors/hold-tap?examples=homerow_mods#example-use-cases
         lh_pht: left_positional_hold_tap {
