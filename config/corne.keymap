@@ -140,7 +140,7 @@
         };
 
         combo_lt {
-            bindings = <&kp LESS_THEN>;
+            bindings = <&kp LESS_THAN>;
             key-positions = <27 28>;
             timeout-ms = <30>;
         };
