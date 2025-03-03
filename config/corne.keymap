@@ -27,12 +27,23 @@
             tapping-term-ms = <100>;
             bindings = <&kp F>, <&kp LG(F11)>;
         };
+
         tdJ: tap_dance_lang2 {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <100>;
             bindings = <&kp J>, <&kp LG(F12)>;
         };
+
+        // tap-dance copy-cut
+        tdC: tap_dance_cc {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <100>;
+            bindings = <&kp CTRL(C)>, <&kp CTRL(X)>;
+
+        };
+
         // https://zmk.dev/docs/keymaps/behaviors/hold-tap?examples=homerow_mods#example-use-cases
         lh_pht: left_positional_hold_tap {
             compatible = "zmk,behavior-hold-tap";
@@ -166,26 +177,26 @@
         lower_layer {
             bindings = <
     // ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮   ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
-          &kp TILDE      &kp N1         &kp N2        &kp N3        &kp N4        &kp N5            &kp N6        &kp N7        &kp N8        &kp N9        &kp N0       &kp F17
+          &kp TILDE      &kp N1         &kp N2        &kp N3        &kp N4        &kp N5            &kp N6        &kp N7        &kp N8        &kp N9        &kp N0       &kp F8
     // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-          &kp GRAVE      &kp EXCL       &kp AT       &kp HASH      &kp DLLR     &kp PRCNT         &kp CARET     &kp AMPS      &kp ASTRK      &kp LPAR      &kp RPAR      &kp F18
+          &kp GRAVE      &kp EXCL       &kp AT       &kp HASH      &kp DLLR     &kp PRCNT         &kp CARET     &kp AMPS      &kp ASTRK      &kp LPAR      &kp RPAR      &kp F9
     // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-          &kp LSHFT      &none          &none         &CAPS      &kp LG(F11)   &kp LG(F12)         &KP_PLUS     &KP_EQUAL      &none         &none         &none         &kp F14
+          &kp LSHFT      &none          &none         &CAPS      &kp LG(F11)   &kp LG(F12)         &KP_PLUS     &KP_EQUAL      &none         &none         &none         &kp F10
     // ╰─────────────┴─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┴─────────────╯
-                                                    &none        &kp LGUI         &kp KP_N1     &kp KP_N2     &kp KP_N3
+                                                    &none         &none          &kp LGUI         &kp KP_N1     &kp KP_N2     &kp KP_N3
     //                                           ╰─────────────┴─────────────┴─────────────╯   ╰─────────────┴─────────────┴─────────────╯
                 >;
         };
         raise_layer {
             bindings = <
     // ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮   ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
-           &none          &none      &kp PG_UP      &kp UP        &kp PG_DN     &kp HOME          &kp CARET     &kp PG_UP     &kp UP        &kp PG_DN     &kp HOME     &kp F17
+           &none          &none      &kp PG_UP      &kp UP        &kp PG_DN     &kp HOME          &kp CARET     &kp PG_UP     &kp UP        &kp PG_DN     &kp HOME     &kp F8
     // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-           &none          &none      &kp LEFT       &kp DOWN      &kp RIGHT     &kp END           &kp MINUS     &kp LEFT      &kp DOWN      &kp RIGHT     &kp END      &kp F18
+           &none          &none      &kp LEFT       &kp DOWN      &kp RIGHT     &kp END           &kp MINUS     &kp LEFT      &kp DOWN      &kp RIGHT     &kp END      &kp F9
     // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-         &out OUT_TOG     &none      &none          &none         &none         &kp F15           &kp F16       &kp F23       &none         &none         &none        &out OUT_TOG
+            &trans        &none         &none      &tdC         &kp CTRL(v)     &kp F15           &kp F16       &kp F23       &none         &none         &none        &kp F10
     // ╰─────────────┴─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┴─────────────╯
-                                                      &none      &kp LG(F11)   &kp LG(F12)            &none         &none         &none 
+                                                      &trans      &kp LG(F11)   &kp LG(F12)        &trans         &trans         &trans 
     //                                           ╰─────────────┴─────────────┴─────────────╯   ╰─────────────┴─────────────┴─────────────╯
             >; 
         };
@@ -209,7 +220,7 @@
     // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
             &none        &none        &none   &kp LCTR(LSHFT(S)) &kp LCTR(LALT(S))  &none           &none         &none         &none         &none         &none        &none
     // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-           &none       &kp KP_NUM      &none         &none         &none         &none             &none         &none         &none         &none         &none         &none
+           &none       &none           &none         &none         &none          &none             &none         &none         &none         &none         &none         &none
     // ╰─────────────┴─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┴─────────────╯
                                                       &none        &none        &none            &none        &none          &none
     //                                           ╰─────────────┴─────────────┴─────────────╯   ╰─────────────┴─────────────┴─────────────╯
