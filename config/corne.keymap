@@ -16,8 +16,8 @@
 #define FLR 3
 #define AJT 4
 
-&lt { quick_tap_ms = <219>; };
-&mt { quick_tap_ms = <219>; };
+// &lt { quick_tap_ms = <219>; };
+// &mt { quick_tap_ms = <219>; };
  
 / {
     behaviors {
@@ -161,7 +161,7 @@
     // &mt <keycode hold> <keycode tap> (mod tap) -- if you hold -- send <hold> keycode. If you tab, then second keycode sent
     // &lt <layer hold> <keycode tap> (layer tap) -- if you hold activate <layer hold>. If you tab, then send keycode <keycode tap> 
     // &mo <layer> (momentary layer) -- activate the layer when key is pressed
-    // &kp <keycode> -- just send keycode
+    // &kp <keycode> -- just send keycodecccccccccccccccccccccccc
     // 
 
     keymap {
