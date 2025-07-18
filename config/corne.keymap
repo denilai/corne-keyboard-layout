@@ -158,17 +158,22 @@
         };
     };
 
+    // &mt <keycode hold> <keycode tap> (mod tap) -- if you hold -- send <hold> keycode. If you tab, then second keycode sent
+    // &lt <layer hold> <keycode tap> (layer tap) -- if you hold activate <layer hold>. If you tab, then send keycode <keycode tap> 
+    // &mo <layer> (momentary layer) -- activate the layer when key is pressed
+    // 
+
     keymap {
         compatible = "zmk,keymap";
  
         default_layer {
             bindings = <
      // ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮   ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
-           &gresc        &kp Q         &kp W         &kp E        &kp R         &kp T              &kp Y         &kp U         &kp I         &kp O         &kp P         &lt FLR LEFT_BRACKET
+           &kp ESC        &kp Q         &kp W         &kp E        &kp R         &kp T              &kp Y         &kp U         &kp I         &kp O         &kp P         &lt LEFT_BRACKET
      // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
            &kp TAB       &kp A         &kp S         &kp D        &tdF          &kp G              &kp H         &tdJ          &kp K         &kp L         &kp SEMI      &kp SQT
      // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-           &kp LSHFT     &kp Z         &kp X         &tdC        &tdV         &kp B              &kp N         &kp M         &kp COMMA     &kp DOT       &kp FSLH      &mt RALT RIGHT_BRACKET
+           &kp LSHFT     &kp Z         &kp X         &tdC        &tdV         &kp B              &kp N         &kp M         &kp COMMA     &kp DOT       &kp FSLH        &mt RALT RIGHT_BRACKET
      // ╰─────────────┴─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┴─────────────╯
                                                      &kp LCTRL     &mo LWR      &mt LGUI RET     &lt RSE SPACE   &kp BSPC    &lt AJT DEL 
      //                                           ╰─────────────┴─────────────┴─────────────╯   ╰─────────────┴─────────────┴─────────────╯
