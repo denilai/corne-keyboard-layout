@@ -162,7 +162,7 @@
     // &lt <layer hold> <keycode tap> (layer tap) -- if you hold activate <layer hold>. If you tab, then send keycode <keycode tap> 
     // &mo <layer> (momentary layer) -- activate the layer when key is pressed
     // &kp <keycode> -- just send keycode
-    // 
+    //  
 
     keymap {
         compatible = "zmk,keymap";
