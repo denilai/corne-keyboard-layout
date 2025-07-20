@@ -183,7 +183,10 @@
     // &lt <layer hold> <keycode tap> (layer tap) -- if you hold activate <layer hold>. If you tab, then send keycode <keycode tap> 
     // &mo <layer> (momentary layer) -- activate the layer when key is pressed
     // &kp <keycode> -- just send keycode
-    //  
+
+    // TODO: organize numbers as on numpad https://raw.githubusercontent.com/reinier/dotfiles/main/hammerspoon/keyboard/keymap.png
+    // https://github.com/reinier/rlkeymaps
+
 
     keymap {
         compatible = "zmk,keymap";
