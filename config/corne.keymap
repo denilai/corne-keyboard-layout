@@ -46,6 +46,31 @@
             tapping-term-ms = <200>;
             bindings = <&kp V>, <&kp LC(V)>;
         };
+        // Шаг 1: Создаем tap-dance для Enter / Ctrl+Enter
+        td_enter: tap_dance_enter_ctrl_enter {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            // Время в мс, чтобы зарегистрировать второе нажатие.
+            // Можете настроить под себя.
+            tapping-term-ms = <200>; 
+            // bindings: <одно нажатие>, <два нажатия>, <три нажатия>...
+            bindings = <&kp RET>, <&kp LC(RET)>;
+        };
+
+        // Шаг 2: Создаем hold-tap, который комбинирует GUI и наш tap-dance
+        ht_gui_enter: hold_tap_gui_enter {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <0>;
+            // Время в мс для разделения tap и hold.
+            // Если зажать дольше этого времени, сработает hold (GUI).
+            tapping-term-ms = <220>;
+            // flavor: "tap-preferred" означает, что ZMK дождется tapping-term-ms,
+            // чтобы решить, было ли это нажатие коротким. Это предотвращает
+            // ложное срабатывание GUI при быстрой печати.
+            flavor = "tap-preferred"; 
+            // bindings: <действие на hold>, <действие на tap>
+            bindings = <&kp LGUI>, <&td_enter>;
+        };
         // https://zmk.dev/docs/keymaps/behaviors/hold-tap?examples=homerow_mods#example-use-cases
         lh_pht: left_positional_hold_tap {
             compatible = "zmk,behavior-hold-tap";
@@ -172,20 +197,20 @@
      // ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮   ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
            &kp ESC        &kp Q         &kp W         &kp E        &kp R         &kp T              &kp Y         &kp U         &kp I         &kp O         &kp P         &lt FLR LEFT_BRACKET
      // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-           &kp TAB       &kp A         &kp S         &kp D        &tdF          &kp G              &kp H         &tdJ          &kp K         &kp L         &kp SEMI      &kp SQT
+           &mt LALT TAB   &kp A         &kp S         &kp D        &tdF          &kp G              &kp H         &tdJ          &kp K         &kp L         &kp SEMI      &kp SQT
      // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-           &kp LSHFT     &kp Z         &kp X         &tdC        &tdV         &kp B              &kp N         &kp M         &kp COMMA     &kp DOT       &kp FSLH        &mt RALT RIGHT_BRACKET
+           &kp LSHFT     &kp Z         &kp X         &tdC        &tdV         &kp B                 &kp N         &kp M         &kp COMMA     &kp DOT       &kp FSLH        &mt RALT RIGHT_BRACKET
      // ╰─────────────┴─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┴─────────────╯
-                                                     &kp LCTRL     &mo LWR      &mt LGUI RET     &lt RSE SPACE   &kp BSPC    &lt AJT DEL 
+                                                     &kp LCTRL     &mo LWR      &ht_gui_enter     &lt RSE SPACE   &kp BSPC    &lt AJT DEL 
      //                                           ╰─────────────┴─────────────┴─────────────╯   ╰─────────────┴─────────────┴─────────────╯
             >;
         };
         lower_layer {
             bindings = <
      // ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮   ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
-           &kp TILDE      &kp N1         &kp N2        &kp N3        &kp N4        &kp N5            &kp N6        &kp N7        &kp N8        &kp N9        &kp N0       &kp F8
+           &kp GRAVE      &kp N1         &kp N2        &kp N3        &kp N4        &kp N5            &kp N6        &kp N7        &kp N8        &kp N9        &kp N0       &kp F8
      // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-           &kp GRAVE      &kp EXCL       &kp AT       &kp HASH      &kp DLLR     &kp PRCNT         &kp CARET     &kp AMPS      &kp ASTRK      &kp LPAR      &kp RPAR      &kp F9
+           &kp TILDE      &kp EXCL       &kp AT       &kp HASH      &kp DLLR     &kp PRCNT         &kp CARET     &kp AMPS      &kp ASTRK      &kp LPAR      &kp RPAR      &kp F9
      // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
            &kp LSHFT      &none          &none        &kp CAPS    &kp LG(F11)   &kp LG(F12)       &kp KP_PLUS   &kp KP_EQUAL    &none         &none        &kp BSLH        &kp F10
      // ╰─────────────┴─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┴─────────────╯
