@@ -186,7 +186,7 @@
     //  
 
     keymap {
-        compatible = "zmk,keymap";]]
+        compatible = "zmk,keymap";
 
 
         ъъъъххххъъхх
