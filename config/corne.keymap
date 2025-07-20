@@ -187,9 +187,6 @@
 
     keymap {
         compatible = "zmk,keymap";
-
-
-        ъъъъххххъъхх
  
         default_layer {
             bindings = <
