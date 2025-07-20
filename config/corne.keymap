@@ -47,7 +47,7 @@
             bindings = <&kp V>, <&kp LC(V)>;
         };
         // Шаг 1: Создаем tap-dance для Enter / Ctrl+Enter
-        td_enter: tap_dance_enter_ctrl_enter {
+        tdEnter: tap_dance_enter_ctrl_enter {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             // Время в мс, чтобы зарегистрировать второе нажатие.
@@ -56,21 +56,21 @@
             // bindings: <одно нажатие>, <два нажатия>, <три нажатия>...
             bindings = <&kp RET>, <&kp LC(RET)>;
         };
-
         // Шаг 2: Создаем hold-tap, который комбинирует GUI и наш tap-dance
-        ht_gui_enter: hold_tap_gui_enter {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <0>;
-            // Время в мс для разделения tap и hold.
-            // Если зажать дольше этого времени, сработает hold (GUI).
-            tapping-term-ms = <220>;
-            // flavor: "tap-preferred" означает, что ZMK дождется tapping-term-ms,
-            // чтобы решить, было ли это нажатие коротким. Это предотвращает
-            // ложное срабатывание GUI при быстрой печати.
-            flavor = "tap-preferred"; 
-            // bindings: <действие на hold>, <действие на tap>
-            bindings = <&kp LGUI>, <&td_enter>;
-        };
+        // ht_gui_enter: hold_tap_gui_enter {
+        //     compatible = "zmk,behavior-hold-tap";
+        //     #binding-cells = <0>;
+        //     // Время в мс для разделения tap и hold.
+        //     // Если зажать дольше этого времени, сработает hold (GUI).
+        //     tapping-term-ms = <220>;
+        //     // flavor: "tap-preferred" означает, что ZMK дождется tapping-term-ms,
+        //     // чтобы решить, было ли это нажатие коротким. Это предотвращает
+        //     // ложное срабатывание GUI при быстрой печати.
+        //     flavor = "tap-preferred"; 
+        //     // bindings: <действие на hold>, <действие на tap>
+        //     bindings = <&kp LGUI>, <&td_enter>;
+        // };
+
         // https://zmk.dev/docs/keymaps/behaviors/hold-tap?examples=homerow_mods#example-use-cases
         lh_pht: left_positional_hold_tap {
             compatible = "zmk,behavior-hold-tap";
@@ -201,7 +201,7 @@
      // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
            &kp LSHFT     &kp Z         &kp X         &tdC        &tdV         &kp B                 &kp N         &kp M         &kp COMMA     &kp DOT       &kp FSLH        &mt RALT RIGHT_BRACKET
      // ╰─────────────┴─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┴─────────────╯
-                                                     &kp LCTRL     &mo LWR      &ht_gui_enter     &lt RSE SPACE   &kp BSPC    &lt AJT DEL 
+                                                     &kp LCTRL     &mo LWR      &tdEnter     &lt RSE SPACE   &kp BSPC    &lt AJT DEL 
      //                                           ╰─────────────┴─────────────┴─────────────╯   ╰─────────────┴─────────────┴─────────────╯
             >;
         };
