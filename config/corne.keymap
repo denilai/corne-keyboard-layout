@@ -46,12 +46,15 @@
             tapping-term-ms = <200>;
             bindings = <&kp V>, <&kp LC(V)>;
         };
-        tdEnter: mod_tap_tap_dance {
-            compatible = "zmk,behavior-tap-dance";
-            #binding-cells = <0>;
-            tapping-term-ms = <200>; 
-            bindings = <&mt LGUI RET>, <&kp LC(RET)>;
-        };
+        // приводит к необходимости повторного нажатия
+        // при использовании комбинаций с LGUI
+        // решил не использовать
+        // tdEnter: mod_tap_tap_dance {
+        //     compatible = "zmk,behavior-tap-dance";
+        //     #binding-cells = <0>;
+        //     tapping-term-ms = <200>; 
+        //     bindings = <&mt LGUI RET>, <&kp LC(RET)>;
+        // };
         // https://zmk.dev/docs/keymaps/behaviors/hold-tap?examples=homerow_mods#example-use-cases
         lh_pht: left_positional_hold_tap {
             compatible = "zmk,behavior-hold-tap";
@@ -61,6 +64,18 @@
             quick-tap-ms = <200>;
             bindings = <&kp>, <&kp>;
             hold-trigger-key-positions = <0 1 2 3 4 5>;    // <---[[right-hand keys]]
+        };
+        sqtctrl: squote_lctrl {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp SQT>, <&kp LCTRL>;
+            mods = <(MOD_LGUI|MOD_LSFT|MOD_RGUI|MOD_RSFT)>;
+        };
+        lbralt: leftbr_alt {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp LEFT_BRACKET>, <&kp LALT>;
+            mods = <(MOD_LGUI|MOD_LSFT|MOD_RGUI|MOD_RSFT)>;
         };
     };
 
@@ -171,18 +186,21 @@
     //  
 
     keymap {
-        compatible = "zmk,keymap";
+        compatible = "zmk,keymap";]]
+
+
+        ъъъъххххъъхх
  
         default_layer {
             bindings = <
      // ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮   ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
            &kp ESC        &kp Q         &kp W         &kp E        &kp R         &kp T              &kp Y         &kp U         &kp I         &kp O         &kp P         &lt FLR LEFT_BRACKET
      // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-           &mt LALT TAB   &kp A         &kp S         &kp D        &tdF          &kp G              &kp H         &tdJ          &kp K         &kp L         &kp SEMI      &kp SQT
+           &mt LALT TAB   &kp A         &kp S         &kp D        &tdF          &kp G              &kp H         &tdJ          &kp K         &kp L         &kp SEMI      &sqtctrl
      // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-           &kp LSHFT     &kp Z         &kp X         &tdC        &tdV         &kp B                 &kp N         &kp M         &kp COMMA     &kp DOT       &kp FSLH        &mt RALT RIGHT_BRACKET
+           &kp LSHFT     &kp Z         &kp X         &tdC        &tdV         &kp B                 &kp N         &kp M         &kp COMMA     &kp DOT       &kp FSLH       &lbralt
      // ╰─────────────┴─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┴─────────────╯
-                                                     &kp LCTRL     &mo LWR      &tdEnter          &lt RSE SPACE   &kp BSPC    &lt AJT DEL 
+                                                     &kp LCTRL     &mo LWR      &mt LGUI RET     &lt RSE SPACE   &kp BSPC    &lt AJT DEL 
      //                                           ╰─────────────┴─────────────┴─────────────╯   ╰─────────────┴─────────────┴─────────────╯
             >;
         };
@@ -241,3 +259,4 @@
     };
 };
  
+
