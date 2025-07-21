@@ -180,6 +180,7 @@
 
     // TODO: organize numbers as on numpad https://raw.githubusercontent.com/reinier/dotfiles/main/hammerspoon/keyboard/keymap.png
     // https://github.com/reinier/rlkeymaps
+    // and functional buttons either
 
 
     keymap {
