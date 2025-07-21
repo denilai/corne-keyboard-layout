@@ -66,16 +66,10 @@
             hold-trigger-key-positions = <0 1 2 3 4 5>;    // <---[[right-hand keys]]
         };
         sqtctrl: squote_lctrl {
-            compatible = "zmk,behavior-mod-morph";
+            compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
-            bindings = <&kp SQT>, <&kp LCTRL>;
-            mods = <(MOD_LGUI|MOD_LSFT|MOD_RGUI|MOD_RSFT)>;
-        };
-        lbralt: leftbr_alt {
-            compatible = "zmk,behavior-mod-morph";
-            #binding-cells = <0>;
-            bindings = <&kp LEFT_BRACKET>, <&kp LALT>;
-            mods = <(MOD_LGUI|MOD_LSFT|MOD_RGUI|MOD_RSFT)>;
+            tapping-term-ms = <200>;
+            bindings = <&kp LC(RET)>, <&kp SQT>;
         };
     };
 
@@ -198,7 +192,7 @@
      // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
            &mt LALT TAB   &kp A         &kp S         &kp D        &tdF          &kp G              &kp H         &tdJ          &kp K         &kp L         &kp SEMI      &sqtctrl
      // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-           &kp LSHFT     &kp Z         &kp X         &tdC        &tdV         &kp B                 &kp N         &kp M         &kp COMMA     &kp DOT       &kp FSLH       &lbralt
+           &kp LSHFT     &kp Z         &kp X         &tdC        &tdV         &kp B                 &kp N         &kp M         &kp COMMA     &kp DOT       &kp FSLH       &kp LEFT_BRACKET
      // ╰─────────────┴─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┴─────────────╯
                                                      &kp LCTRL     &mo LWR      &mt LGUI RET     &lt RSE SPACE   &kp BSPC    &lt AJT DEL 
      //                                           ╰─────────────┴─────────────┴─────────────╯   ╰─────────────┴─────────────┴─────────────╯
@@ -209,7 +203,7 @@
      // ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮   ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
            &kp GRAVE      &kp N1         &kp N2        &kp N3        &kp N4        &kp N5            &kp N6        &kp N7        &kp N8        &kp N9        &kp N0       &kp F8
      // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-           &kp TILDE      &kp EXCL       &kp AT       &kp HASH      &kp DLLR     &kp PRCNT         &kp CARET     &kp AMPS      &kp ASTRK      &kp LPAR      &kp RPAR      &kp F9
+           &kp TILDE      &kp EXCL       &kp AT       &kp HASH      &kp DLLR     &kp PRCNT         &kp CARET     &kp AMPS      &kp ASTRK      &kp LPAR      &kp RPAR      &kp LCTRL
      // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
            &kp LSHFT      &none          &none        &kp CAPS    &kp LG(F11)   &kp LG(F12)       &kp KP_PLUS   &kp KP_EQUAL    &none         &none        &kp BSLH        &kp F10
      // ╰─────────────┴─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┴─────────────╯
