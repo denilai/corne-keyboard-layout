@@ -233,7 +233,7 @@
 &kp LCTRL  &bhm LMETA A  &bhm LEFT_ALT S  &bhm LEFT_SHIFT D  &bhm LCTRL F  &kp G        &kp H           &bhm RCTRL J     &bhm RIGHT_SHIFT K  &bhm LEFT_ALT L  &bhm LMETA SEMICOLON  &kp SQT
 &sk LSHFT  &kp Z         &kp X            &kp C              &kp V         &kp B        &kp N           &kp M            &kp COMMA           &kp DOT          &kp FSLH              &kp RIGHT_ALT
                                           &kp LCTRL          &lt 2 TAB     &lt 4 RET    &underspace     &lt 3 BACKSPACE  &sk RIGHT_SHIFT
-            
+            >;
         };
         nav_layer {
             bindings = <
