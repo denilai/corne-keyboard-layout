@@ -16,45 +16,60 @@
 #define FLR 3
 #define AJT 4
 
-&lt { quick_tap_ms = <219>; };
-&mt { quick_tap_ms = <219>; };
+// &lt { quick_tap_ms = <219>; };
+// &mt { quick_tap_ms = <219>; };
  
 / {
     behaviors {
         tdF: tap_dance_lang1 {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
-            tapping-term-ms = <100>;
+            tapping-term-ms = <200>;
             bindings = <&kp F>, <&kp LG(F11)>;
         };
         tdJ: tap_dance_lang2 {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
-            tapping-term-ms = <100>;
+            tapping-term-ms = <200>;
             bindings = <&kp J>, <&kp LG(F12)>;
         };
         // tap-dance copy-cut
         tdC: tap_dance_c {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
-            tapping-term-ms = <100>;
+            tapping-term-ms = <200>;
             bindings = <&kp C>, <&kp LC(C)>;
         };
         tdV: tap_dance_v {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
-            tapping-term-ms = <100>;
+            tapping-term-ms = <200>;
             bindings = <&kp V>, <&kp LC(V)>;
         };
+        // приводит к необходимости повторного нажатия
+        // при использовании комбинаций с LGUI
+        // решил не использовать
+        // tdEnter: mod_tap_tap_dance {
+        //     compatible = "zmk,behavior-tap-dance";
+        //     #binding-cells = <0>;
+        //     tapping-term-ms = <200>; 
+        //     bindings = <&mt LGUI RET>, <&kp LC(RET)>;
+        // };
         // https://zmk.dev/docs/keymaps/behaviors/hold-tap?examples=homerow_mods#example-use-cases
         lh_pht: left_positional_hold_tap {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
             flavor = "tap-unless-interrupted";
-            tapping-term-ms = <100>;                        // <---[[produces tap if held longer than tapping-term-ms]]
+            tapping-term-ms = <200>;                        // <---[[produces tap if held longer than tapping-term-ms]]
             quick-tap-ms = <200>;
             bindings = <&kp>, <&kp>;
             hold-trigger-key-positions = <0 1 2 3 4 5>;    // <---[[right-hand keys]]
+        };
+        sqtctrl: squote_lctrl {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&kp SQT>, <&kp LC(RET)>;
         };
     };
 
@@ -158,17 +173,27 @@
         };
     };
 
+    // &mt <keycode hold> <keycode tap> (mod tap) -- if you hold -- send <hold> keycode. If you tab, then second keycode sent
+    // &lt <layer hold> <keycode tap> (layer tap) -- if you hold activate <layer hold>. If you tab, then send keycode <keycode tap> 
+    // &mo <layer> (momentary layer) -- activate the layer when key is pressed
+    // &kp <keycode> -- just send keycode
+
+    // TODO: organize numbers as on numpad https://raw.githubusercontent.com/reinier/dotfiles/main/hammerspoon/keyboard/keymap.png
+    // https://github.com/reinier/rlkeymaps
+    // and functional buttons either
+
+
     keymap {
         compatible = "zmk,keymap";
  
         default_layer {
             bindings = <
      // ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮   ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
-           &gresc        &kp Q         &kp W         &kp E        &kp R         &kp T              &kp Y         &kp U         &kp I         &kp O         &kp P         &lt FLR LEFT_BRACKET
+           &kp ESC        &kp Q         &kp W         &kp E        &kp R         &kp T              &kp Y         &kp U         &kp I         &kp O         &kp P         &lt FLR LEFT_BRACKET
      // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-           &kp TAB       &kp A         &kp S         &kp D        &tdF          &kp G              &kp H         &tdJ          &kp K         &kp L         &kp SEMI      &kp SQT
+           &mt LALT TAB   &kp A         &kp S         &kp D        &kp F          &kp G              &kp H         &kp J          &kp K         &kp L         &kp SEMI      &sqtctrl
      // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-           &kp LSHFT     &kp Z         &kp X         &tdC        &tdV         &kp B              &kp N         &kp M         &kp COMMA     &kp DOT       &kp FSLH      &mt RALT RIGHT_BRACKET
+           &kp LSHFT     &kp Z         &kp X         &tdC           &tdV         &kp B                 &kp N       &kp M         &kp COMMA     &kp DOT       &kp FSLH       &kp LEFT_BRACKET
      // ╰─────────────┴─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┴─────────────╯
                                                      &kp LCTRL     &mo LWR      &mt LGUI RET     &lt RSE SPACE   &kp BSPC    &lt AJT DEL 
      //                                           ╰─────────────┴─────────────┴─────────────╯   ╰─────────────┴─────────────┴─────────────╯
@@ -177,9 +202,9 @@
         lower_layer {
             bindings = <
      // ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮   ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
-           &kp TILDE      &kp N1         &kp N2        &kp N3        &kp N4        &kp N5            &kp N6        &kp N7        &kp N8        &kp N9        &kp N0       &kp F8
+           &kp GRAVE      &kp N1         &kp N2        &kp N3        &kp N4        &kp N5            &kp N6        &kp N7        &kp N8        &kp N9        &kp N0       &kp F8
      // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-           &kp GRAVE      &kp EXCL       &kp AT       &kp HASH      &kp DLLR     &kp PRCNT         &kp CARET     &kp AMPS      &kp ASTRK      &kp LPAR      &kp RPAR      &kp F9
+           &kp TILDE      &kp EXCL       &kp AT       &kp HASH      &kp DLLR     &kp PRCNT         &kp CARET     &kp AMPS      &kp ASTRK      &kp LPAR      &kp RPAR      &kp LCTRL
      // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
            &kp LSHFT      &none          &none        &kp CAPS    &kp LG(F11)   &kp LG(F12)       &kp KP_PLUS   &kp KP_EQUAL    &none         &none        &kp BSLH        &kp F10
      // ╰─────────────┴─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┴─────────────╯
@@ -190,13 +215,13 @@
         raise_layer {
             bindings = <
     // ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮   ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
-           &none          &none      &kp PG_UP      &kp UP        &kp PG_DN     &kp HOME          &kp CARET     &kp PG_UP     &kp UP        &kp PG_DN     &kp HOME     &kp F8
+           &none          &none      &kp PG_UP      &kp UP        &kp PG_DN     &kp HOME          &kp HOME     &kp PG_UP     &kp UP        &kp PG_DN     &kp CARET     &kp F8
     // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-           &none          &none      &kp LEFT       &kp DOWN      &kp RIGHT     &kp END           &kp MINUS     &kp LEFT      &kp DOWN      &kp RIGHT     &kp END      &kp F9
+           &none          &none      &kp LEFT       &kp DOWN      &kp RIGHT     &kp END           &kp END      &kp LEFT      &kp DOWN      &kp RIGHT     &kp MINUS      &kp F9
     // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
             &trans        &none         &none      &none          &none         &kp F15           &kp F16       &kp F23       &none         &none         &none        &kp F10
     // ╰─────────────┴─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┴─────────────╯
-                                                      &trans      &kp LG(F11)   &kp LG(F12)        &trans         &trans         &trans 
+                                                      &trans      &trans        &trans        &trans         &trans         &trans 
     //                                           ╰─────────────┴─────────────┴─────────────╯   ╰─────────────┴─────────────┴─────────────╯
             >; 
         };
@@ -218,7 +243,7 @@
     // ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮   ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
          &bootloader    &sys_reset    &none           &none         &none         &none             &none         &none         &none         &none       &sys_reset   &bootloader
     // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-            &none        &none        &none   &kp LC(LS(S)) &kp LC(LA(S))  &none           &none         &none         &none         &none         &none        &none
+            &none        &none        &none         &kp PSCRN  &kp LC(PSCRN)   &none                &none         &none         &none         &none         &none        &none
     // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
            &none       &none           &none         &none         &none          &none             &none         &none         &none         &none         &none         &none
     // ╰─────────────┴─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┴─────────────╯
@@ -229,3 +254,4 @@
     };
 };
  
+
