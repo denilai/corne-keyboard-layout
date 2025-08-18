@@ -38,19 +38,120 @@
     combos {
         compatible = "zmk,combos";
 
-        caps_word {
+        // -- parenthesis and brackets
+
+        combo_para_left {
+            bindings = <&kp LEFT_PARENTHESIS>;
+            key-positions = <4 5>;
+            timeout-ms = <30>;
+        };
+
+        combo_para_right {
+            bindings = <&kp RIGHT_PARENTHESIS>;
+            key-positions = <6 7>;
+            timeout-ms = <30>;
+        };
+
+        combo_brack_left {
+            bindings = <&kp LEFT_BRACKET>;
+            key-positions = <16 17>;
+            timeout-ms = <30>;
+        };
+
+        combo_brack_right {
+            bindings = <&kp RIGHT_BRACKET>;
+            key-positions = <18 19>;
+            timeout-ms = <30>;
+        };
+
+        combo_brace_left {
+            bindings = <&kp LEFT_BRACE>;
+            key-positions = <28 29>;
+            timeout-ms = <30>;
+        };
+
+        combo_brace_right {
+            bindings = <&kp RIGHT_BRACE>;
+            key-positions = <30 31>;
+            timeout-ms = <30>;
+        };
+
+        //
+
+        combo_double_quote {
+            bindings = <&kp DOUBLE_QUOTES>;
+            key-positions = <15 16>;
+            timeout-ms = <30>;
+        };
+
+        combo_apostr {
+            bindings = <&kp APOSTROPHE>;
+            key-positions = <19 20>;
+            timeout-ms = <30>;
+        };
+
+        combo_tilda {
+            bindings = <&kp TILDE>;
+            key-positions = <0 12>;
+            timeout-ms = <30>;
+        };
+
+        combo_grave {
+            bindings = <&kp GRAVE>;
+            key-positions = <12 24>;
+            timeout-ms = <30>;
+        };
+
+        combo_minus {
+            bindings = <&kp MINUS>;
+            key-positions = <3 4>;
+            timeout-ms = <30>;
+        };
+
+        combo_plus {
+            bindings = <&kp PLUS>;
+            key-positions = <2 3>;
+            timeout-ms = <30>;
+        };
+
+        combo_underscore {
+            bindings = <&kp UNDERSCORE>;
+            key-positions = <7 8>;
+            timeout-ms = <30>;
+        };
+
+        combo_pipe {
+            bindings = <&kp PIPE>;
+            key-positions = <8 9>;
+            timeout-ms = <30>;
+        };
+
+        combo_lt {
+            bindings = <&kp LESS_THAN>;
+            key-positions = <27 28>;
+            timeout-ms = <30>;
+        };
+
+        combo_caps_word {
             bindings = <&caps_word>;
             key-positions = <17 18>;
             layers = <0>;
         };
 
-        esc {
-            bindings = <&kp ESCAPE>;
-            key-positions = <1 2>;
+        combo_caps_lock {
+            bindings = <&kp CAPSLOCK>;
+            key-positions = <5 6>;
             layers = <0>;
         };
 
-        vol_up {
+
+        combo_gt {
+            bindings = <&kp GREATER_THAN>;
+            key-positions = <31 32>;
+            timeout-ms = <30>;
+        };
+
+        combo_vol_up {
             bindings = <&kp C_VOLUME_UP>;
             key-positions = <11 23>;
             layers = <0>;
@@ -62,53 +163,12 @@
             layers = <0>;
         };
 
-        combo_CAPS_LOCK {
-            bindings = <&kp CAPSLOCK>;
-            key-positions = <5 6>;
-            layers = <0>;
-        };
 
-        combo_Delete {
-            bindings = <&kp DELETE>;
-            key-positions = <10 9>;
-            layers = <0>;
-        };
-
-        combo_underscore {
-            bindings = <&kp UNDER>;
-            key-positions = <7 8>;
-            layers = <0>;
-        };
-
-        combo_dash {
-            bindings = <&kp MINUS>;
-            key-positions = <4 3>;
-            layers = <0>;
-        };
-
-        combo_em-dash {
-            bindings = <&emdsh>;
-            key-positions = <2 3 4>;
-            layers = <0>;
-        };
-
-        combo_f19 {
-            bindings = <&kp F19>;
-            key-positions = <1 4 7 10>;
-            layers = <0>;
-        };
-
-        combo_single-quote {
-            bindings = <&kp SINGLE_QUOTE>;
-            key-positions = <7 19>;
-            layers = <0>;
-        };
-
-        combo_double-quote {
-            bindings = <&kp AT_SIGN>;
-            key-positions = <8 20>;
-            layers = <0>;
-        };
+        // combo_em-dash {
+        //     bindings = <&emdsh>;
+        //     key-positions = <2 3 4>;
+        //     layers = <0>;
+        // };
     };
 
     macros {
@@ -151,7 +211,7 @@
         underspace: underspace {
             compatible = "zmk,behavior-mod-morph";
             label = "UNDERSPACE";
-            bindings = <&lt 1 SPACE>, <&kp UNDER>;
+            bindings = <&lt 3 SPACE>, <&kp UNDER>;
 
             #binding-cells = <0>;
             mods = <(MOD_RSFT)>;
@@ -169,20 +229,20 @@
             //                    | GUI | LWR | SPC |   | ENT | RSE  | ALT |
 
             bindings = <
-&kp LMETA  &kp Q         &kp W            &kp E              &kp R         &kp T        &kp Y      &kp U            &kp I               &kp O            &kp P                 &kp DELETE
-&kp LCTRL  &bhm LMETA A  &bhm LEFT_ALT S  &bhm LEFT_SHIFT D  &bhm LCTRL F  &kp G        &kp H      &bhm RCTRL J     &bhm RIGHT_SHIFT K  &bhm LEFT_ALT L  &bhm LMETA SEMICOLON  &kp SQT
-&sk LSHFT  &kp Z         &kp X            &kp C              &kp V         &kp B        &kp N      &kp M            &kp COMMA           &kp DOT          &kp FSLH              &kp RIGHT_ALT
-                                          &kp LCTRL          &underspace   &lt 4 TAB    &lt 3 RET  &lt 2 BACKSPACE  &sk RIGHT_SHIFT
+&gresc  &kp Q         &kp W            &kp E              &kp R         &kp T        &kp Y           &kp U            &kp I               &kp O            &kp P                 &kp DELETE
+&kp LCTRL  &bhm LMETA A  &bhm LEFT_ALT S  &bhm LEFT_SHIFT D  &bhm LCTRL F  &kp G        &kp H           &bhm RCTRL J     &bhm RIGHT_SHIFT K  &bhm LEFT_ALT L  &bhm LMETA SEMICOLON  &kp SQT
+&sk LSHFT  &kp Z         &kp X            &kp C              &kp V         &kp B        &kp N           &kp M            &kp COMMA           &kp DOT          &kp FSLH              &kp RIGHT_ALT
+                                          &kp LCTRL          &lt 1 TAB     &lt 4 RET    &underspace     &lt 2 BACKSPACE  &sk RIGHT_SHIFT
             >;
         };
-
+!?
         nav_layer {
             bindings = <
-&trans  &trans    &trans    &trans          &trans            &trans    &mkp LCLK          &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_UP  &mmv MOVE_RIGHT  &mkp RCLK
-&trans  &kp LGUI  &kp LALT  &kp LEFT_SHIFT  &kp LEFT_CONTROL  &trans    &kp K_APPLICATION  &kp LEFT        &kp DOWN_ARROW  &kp UP_ARROW  &kp RIGHT        &kp K_CMENU
-&trans  &trans    &trans    &trans          &trans            &trans    &mkp MB4           &kp HOME        &kp PAGE_DOWN   &kp PG_UP     &kp END          &mkp MB5
+&trans  &trans    &trans    &trans          &trans            &trans    &mkp LCLK          &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_UP  &mmv MOVE_RIGHT    &mkp RCLK
+&trans  &kp LGUI  &kp LALT  &kp LEFT_SHIFT  &kp LEFT_CONTROL  &trans    &kp LEFT           &kp DOWN_ARROW  &kp UP_ARROW    &kp RIGHT     &kp K_APPLICATION  &kp K_CMENU
+&trans  &trans    &trans    &trans          &trans            &trans    &mkp MB4           &kp HOME        &kp PAGE_DOWN   &kp PG_UP     &kp END            &mkp MB5
                             &trans          &trans            &trans    &trans             &trans          &trans
-            >;
+            >
         };
 
         symb_layer {
