@@ -50,11 +50,11 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - LClk
   - MOUSE ←
   - MOUSE ↓
   - MOUSE ↑
   - MOUSE →
+  - LClk
   - '&mkp RCLK'
   - {t: ▽, type: trans}
   - ⌘
@@ -191,11 +191,11 @@ layers:
   - ⏯
   - ⏭
   - ''
-  - ''
   - MOUSE ←
   - MOUSE ↓
   - MOUSE ↑
   - MOUSE →
+  - ''
   - ''
   - BT CLR
   - {t: BT, h: '0'}
