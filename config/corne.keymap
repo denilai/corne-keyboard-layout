@@ -235,7 +235,6 @@
                                           &kp LCTRL          &lt 1 TAB     &lt 4 RET    &underspace     &lt 2 BACKSPACE  &sk RIGHT_SHIFT
             >;
         };
-!?
         nav_layer {
             bindings = <
 &trans  &trans    &trans    &trans          &trans            &trans    &mkp LCLK          &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_UP  &mmv MOVE_RIGHT    &mkp RCLK
