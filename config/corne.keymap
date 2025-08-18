@@ -1,257 +1,216 @@
 /*
-* Copyright (c) 2020 The ZMK Contributors
-*
-* SPDX-License-Identifier: MIT
-*/
+ * Copyright (c) 2020 The ZMK Contributors
+ *
+ * SPDX-License-Identifier: MIT
+ */
 
+
+#define ZMK_POINTING_DEFAULT_MOVE_VAL 800  // default: 600
+#define ZMK_POINTING_DEFAULT_SCRL_VAL 20    // default: 10
+
+#include <zmk-helpers/key-labels/42.h>
 #include <behaviors.dtsi>
-#include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
-#include <dt-bindings/zmk/outputs.h>
-#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/pointing.h>
 
-#define DEF 0
-#define LWR 1
-#define RSE 2
-#define FLR 3
-#define AJT 4
+&sk {
+    release-after-ms = <1000>;
+    quick-release;
+    lazy;
+    ignore-modifiers;
+};
 
-// &lt { quick_tap_ms = <219>; };
-// &mt { quick_tap_ms = <219>; };
- 
+&mmv {
+    acceleration-exponent = <1>;          // 1
+    time-to-max-speed-ms = <500>;         // 300
+    delay-ms = <0>;                       // 0
+};
+
+&lt {
+    tapping-term-ms = <200>; // default 200
+    flavor = "balanced"; // or hold-preferred or tap-preferred
+    quick-tap-ms = <150>;
+};
+
 / {
-    behaviors {
-        tdF: tap_dance_lang1 {
-            compatible = "zmk,behavior-tap-dance";
-            #binding-cells = <0>;
-            tapping-term-ms = <200>;
-            bindings = <&kp F>, <&kp LG(F11)>;
-        };
-        tdJ: tap_dance_lang2 {
-            compatible = "zmk,behavior-tap-dance";
-            #binding-cells = <0>;
-            tapping-term-ms = <200>;
-            bindings = <&kp J>, <&kp LG(F12)>;
-        };
-        // tap-dance copy-cut
-        tdC: tap_dance_c {
-            compatible = "zmk,behavior-tap-dance";
-            #binding-cells = <0>;
-            tapping-term-ms = <200>;
-            bindings = <&kp C>, <&kp LC(C)>;
-        };
-        tdV: tap_dance_v {
-            compatible = "zmk,behavior-tap-dance";
-            #binding-cells = <0>;
-            tapping-term-ms = <200>;
-            bindings = <&kp V>, <&kp LC(V)>;
-        };
-        // приводит к необходимости повторного нажатия
-        // при использовании комбинаций с LGUI
-        // решил не использовать
-        // tdEnter: mod_tap_tap_dance {
-        //     compatible = "zmk,behavior-tap-dance";
-        //     #binding-cells = <0>;
-        //     tapping-term-ms = <200>; 
-        //     bindings = <&mt LGUI RET>, <&kp LC(RET)>;
-        // };
-        // https://zmk.dev/docs/keymaps/behaviors/hold-tap?examples=homerow_mods#example-use-cases
-        lh_pht: left_positional_hold_tap {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <2>;
-            flavor = "tap-unless-interrupted";
-            tapping-term-ms = <200>;                        // <---[[produces tap if held longer than tapping-term-ms]]
-            quick-tap-ms = <200>;
-            bindings = <&kp>, <&kp>;
-            hold-trigger-key-positions = <0 1 2 3 4 5>;    // <---[[right-hand keys]]
-        };
-        sqtctrl: squote_lctrl {
-            compatible = "zmk,behavior-tap-dance";
-            #binding-cells = <0>;
-            tapping-term-ms = <200>;
-            bindings = <&kp SQT>, <&kp LC(RET)>;
-        };
-    };
-
     combos {
         compatible = "zmk,combos";
 
-        combo_para_left {
-            bindings = <&kp LEFT_PARENTHESIS>;
-            key-positions = <4 5>;
-            timeout-ms = <30>;
+        caps_word {
+            bindings = <&caps_word>;
+            key-positions = <17 18>;
+            layers = <0>;
         };
 
-        combo_para_right {
-            bindings = <&kp RIGHT_PARENTHESIS>;
-            key-positions = <6 7>;
-            timeout-ms = <30>;
+        esc {
+            bindings = <&kp ESCAPE>;
+            key-positions = <1 2>;
+            layers = <0>;
         };
 
-        combo_brack_left {
-            bindings = <&kp LEFT_BRACKET>;
-            key-positions = <16 17>;
-            timeout-ms = <30>;
+        vol_up {
+            bindings = <&kp C_VOLUME_UP>;
+            key-positions = <11 23>;
+            layers = <0>;
         };
 
-        combo_brack_right {
-            bindings = <&kp RIGHT_BRACKET>;
-            key-positions = <18 19>;
-            timeout-ms = <30>;
+        combo_vol_down {
+            bindings = <&kp C_VOLUME_DOWN>;
+            key-positions = <23 35>;
+            layers = <0>;
         };
 
-        combo_brace_left {
-            bindings = <&kp LEFT_BRACE>;
-            key-positions = <28 29>;
-            timeout-ms = <30>;
+        combo_CAPS_LOCK {
+            bindings = <&kp CAPSLOCK>;
+            key-positions = <5 6>;
+            layers = <0>;
         };
 
-        combo_brace_right {
-            bindings = <&kp RIGHT_BRACE>;
-            key-positions = <30 31>;
-            timeout-ms = <30>;
-        };
-
-        combo_double_quote {
-            bindings = <&kp DOUBLE_QUOTES>;
-            key-positions = <15 16>;
-            timeout-ms = <30>;
-        };
-
-        combo_apostr {
-            bindings = <&kp APOSTROPHE>;
-            key-positions = <19 20>;
-            timeout-ms = <30>;
-        };
-
-        combo_tilda {
-            bindings = <&kp TILDE>;
-            key-positions = <0 12>;
-            timeout-ms = <30>;
-        };
-
-        combo_grave {
-            bindings = <&kp GRAVE>;
-            key-positions = <12 24>;
-            timeout-ms = <30>;
-        };
-
-        combo_minus {
-            bindings = <&kp MINUS>;
-            key-positions = <3 4>;
-            timeout-ms = <30>;
-        };
-
-        combo_plus {
-            bindings = <&kp PLUS>;
-            key-positions = <2 3>;
-            timeout-ms = <30>;
+        combo_Delete {
+            bindings = <&kp DELETE>;
+            key-positions = <10 9>;
+            layers = <0>;
         };
 
         combo_underscore {
-            bindings = <&kp UNDERSCORE>;
+            bindings = <&kp UNDER>;
             key-positions = <7 8>;
-            timeout-ms = <30>;
+            layers = <0>;
         };
 
-        combo_pipe {
-            bindings = <&kp PIPE>;
-            key-positions = <8 9>;
-            timeout-ms = <30>;
+        combo_dash {
+            bindings = <&kp MINUS>;
+            key-positions = <4 3>;
+            layers = <0>;
         };
 
-        combo_lt {
-            bindings = <&kp LESS_THAN>;
-            key-positions = <27 28>;
-            timeout-ms = <30>;
+        combo_em-dash {
+            bindings = <&emdsh>;
+            key-positions = <2 3 4>;
+            layers = <0>;
         };
 
-        combo_gt {
-            bindings = <&kp GREATER_THAN>;
-            key-positions = <31 32>;
-            timeout-ms = <30>;
+        combo_f19 {
+            bindings = <&kp F19>;
+            key-positions = <1 4 7 10>;
+            layers = <0>;
+        };
+
+        combo_single-quote {
+            bindings = <&kp SINGLE_QUOTE>;
+            key-positions = <7 19>;
+            layers = <0>;
+        };
+
+        combo_double-quote {
+            bindings = <&kp AT_SIGN>;
+            key-positions = <8 20>;
+            layers = <0>;
         };
     };
 
-    // &mt <keycode hold> <keycode tap> (mod tap) -- if you hold -- send <hold> keycode. If you tab, then second keycode sent
-    // &lt <layer hold> <keycode tap> (layer tap) -- if you hold activate <layer hold>. If you tab, then send keycode <keycode tap> 
-    // &mo <layer> (momentary layer) -- activate the layer when key is pressed
-    // &kp <keycode> -- just send keycode
+    macros {
+        arrow_func: arrow_func {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp EQUAL &kp GT>, <&macro_press>;
 
-    // TODO: organize numbers as on numpad https://raw.githubusercontent.com/reinier/dotfiles/main/hammerspoon/keyboard/keymap.png
-    // https://github.com/reinier/rlkeymaps
-    // and functional buttons either
+            label = "ARROW_FUNC";
+        };
 
+        emdsh: emdsh {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings =
+                <&kp SPACE &kp MINUS &kp MINUS &kp SPACE>,
+                <&macro_press>;
+
+            label = "EMDSH";
+        };
+    };
+
+    behaviors {
+        bhm: balanced_homerow_mods {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;    // <---[[moderate duration]]
+            quick-tap-ms = <0>;
+            flavor = "balanced";
+            bindings = <&kp>, <&kp>;
+        };
+
+        arrow_func_tap: arrow_func_tap {
+            compatible = "zmk,behavior-tap-dance";
+            label = "ARROW_FUNC_TAP";
+            #binding-cells = <0>;
+            bindings = <&kp GREATER_THAN>, <&arrow_func>;
+        };
+
+        underspace: underspace {
+            compatible = "zmk,behavior-mod-morph";
+            label = "UNDERSPACE";
+            bindings = <&lt 1 SPACE>, <&kp UNDER>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_RSFT)>;
+        };
+    };
 
     keymap {
         compatible = "zmk,keymap";
- 
+
         default_layer {
+            // -----------------------------------------------------------------------------------------
+            // |  TAB |  Q  |  W  |  E  |  R  |  T  |   |  Y  |  U   |  I  |  O  |  P  | BSPC |
+            // | CTRL |  A  |  S  |  D  |  F  |  G  |   |  H  |  J   |  K  |  L  |  ;  |  '   |
+            // | SHFT |  Z  |  X  |  C  |  V  |  B  |   |  N  |  M   |  ,  |  .  |  /  | ESC  |
+            //                    | GUI | LWR | SPC |   | ENT | RSE  | ALT |
+
             bindings = <
-     // ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮   ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
-           &kp ESC        &kp Q         &kp W         &kp E        &kp R         &kp T              &kp Y         &kp U         &kp I         &kp O         &kp P         &lt FLR LEFT_BRACKET
-     // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-           &mt LALT TAB   &kp A         &kp S         &kp D        &kp F          &kp G              &kp H         &kp J          &kp K         &kp L         &kp SEMI      &sqtctrl
-     // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-           &kp LSHFT     &kp Z         &kp X         &tdC           &tdV         &kp B                 &kp N       &kp M         &kp COMMA     &kp DOT       &kp FSLH       &kp LEFT_BRACKET
-     // ╰─────────────┴─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┴─────────────╯
-                                                     &kp LCTRL     &mo LWR      &mt LGUI RET     &lt RSE SPACE   &kp BSPC    &lt AJT DEL 
-     //                                           ╰─────────────┴─────────────┴─────────────╯   ╰─────────────┴─────────────┴─────────────╯
+&kp LMETA  &kp Q         &kp W            &kp E              &kp R         &kp T        &kp Y      &kp U            &kp I               &kp O            &kp P                 &kp DELETE
+&kp LCTRL  &bhm LMETA A  &bhm LEFT_ALT S  &bhm LEFT_SHIFT D  &bhm LCTRL F  &kp G        &kp H      &bhm RCTRL J     &bhm RIGHT_SHIFT K  &bhm LEFT_ALT L  &bhm LMETA SEMICOLON  &kp SQT
+&sk LSHFT  &kp Z         &kp X            &kp C              &kp V         &kp B        &kp N      &kp M            &kp COMMA           &kp DOT          &kp FSLH              &kp RIGHT_ALT
+                                          &kp LCTRL          &underspace   &lt 4 TAB    &lt 3 RET  &lt 2 BACKSPACE  &sk RIGHT_SHIFT
             >;
         };
-        lower_layer {
+
+        nav_layer {
             bindings = <
-     // ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮   ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
-           &kp GRAVE      &kp N1         &kp N2        &kp N3        &kp N4        &kp N5            &kp N6        &kp N7        &kp N8        &kp N9        &kp N0       &kp F8
-     // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-           &kp TILDE      &kp EXCL       &kp AT       &kp HASH      &kp DLLR     &kp PRCNT         &kp CARET     &kp AMPS      &kp ASTRK      &kp LPAR      &kp RPAR      &kp LCTRL
-     // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-           &kp LSHFT      &none          &none        &kp CAPS    &kp LG(F11)   &kp LG(F12)       &kp KP_PLUS   &kp KP_EQUAL    &none         &none        &kp BSLH        &kp F10
-     // ╰─────────────┴─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┴─────────────╯
-                                                     &none         &none          &kp LGUI         &kp KP_N1     &kp KP_N2     &kp KP_N3
-     //                                           ╰─────────────┴─────────────┴─────────────╯   ╰─────────────┴─────────────┴─────────────╯
+&trans  &trans    &trans    &trans          &trans            &trans    &mkp LCLK          &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_UP  &mmv MOVE_RIGHT  &mkp RCLK
+&trans  &kp LGUI  &kp LALT  &kp LEFT_SHIFT  &kp LEFT_CONTROL  &trans    &kp K_APPLICATION  &kp LEFT        &kp DOWN_ARROW  &kp UP_ARROW  &kp RIGHT        &kp K_CMENU
+&trans  &trans    &trans    &trans          &trans            &trans    &mkp MB4           &kp HOME        &kp PAGE_DOWN   &kp PG_UP     &kp END          &mkp MB5
+                            &trans          &trans            &trans    &trans             &trans          &trans
             >;
         };
-        raise_layer {
+
+        symb_layer {
             bindings = <
-    // ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮   ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
-           &none          &none      &kp PG_UP      &kp UP        &kp PG_DN     &kp HOME          &kp HOME     &kp PG_UP     &kp UP        &kp PG_DN     &kp CARET     &kp F8
-    // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-           &none          &none      &kp LEFT       &kp DOWN      &kp RIGHT     &kp END           &kp END      &kp LEFT      &kp DOWN      &kp RIGHT     &kp MINUS      &kp F9
-    // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-            &trans        &none         &none      &none          &none         &kp F15           &kp F16       &kp F23       &none         &none         &none        &kp F10
-    // ╰─────────────┴─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┴─────────────╯
-                                                      &trans      &trans        &trans        &trans         &trans         &trans 
-    //                                           ╰─────────────┴─────────────┴─────────────╯   ╰─────────────┴─────────────┴─────────────╯
-            >; 
+&trans  &kp EXCLAMATION       &kp QUESTION     &kp LEFT_BRACE                    &kp RIGHT_BRACE               &kp PLUS        &kp DOLLAR      &kp GRAVE                &kp LS(PERCENT)             &kp LS(NUMBER_3)   &kp CARET            &trans
+&trans  &kp LESS_THAN         &arrow_func_tap  &bhm LEFT_SHIFT LEFT_PARENTHESIS  &bhm LCTRL RIGHT_PARENTHESIS  &kp MINUS       &kp EQUAL       &bhm RCTRL SINGLE_QUOTE  &bhm RIGHT_SHIFT AMPERSAND  &kp DOUBLE_QUOTES  &kp LS(SEMICOLON)    &trans
+&trans  &kp NON_US_BACKSLASH  &kp SLASH        &kp LEFT_BRACKET                  &kp RIGHT_BRACKET             &kp ASTERISK    &kp UNDERSCORE  &kp AT_SIGN              &kp LS(NON_US_BACKSLASH)    &kp NON_US_HASH    &kp LS(NON_US_HASH)  &trans
+                                               &trans                            &trans                        &trans          &trans          &trans                   &trans
+            >;
         };
-        fbuttons_layer {
+
+        num_layer {
             bindings = <
-    // ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮   ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
-           &kp F1        &kp F2        &kp F3         &kp F4        &kp F5        &kp F6            &none         &none        &kp LALT     &kp LSHFT     &kp LCTRL      &none 
-    // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-           &kp F7        &kp F8        &kp F9         &kp F10       &kp F11       &kp F12           &none         &none        &none        &none         &none          &none 
-    // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-           &trans        &none         &none          &none         &none         &none             &none         &none        &none        &none         &none          &none 
-    // ╰─────────────┴─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┴─────────────╯
-                                                      &trans        &trans        &trans             &trans        &trans       &trans 
-    //                                           ╰─────────────┴─────────────┴─────────────╯   ╰─────────────┴─────────────┴─────────────╯
-            >; 
+&kp ESC  &kp F1      &kp F2      &kp F3      &kp F4               &kp F5        &kp F6      &kp F7               &kp F8      &kp F9      &kp F10     &kp F11
+&trans   &kp N1      &kp N2      &kp N3      &bhm LCTRL NUMBER_4  &kp N5        &kp N6      &bhm RCTRL NUMBER_7  &kp N8      &kp N9      &kp N0      &trans
+&trans   &kp LS(N1)  &kp LS(N2)  &kp LS(N3)  &kp LS(N4)           &kp LS(N5)    &kp LS(N6)  &kp LS(N7)           &kp LS(N8)  &kp LS(N9)  &kp LS(N0)  &trans
+                                 &trans      &kp UNDER            &trans        &trans      &trans               &trans
+            >;
         };
-        adjust_layer {
+
+        kb_utils {
             bindings = <
-    // ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮   ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
-         &bootloader    &sys_reset    &none           &none         &none         &none             &none         &none         &none         &none       &sys_reset   &bootloader
-    // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-            &none        &none        &none         &kp PSCRN  &kp LC(PSCRN)   &none                &none         &none         &none         &none         &none        &none
-    // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-           &none       &none           &none         &none         &none          &none             &none         &none         &none         &none         &none         &none
-    // ╰─────────────┴─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┴─────────────╯
-                                                      &none        &none        &none            &none        &none          &none
-    //                                           ╰─────────────┴─────────────┴─────────────╯   ╰─────────────┴─────────────┴─────────────╯
-            >; 
+&bootloader  &none           &none         &none             &none         &none           &none     &mkp MB1        &mkp MB2        &mkp MB3      &none            &studio_unlock
+&none        &kp C_PREVIOUS  &kp C_MUTE    &kp C_PLAY_PAUSE  &kp C_NEXT    &none           &none     &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_UP  &mmv MOVE_RIGHT  &none
+&bt BT_CLR   &bt BT_SEL 0    &bt BT_SEL 1  &bt BT_SEL 2      &bt BT_SEL 3  &bt BT_SEL 4    &none     &mkp MB4        &msc SCRL_DOWN  &msc SCRL_UP  &mkp MB5         &none
+                                           &none             &none         &none           &mkp MB1  &mkp MB2        &none
+            >;
         };
     };
-};
- 
 
+    conditional_layers { compatible = "zmk,conditional-layers"; };
+};
