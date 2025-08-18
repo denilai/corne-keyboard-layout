@@ -22,3 +22,10 @@ and "corne_peripheral_right-nice_nano_v2-zmk.uf2" for the right part
 
 ![5](https://github.com/user-attachments/assets/eda87411-e599-4773-a147-10708c871826)
 
+
+## Мысли по дальнейшему улучшению
+
+- возможность зажимать delete как backspace (чтобы удалять много символов)
+- переключение языка не по GUI Space, так как это вызывает ложные нажатия Enter (GUI) при смене языка
+- цифры в виде numlock (+ слой с символами по другой клавише)
+- убрать tap dance по ctrl c ctrl v
