@@ -87,7 +87,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   num:
-  - {t: ▽, type: trans}
+  - {t: '`', s: '~'}
   - Sft+1
   - Sft+2
   - Sft+3
@@ -99,7 +99,7 @@ layers:
   - Sft+9
   - Sft+0
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - '~'
   - '1'
   - '2'
   - '3'
@@ -111,21 +111,21 @@ layers:
   - '9'
   - '0'
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: _, type: held}
-  - {t: ▽, type: trans}
+  - ⇧
+  - ''
+  - ''
+  - ''
+  - Gui+F11
+  - Gui+F12
+  - ''
+  - KP EQUAL
+  - ''
+  - ''
+  - \
+  - F10
+  - ''
+  - {type: held}
+  - ''
   - KP 1
   - KP 2
   - KP 3
