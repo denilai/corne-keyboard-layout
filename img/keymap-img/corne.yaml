@@ -44,36 +44,36 @@ layers:
   - {t: ⌫, h: kb_utils}
   - DEL
   nav:
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
   - MOUSE ←
   - MOUSE ↓
   - MOUSE ↑
   - MOUSE →
   - LClk
   - '&mkp RCLK'
-  - {t: ▽, type: trans}
-  - ⌘
-  - ⎇
-  - ⇧
-  - ⌃
-  - {t: ▽, type: trans}
+  - MOUSE ←
+  - MOUSE ↓
+  - MOUSE ↑
+  - MOUSE →
+  - LClk
+  - '&mkp RCLK'
   - ←
   - ↓
   - ↑
   - →
   - MENU
   - CMENU
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - ←
+  - ↓
+  - ↑
+  - →
+  - MENU
+  - CMENU
+  - BACK
+  - HOME
+  - PG DN
+  - PG UP
+  - END
+  - FORWARD
   - BACK
   - HOME
   - PG DN
