@@ -13,7 +13,7 @@ layers:
   - O
   - P
   - '['
-  - ⇧
+  - ⌃
   - {t: A, h: ⌘}
   - {t: S, h: ⎇}
   - {t: D, h: ⇧}
@@ -24,8 +24,8 @@ layers:
   - {t: K, h: ⇧}
   - {t: L, h: ⎇}
   - {t: ;, h: ⌘, s: ':'}
-  - ''''
-  - {t: ⌃, h: sticky}
+  - ⌃
+  - {t: ⇧, h: sticky}
   - Z
   - X
   - C
@@ -36,13 +36,13 @@ layers:
   - {t: ',', s: <}
   - {t: ., s: '>'}
   - /
-  - ⎇
+  - {t: ⇧, h: sticky}
   - ⌃
   - {t: ↹, h: symb}
   - {t: ⏎, h: ⌘}
   - {t: ⎵, h: nav, s: _}
   - {t: ⌫, h: num}
-  - {t: ⇧, h: sticky}
+  - DEL
   nav:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
