@@ -12,8 +12,8 @@ layers:
   - I
   - O
   - P
-  - ⌦
-  - ⌃
+  - '['
+  - ⇧
   - {t: A, h: ⌘}
   - {t: S, h: ⎇}
   - {t: D, h: ⇧}
@@ -25,7 +25,7 @@ layers:
   - {t: L, h: ⎇}
   - {t: ;, h: ⌘, s: ':'}
   - ''''
-  - {t: ⇧, h: sticky}
+  - {t: ⌃, h: sticky}
   - Z
   - X
   - C
@@ -39,7 +39,7 @@ layers:
   - ⎇
   - ⌃
   - {t: ↹, h: symb}
-  - {t: ⏎, h: kb_utils}
+  - {t: ⏎, h: ⌘}
   - {t: ⎵, h: nav, s: _}
   - {t: ⌫, h: num}
   - {t: ⇧, h: sticky}
@@ -126,9 +126,9 @@ layers:
   - {t: ▽, type: trans}
   - {type: held}
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - KP 1
+  - KP 2
+  - KP 3
   num:
   - ESC
   - F1
@@ -211,7 +211,7 @@ layers:
   - ''
   - ''
   - ''
-  - {type: held}
+  - ''
   - LClk
   - RClk
   - ''
