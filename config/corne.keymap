@@ -1,9 +1,48 @@
 /*
  * Copyright (c) 2020 The ZMK Contributors
  *
- * SPDX-License-Identifier: MIT
+ * ==============================================================================
+ * Corne Keyboard (CRKBD) - Row-First (Horizontal) Key Indexing
+ * ==============================================================================
+ *
+ * Description:
+ * Indexing starts at 0 and proceeds from left to right across the entire row,
+ * spanning both halves, before moving down to the next row. This method
+ * is commonly used in firmware like ZMK.
+ *
+ *
+ * ------------------------------ MAIN CLUSTER ------------------------------
+ *
+ * Row 0 (Top): Indices 0 - 11
+ *                  <---------- Left Half ------->    <-------- Right Half --------->
+ *                  ┌────┬────┬────┬────┬────┬────┐   ┌────┬────┬────┬────┬────┬────┐
+ *                  │ 00 │ 01 │ 02 │ 03 │ 04 │ 05 │   │ 06 │ 07 │ 08 │ 09 │ 10 │ 11 │
+ *                  ├────┼────┼────┼────┼────┼────┤   ├────┼────┼────┼────┼────┼────┤
+ *                  │ 12 │ 13 │ 14 │ 15 │ 16 │ 17 │   │ 18 │ 19 │ 20 │ 21 │ 22 │ 23 │
+ *                  ├────┼────┼────┼────┼────┼────┤   ├────┼────┼────┼────┼────┼────┤
+ *                  │ 24 │ 25 │ 26 │ 27 │ 28 │ 29 │   │ 30 │ 31 │ 32 │ 33 │ 34 │ 35 │
+ *                  └────┴────┴────┴────┴────┴────┘   └────┴────┴────┴────┴────┴────┘
+ *
+ *
+ * ----------------------------- THUMB CLUSTERS -----------------------------
+ *
+ * Row 3 (Thumbs): Indices 36 - 41
+ *                                <- Left Cluster ->  <- Right Cluster ->
+ *                                 ┌────┬────┬────┐   ┌────┬────┬────┐
+ *                                 │ 36 │ 37 │ 38 │   │ 39 │ 40 │ 41 │
+ *                                 └────┴────┴────┘   └────┴────┴────┘
+ *
+ *
+ * Index Range Summary:
+ * -----------------------------
+ *  - Top Row:       0 - 11
+ *  - Home Row:     12 - 23
+ *  - Bottom Row:   24 - 35
+ *  - Thumb Cluster: 36 - 41
+ * -----------------------------
+ *  Total Keys: 42 (indices 0 through 41)
+ *
  */
-
 
 #define ZMK_POINTING_DEFAULT_MOVE_VAL 800  // default: 600
 #define ZMK_POINTING_DEFAULT_SCRL_VAL 20    // default: 10
@@ -192,13 +231,26 @@
     };
 
     behaviors {
-        bhm: balanced_homerow_mods {
+        lbhm: left_balanced_homerow_mods {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
-            tapping-term-ms = <200>;    // <---[[moderate duration]]
-            quick-tap-ms = <0>;
+            tapping-term-ms = <219>;    // <---[[moderate duration]]
+            quick-tap-ms = <175>;
             flavor = "balanced";
             bindings = <&kp>, <&kp>;
+            hold-trigger-key-positions = < 6 7 8 9 10 11 18 19 20 21 22 23 30 31 32 33 34 35 39 40 41 >;
+            hold-trigger-on-release;
+        };
+
+        rbhm: right_balanced_homerow_mods {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <219>;    // <---[[moderate duration]]
+            quick-tap-ms = <175>;
+            flavor = "balanced";
+            bindings = <&kp>, <&kp>;
+            hold-trigger-key-positions = < 0 1 2 3 4 5 12 13 14 15 16 17 24 25 26 27 28 29 36 37 38 >;
+            hold-trigger-on-release;
         };
 
         arrow_func_tap: arrow_func_tap {
@@ -224,7 +276,7 @@
         default_layer {
             bindings = <
 &gresc     &kp Q         &kp W            &kp E              &kp R         &kp T        &kp Y           &kp U            &kp I               &kp O            &kp P                 &kp LEFT_BRACKET
-&kp LCTRL  &bhm LMETA A  &bhm LEFT_ALT S  &bhm LEFT_SHIFT D  &bhm LCTRL F  &kp G        &kp H           &bhm RCTRL J     &bhm RIGHT_SHIFT K  &bhm LEFT_ALT L  &bhm LMETA SEMICOLON  &kp RCTRL
+&kp LCTRL  &lbhm LMETA A  &lbhm LEFT_ALT S  &lbhm LEFT_SHIFT D  &lbhm LCTRL F  &kp G        &kp H           &rbhm RCTRL J     &rbhm RIGHT_SHIFT K  &rbhm LEFT_ALT L  &rbhm LMETA SEMICOLON  &kp RCTRL
 &sk LSHFT  &kp Z         &kp X            &kp C              &kp V         &kp B        &kp N           &kp M            &kp COMMA           &kp DOT          &kp FSLH              &sk RSHFT
                                           &kp LCTRL          &lt 2 TAB     &mt LGUI RET &underspace     &lt 3 BACKSPACE  &kp DEL
             >;
@@ -241,7 +293,7 @@
         num_layer {
             bindings = <
 &kp GRAVE   &kp LS(N1)  &kp LS(N2)  &kp LS(N3)  &kp LS(N4)           &kp LS(N5)         &kp LS(N6)  &kp LS(N7)           &kp LS(N8)  &kp LS(N9)  &kp LS(N0)  &trans
-&kp TILDE   &kp N1      &kp N2      &kp N3      &bhm LCTRL NUMBER_4  &kp N5             &kp N6      &bhm RCTRL NUMBER_7  &kp N8      &kp N9      &kp N0      &trans
+&kp TILDE   &kp N1      &kp N2      &kp N3      &lbhm LCTRL NUMBER_4  &kp N5             &kp N6      &rbhm RCTRL NUMBER_7  &kp N8      &kp N9      &kp N0      &trans
 &kp LSHFT   &none       &none       &none       &kp LG(F11)          &kp LG(F12)        &none       &kp KP_EQUAL         &none       &none       &kp BSLH    &kp F10
                                     &none       &none                &none              &kp KP_N1   &kp KP_N2            &kp KP_N3
             >;
