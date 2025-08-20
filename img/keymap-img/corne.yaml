@@ -24,7 +24,7 @@ layers:
   - {t: K, h: ⇧}
   - {t: L, h: ⎇}
   - {t: ;, h: ⌘, s: ':'}
-  - ⌃
+  - '&sqtctrl'
   - {t: ⇧, h: sticky}
   - Z
   - X
