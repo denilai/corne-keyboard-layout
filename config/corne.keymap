@@ -70,7 +70,12 @@
 &lt {
     tapping-term-ms = <200>; // default 200
     flavor = "balanced"; // or hold-preferred or tap-preferred
-    quick-tap-ms = <150>;
+    quick-tap-ms = <219>;
+};
+
+&mt {
+    tapping-term-ms = <200>; // default 200
+    quick-tap-ms = <219>;
 };
 
 / {
