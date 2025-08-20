@@ -273,6 +273,13 @@
             #binding-cells = <0>;
             mods = <(MOD_RSFT)>;
         };
+
+        sqtctrl: squote_lctrl {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&kp SQT>, <&kp LC(RET)>;
+        };
     };
 
     keymap {
@@ -281,7 +288,7 @@
         default_layer {
             bindings = <
 &gresc     &kp Q         &kp W            &kp E              &kp R         &kp T        &kp Y           &kp U            &kp I               &kp O            &kp P                 &kp LEFT_BRACKET
-&kp LCTRL  &lbhm LMETA A  &lbhm LEFT_ALT S  &lbhm LEFT_SHIFT D  &lbhm LCTRL F  &kp G        &kp H           &rbhm RCTRL J     &rbhm RIGHT_SHIFT K  &rbhm LEFT_ALT L  &rbhm LMETA SEMICOLON  &kp RCTRL
+&kp LCTRL  &lbhm LMETA A  &lbhm LEFT_ALT S  &lbhm LEFT_SHIFT D  &lbhm LCTRL F  &kp G        &kp H           &rbhm RCTRL J     &rbhm RIGHT_SHIFT K  &rbhm LEFT_ALT L  &rbhm LMETA SEMICOLON  &sqtctrl
 &sk LSHFT  &kp Z         &kp X            &kp C              &kp V         &kp B        &kp N           &kp M            &kp COMMA           &kp DOT          &kp FSLH              &sk RSHFT
                                           &kp LCTRL          &lt 2 TAB     &mt LGUI RET &underspace     &lt 3 BACKSPACE  &kp DEL
             >;
