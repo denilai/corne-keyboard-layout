@@ -21,3 +21,6 @@ and "corne_peripheral_right-nice_nano_v2-zmk.uf2" for the right part
 - переключение языка не по GUI Space, так как это вызывает ложные нажатия Enter (GUI) при смене языка
 - цифры в виде numlock (+ слой с символами по другой клавише)
 - убрать tap dance по ctrl c ctrl v
+- располагать цифры с 1 по 5 в левой руке в верхнем ряду, а дальше в виде numpad  в правой руке
+- page up page down как на фото
+![alt text](img/ref.png)
