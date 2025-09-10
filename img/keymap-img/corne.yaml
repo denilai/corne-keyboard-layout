@@ -74,11 +74,11 @@ layers:
   - PG UP
   - END
   - FORWARD
-  - BACK
-  - HOME
-  - PG DN
-  - PG UP
+  - PG DOWN
   - END
+  - HOME
+  - PG UP
+  - BACK
   - FORWARD
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
