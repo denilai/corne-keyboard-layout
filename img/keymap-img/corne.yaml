@@ -132,8 +132,8 @@ layers:
   kb_utils:
   - BOOT
   - ''
-  - ''
-  - ''
+  - PSCRN
+  - LALT(PSCRN)
   - ''
   - ''
   - ''
