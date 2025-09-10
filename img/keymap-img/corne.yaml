@@ -74,11 +74,11 @@ layers:
   - PG UP
   - END
   - FORWARD
-  - '&mkp PG_DOWN'
+  - PG DOWN
   - END
   - HOME
   - PG UP
-  - MB4
+  - BACK
   - FORWARD
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
