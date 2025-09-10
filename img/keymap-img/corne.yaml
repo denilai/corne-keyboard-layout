@@ -1,0 +1,223 @@
+layout: {zmk_keyboard: corne}
+layers:
+  default:
+  - {t: ESC, s: '`'}
+  - Q
+  - W
+  - E
+  - R
+  - T
+  - Y
+  - U
+  - I
+  - O
+  - P
+  - '['
+  - ⌃
+  - {t: A, h: ⌘}
+  - {t: S, h: ⎇}
+  - {t: D, h: ⇧}
+  - {t: F, h: ⌃}
+  - G
+  - H
+  - {t: J, h: ⌃}
+  - {t: K, h: RSHIFT}
+  - {t: L, h: ⎇}
+  - {t: ;, h: ⌘, s: ':'}
+  - '&sqtctrl'
+  - {t: ⇧, h: sticky}
+  - Z
+  - X
+  - C
+  - V
+  - B
+  - N
+  - M
+  - {t: ',', s: <}
+  - {t: ., s: '>'}
+  - /
+  - {t: RSHIFT, h: sticky}
+  - ⌃
+  - {t: ↹, h: num}
+  - {t: ⏎, h: ⌘}
+  - {t: ⎵, h: nav, s: _}
+  - {t: ⌫, h: kb_utils}
+  - DEL
+  nav:
+  - MOUSE ←
+  - MOUSE ↓
+  - MOUSE ↑
+  - MOUSE →
+  - LClk
+  - '&mkp RCLK'
+  - MOUSE ←
+  - MOUSE ↓
+  - MOUSE ↑
+  - MOUSE →
+  - LClk
+  - '&mkp RCLK'
+  - ←
+  - ↓
+  - ↑
+  - →
+  - MENU
+  - CMENU
+  - ←
+  - ↓
+  - ↑
+  - →
+  - MENU
+  - CMENU
+  - BACK
+  - HOME
+  - PG DN
+  - PG UP
+  - END
+  - FORWARD
+  - BACK
+  - HOME
+  - PG DN
+  - PG UP
+  - END
+  - FORWARD
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {type: held}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  num:
+  - {t: '`', s: '~'}
+  - '!'
+  - '@'
+  - '#'
+  - $
+  - '%'
+  - ^
+  - '&'
+  - '*'
+  - (
+  - )
+  - ⌃
+  - '~'
+  - {t: '1', h: ⌘}
+  - {t: '2', h: ⎇}
+  - {t: '3', h: ⇧}
+  - {t: '4', h: ⌃}
+  - '5'
+  - '6'
+  - {t: '7', h: ⌃}
+  - {t: '8', h: RSHIFT}
+  - {t: '9', h: ⎇}
+  - {t: '0', h: ⌘}
+  - {t: ▽, type: trans}
+  - ⇧
+  - ''
+  - ''
+  - ''
+  - Gui+F11
+  - Gui+F12
+  - ''
+  - KP EQUAL
+  - ''
+  - ''
+  - \
+  - F10
+  - ''
+  - {type: held}
+  - ''
+  - KP 1
+  - KP 2
+  - KP 3
+  kb_utils:
+  - BOOT
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - LClk
+  - RClk
+  - Mid Clk
+  - ''
+  - UNLOCK
+  - ''
+  - ⏮
+  - MUTE
+  - ⏯
+  - ⏭
+  - ''
+  - MOUSE ←
+  - MOUSE ↓
+  - MOUSE ↑
+  - MOUSE →
+  - ''
+  - ''
+  - BT CLR
+  - {t: BT, h: '0'}
+  - {t: BT, h: '1'}
+  - {t: BT, h: '2'}
+  - {t: BT, h: '3'}
+  - {t: BT, h: '4'}
+  - ''
+  - BACK
+  - SCROLL ↓
+  - SCROLL ↑
+  - FORWARD
+  - ''
+  - ''
+  - ''
+  - ''
+  - LClk
+  - {t: RClk, type: held}
+  - ''
+combos:
+- p: [4, 5]
+  k: (
+- p: [6, 7]
+  k: )
+- p: [16, 17]
+  k: '['
+- p: [18, 19]
+  k: ']'
+- p: [28, 29]
+  k: '{'
+- p: [30, 31]
+  k: '}'
+- p: [15, 16]
+  k: '@'
+- p: [19, 20]
+  k: <
+- p: [0, 12]
+  k: '~'
+- p: [12, 24]
+  k: {t: '`', s: '~'}
+- p: [3, 4]
+  k: '-'
+- p: [2, 3]
+  k: +
+- p: [7, 8]
+  k: _
+- p: [8, 9]
+  k: '|'
+- p: [27, 28]
+  k: <
+- p: [17, 18]
+  k: ⇪ WORD
+  l: [default]
+- p: [5, 6]
+  k: ⇪ LOCK
+  l: [default]
+- p: [31, 32]
+  k: '>'
+- p: [11, 23]
+  k: 'VOL
+
+    UP'
+  l: [default]
+- p: [23, 35]
+  k: 'VOL
+
+    DOWN'
+  l: [default]
