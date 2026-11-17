@@ -1,0 +1,9 @@
+# Быстрый перекат A -> G (одна рука): G не в hold-trigger-позициях, A остаётся буквой
+press A
+tap G
+release A
+---
+press A
+press G
+release G
+release A

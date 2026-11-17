@@ -1,0 +1,8 @@
+# Nav + R = левый клик мыши
+press T4
+wait 250
+tap R
+release T4
+---
+mouse 0x01
+mouse 0x00

@@ -1,0 +1,8 @@
+# Удержание TAB (Num) + A = 1
+press T2
+wait 250
+tap A
+release T2
+---
+press N1
+release N1

@@ -1,0 +1,8 @@
+# Удержание пробела (Nav) + H = стрелка влево
+press T4
+wait 250
+tap H
+release T4
+---
+press LEFT
+release LEFT

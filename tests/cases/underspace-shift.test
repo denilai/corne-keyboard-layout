@@ -1,0 +1,10 @@
+# Mod-morph: sticky RSHIFT + пробел = подчёркивание
+# @xfail: сейчас печатается пробел. Sticky shift с `lazy` нажимает RSHIFT
+# уже после того, как mod-morph выбрал вариант (см. underspace-held-shift).
+tap RSFT
+tap T4
+---
+press RSHIFT
+press MINUS [LSHIFT]
+release MINUS [LSHIFT]
+release RSHIFT

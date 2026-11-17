@@ -1,0 +1,5 @@
+# Grave-escape без модификаторов = Esc
+tap ESC
+---
+press ESC
+release ESC

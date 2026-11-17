@@ -1,0 +1,15 @@
+# Комбо G+H = caps word: буквы заглавные, пробел выключает режим
+press G
+press H
+release G
+release H
+tap Q
+tap T4
+tap W
+---
+press Q [LSHIFT]
+release Q
+press SPACE
+release SPACE
+press W
+release W

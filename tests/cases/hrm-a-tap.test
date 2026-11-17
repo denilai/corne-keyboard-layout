@@ -1,0 +1,5 @@
+# Home-row mod: быстрый тап A печатает букву
+tap A
+---
+press A
+release A

@@ -1,0 +1,5 @@
+# Tap-dance: один тап = апостроф
+tap SQT
+---
+press SQT
+release SQT

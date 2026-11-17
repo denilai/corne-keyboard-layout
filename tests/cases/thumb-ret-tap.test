@@ -1,0 +1,5 @@
+# T3: тап = Enter
+tap T3
+---
+press RET
+release RET

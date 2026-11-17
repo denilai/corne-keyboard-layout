@@ -1,0 +1,10 @@
+# Mod-morph: зажатый RSHIFT (удержание K) + пробел = подчёркивание
+press K
+wait 300
+tap T4
+release K
+---
+press RSHIFT
+press MINUS [LSHIFT]
+release MINUS [LSHIFT]
+release RSHIFT

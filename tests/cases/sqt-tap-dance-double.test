@@ -1,0 +1,6 @@
+# Tap-dance: двойной тап = Ctrl+Enter
+tap SQT
+tap SQT
+---
+press RET [LCTRL]
+release RET [LCTRL]

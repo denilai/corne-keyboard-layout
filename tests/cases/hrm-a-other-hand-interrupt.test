@@ -1,0 +1,9 @@
+# A зажата, тап H правой рукой внутри tapping-term: balanced + другая рука = GUI+H
+press A
+tap H
+release A
+---
+press LGUI
+press H
+release H
+release LGUI

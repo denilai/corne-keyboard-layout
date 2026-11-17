@@ -1,0 +1,8 @@
+# Комбо LBKT+SQT = громкость +
+press LBKT
+press SQT
+release LBKT
+release SQT
+---
+press C_VOL_UP
+release C_VOL_UP

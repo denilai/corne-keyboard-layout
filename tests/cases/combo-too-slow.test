@@ -1,0 +1,11 @@
+# R и T с паузой > 30 мс: комбо не срабатывает
+press R
+wait 60
+press T
+release R
+release T
+---
+press R
+press T
+release R
+release T

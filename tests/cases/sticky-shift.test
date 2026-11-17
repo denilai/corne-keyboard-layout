@@ -1,0 +1,9 @@
+# Sticky shift: тап LSFT, затем Q = Shift+Q.
+# quick-release: shift отпускается сразу при нажатии следующей клавиши
+tap LSFT
+tap Q
+---
+press LSHIFT
+press Q
+release LSHIFT
+release Q
