@@ -7,12 +7,14 @@ ZMK (`main`, Zephyr 4.1) for Corne on nice!nano v2, with a dongle
 ![1](./img/keymap-img/corne.svg)
 
 The picture is rendered locally with [keymap-drawer](https://github.com/caksoylar/keymap-drawer)
-(version pinned in the script, runs in Docker if not installed). After changing
-`config/corne.keymap`, re-render and commit the images with it:
+(version pinned in the script, runs in Docker if not installed) and committed
+together with the keymap. CI does not draw or check it.
 
 ```sh
 scripts/draw-keymap.sh           # updates img/keymap-img/corne.{yaml,svg}
-scripts/draw-keymap.sh --check   # CI: fails if the images are outdated
+scripts/draw-keymap.sh --check   # fails if the images are outdated
+git config core.hooksPath .githooks   # once per clone: pre-commit hook re-renders
+                                      # and stages the images when the keymap is committed
 ```
 
 ## Firmware

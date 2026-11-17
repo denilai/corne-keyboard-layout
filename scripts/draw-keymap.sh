@@ -2,7 +2,7 @@
 # Draw the keymap picture with keymap-drawer (img/keymap-img/corne.{yaml,svg}).
 #
 #   scripts/draw-keymap.sh          # render and overwrite the images
-#   scripts/draw-keymap.sh --check  # fail if the committed images are outdated (CI)
+#   scripts/draw-keymap.sh --check  # fail if the committed images are outdated
 #
 # Uses `keymap` from PATH if it is the pinned version, otherwise runs it in a
 # python container. Version is pinned so local and CI renders are identical.

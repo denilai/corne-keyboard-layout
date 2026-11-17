@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Re-render the keymap drawing when the keymap or the drawer config is
+# committed, and add the images to the same commit. Enable once per clone:
+#   git config core.hooksPath .githooks
+# Renders from the working tree: stage the whole keymap file, not parts of it.
+set -euo pipefail
+if git diff --cached --name-only |
+    grep -qxE 'config/corne\.keymap|img/keymap-img/keymap_drawer\.config\.yaml'; then
+    scripts/draw-keymap.sh
+    git add img/keymap-img/corne.yaml img/keymap-img/corne.svg
+fi
