@@ -1,0 +1,5 @@
+# ZMK Studio: give the logged-in user access to the ZMK USB serial port
+# (CDC ACM from the studio-rpc-usb-uart snippet). VID:PID is ZMK's default.
+# ID_MM_DEVICE_IGNORE keeps ModemManager from probing (and grabbing) the port.
+# Install: sudo cp scripts/udev/70-zmk-studio.rules /etc/udev/rules.d/ && sudo udevadm control --reload-rules
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1d50", ATTRS{idProduct}=="615e", TAG+="uaccess", SYMLINK+="zmk-studio", ENV{ID_MM_DEVICE_IGNORE}="1"
