@@ -8,6 +8,7 @@ on:
       - "config/**"
       - "tests/**"
       - "scripts/**"
+      - "img/keymap-img/**"
       - ".github/workflows/build.yml"
 
 jobs:
@@ -41,6 +42,19 @@ jobs:
           west zephyr-export
       - name: Run keymap tests
         run: python3 tests/run_tests.py
+
+  drawing:
+    name: Keymap drawing is up to date
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install keymap-drawer (version pinned in scripts/draw-keymap.sh)
+        run: pip install "keymap-drawer==$(sed -n 's/^VERSION="\(.*\)"/\1/p' scripts/draw-keymap.sh)"
+      - name: Check drawing
+        run: scripts/draw-keymap.sh --check
 
   build:
     needs: test

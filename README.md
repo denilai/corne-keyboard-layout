@@ -6,6 +6,15 @@ ZMK (`main`, Zephyr 4.1) for Corne on nice!nano v2, with a dongle
 
 ![1](./img/keymap-img/corne.svg)
 
+The picture is rendered locally with [keymap-drawer](https://github.com/caksoylar/keymap-drawer)
+(version pinned in the script, runs in Docker if not installed). After changing
+`config/corne.keymap`, re-render and commit the images with it:
+
+```sh
+scripts/draw-keymap.sh           # updates img/keymap-img/corne.{yaml,svg}
+scripts/draw-keymap.sh --check   # CI: fails if the images are outdated
+```
+
 ## Firmware
 
 GitHub Actions (or `scripts/zmk-docker.sh build` locally, into `firmware/`) builds:
