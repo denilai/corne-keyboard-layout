@@ -2,7 +2,7 @@ device: Corne
 layout* 6 Column: 42 keys
 layout  5 Column: 36 keys
 behaviors: ARROW_FUNC, ARROW_FUNC_TAP, Bluetooth, Bootloader, Caps Word, EMDSH, Grave/Escape, Key Press, Key Repeat, Key Toggle, Layer-Tap, Mod-Tap, Momentary Layer, Mouse Key Press, None, Output Selection, Reset, Sticky Key, Sticky Layer, Studio Unlock, To Layer, Toggle Layer, Transparent, UNDERSPACE, left_balanced_homerow_mods, mouse_move, mouse_scroll, right_balanced_homerow_mods, squote_lctrl
-layers: 4 used, 0 free
+layers: 4 used, 2 free
 
 [Base] (42 keys)
   Grave/Esca |          Q |          W |          E |          R |          T |          Y |          U |          I |          O |          P |       LBKT
@@ -12,7 +12,7 @@ layers: 4 used, 0 free
 
 [Nav] (42 keys)
   mouse_move | mouse_move | mouse_move | mouse_move | Mouse Key  | Mouse Key  | mouse_move | mouse_move | mouse_move | mouse_move | Mouse Key  | Mouse Key 
-        LEFT |       DOWN |         UP |      RIGHT |      K_APP |      K_APP |       LEFT |       DOWN |         UP |      RIGHT |      K_APP |      K_APP
+        LEFT |       DOWN |         UP |      RIGHT |      K_APP |       None |       LEFT |       DOWN |         UP |      RIGHT |      K_APP |       None
   Mouse Key  |       HOME |      PG_DN |      PG_UP |        END | Mouse Key  | Mouse Key  |       HOME |      PG_DN |      PG_UP |        END | Mouse Key 
                                          Transparen | Transparen | Transparen | Transparen | Transparen | Transparen
 
@@ -23,7 +23,7 @@ layers: 4 used, 0 free
                                                None |       None |       None |      KP_N1 |      KP_N2 |      KP_N3
 
 [Utils] (42 keys)
-  Bootloader |       None |      PSCRN |       None |       None |       None |       None | Mouse Key  | Mouse Key  | Mouse Key  |       None | Studio Unl
+        None |       None |      PSCRN |       None |       None |       None |       None | Mouse Key  | Mouse Key  | Mouse Key  |       None | Studio Unl
         None |     C_PREV |     C_MUTE |       C_PP |     C_NEXT |       None | mouse_move | mouse_move | mouse_move | mouse_move |       None |       None
    Bluetooth | Bluetooth  | Bluetooth  | Bluetooth  | Bluetooth  | Bluetooth  |       None | Mouse Key  | mouse_scro | mouse_scro | Mouse Key  |       None
                                                None |       None |       None | Mouse Key  | Mouse Key  |       None

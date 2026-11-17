@@ -37,6 +37,13 @@ bootloader, and at the end reads the keymap over Studio and compares it with
 `tests/hardware/keymap.txt`. Left and right halves are not distinguishable by
 the script: connect the one it asks for.
 
+### Bootloader key
+
+The keymap has no `&bootloader` key. If one is added back, note that it runs
+on the part where the key is pressed (ZMK "event source" locality): a key on
+the left half puts the **left half** into the bootloader, never the dongle.
+The dongle only enters the bootloader by double-tapping its reset.
+
 ## ZMK Studio
 
 Studio runs on the central part (dongle, or left half without a dongle), over USB.
@@ -52,6 +59,9 @@ Studio runs on the central part (dongle, or left half without a dongle), over US
    Studio locks again on USB disconnect or after 10 minutes idle.
 4. Edit keys and layers, then **Save**. Changes live in the keyboard flash and
    override `config/corne.keymap` until "Restore Stock Settings".
+
+Two empty layers (`extra1`, `extra2`, `status = "reserved"`) are reserved in
+the keymap for Studio: add them with `+` in the layer list.
 
 Studio edits bindings and layers only. Combos, macros, tap-dance and
 home-row-mod behaviors are defined in `config/corne.keymap` and can be

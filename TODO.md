@@ -15,4 +15,4 @@
 
 - sticky RSHIFT + пробел печатает пробел, а не `_` (тест `tests/cases/underspace-shift.test`, `@xfail`).
   `&sk` с `lazy` нажимает shift уже после того, как mod-morph `underspace` выбрал вариант.
-  С зажатым shift работает.
+  С зажатым shift работает. Решено не исправлять: `_` есть на комбо U+I.
