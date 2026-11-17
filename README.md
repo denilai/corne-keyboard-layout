@@ -1,26 +1,109 @@
-# CORNE ZMK WITH DONGLE 
+# CORNE ZMK WITH DONGLE
 
-If you use Corne, Nijuni, Dao or any other keyboard with corne-like matrix you may clone this repo
-After that, go to "Actions" tab in github and enable it
-
-You will get archive with firmware
-
-If you use dongle, load "corne_central_dongle-nice-nano-v2-zmk.uf2" if you use nice!nano controller for dongle
-Or "corne_central_dongle-seeeduino_xiao_ble-zmk.uf2" if you use xiao for dongle
-Also, if you use dongle load "peripheral" uf2 for left and right parts
-
-If you don't use Dongle, than load "corne_central_left-nice_nano_v2-zmk.uf2" on the left part
-and "corne_peripheral_right-nice_nano_v2-zmk.uf2" for the right part
+ZMK (`main`, Zephyr 4.1) for Corne on nice!nano v2, with a dongle
+(nice!nano or XIAO BLE) or without one. Keymap is editable live in
+[ZMK Studio](https://zmk.studio).
 
 ![1](./img/keymap-img/corne.svg)
 
+## Firmware
 
-## Мысли по дальнейшему улучшению
+GitHub Actions (or `scripts/zmk-docker.sh build` locally, into `firmware/`) builds:
 
-- возможность зажимать delete как backspace (чтобы удалять много символов)
-- переключение языка не по GUI Space, так как это вызывает ложные нажатия Enter (GUI) при смене языка
-- цифры в виде numlock (+ слой с символами по другой клавише)
-- убрать tap dance по ctrl c ctrl v
-- располагать цифры с 1 по 5 в левой руке в верхнем ряду, а дальше в виде numpad  в правой руке
-- page up page down как на фото
-![alt text](img/ref.png)
+| Setup | Part | File |
+|---|---|---|
+| dongle | dongle (nice!nano) | `corne_central_dongle-nice_nano_zmk.uf2` |
+| dongle | dongle (XIAO BLE) | `corne_central_dongle-xiao_ble_zmk.uf2` |
+| dongle | left / right half | `corne_peripheral_left-…`, `corne_peripheral_right-…` |
+| no dongle | left half (central) / right half | `corne_central_left-…`, `corne_peripheral_right-…` |
+| any | clear bonds and settings | `settings_reset-…` |
+
+Flash all parts from the same build: the split protocol between dongle and
+halves must match. Each part is flashed separately over USB: double-tap reset,
+the part shows up as a UF2 drive (`NICENANO`, `XIAO-SENSE`), copy the `.uf2`
+onto it, the part reboots.
+
+```sh
+scripts/flash-all.sh              # guided: dongle, left, right, then Studio check
+scripts/flash-all.sh --no-dongle  # left as central, right
+scripts/flash-all.sh --reset      # settings_reset before each part (halves don't pair)
+scripts/flash.sh dongle|left|right|central-left|reset   # one part
+```
+
+`flash.sh` waits for the drive, picks the file by board (`INFO_UF2.TXT`),
+copies it and waits for the drive to disappear. `flash-all.sh` prompts for
+each part, refuses to start a step while another part is still in the
+bootloader, and at the end reads the keymap over Studio and compares it with
+`tests/hardware/keymap.txt`. Left and right halves are not distinguishable by
+the script: connect the one it asks for.
+
+## ZMK Studio
+
+Studio runs on the central part (dongle, or left half without a dongle), over USB.
+
+1. Connect the central by USB.
+2. Open <https://zmk.studio> in Chrome/Edge (Safari has no WebSerial), or the
+   desktop app from [zmk-studio releases](https://github.com/zmkfirmware/zmk-studio/releases)
+   (`.dmg` for macOS).
+   Linux: `.deb` from the same page, then "ZMK Studio" in the app menu.
+   Only one client can hold the serial port: close the others first
+   (`lsof /dev/ttyACM0` shows who holds it).
+3. Unlock: `Utils` layer (hold BSPC thumb) + top-right key (`&studio_unlock`).
+   Studio locks again on USB disconnect or after 10 minutes idle.
+4. Edit keys and layers, then **Save**. Changes live in the keyboard flash and
+   override `config/corne.keymap` until "Restore Stock Settings".
+
+Studio edits bindings and layers only. Combos, macros, tap-dance and
+home-row-mod behaviors are defined in `config/corne.keymap` and can be
+assigned to keys in Studio.
+
+Linux: the serial port needs user access. Install the udev rule once:
+
+```sh
+sudo cp scripts/udev/70-zmk-studio.rules /etc/udev/rules.d/ && sudo udevadm control --reload-rules
+```
+
+Check that the keyboard answers Studio and reports the expected keymap
+(read-only; needs `pyserial`):
+
+```sh
+scripts/studio_check.py                  # print layers read from the keyboard
+scripts/studio_check.py --check tests/hardware/keymap.txt   # diff against the reference dump
+```
+
+`tests/hardware/keymap.txt` is the keymap read from the flashed keyboard
+(`--save` to refresh it after intentional changes).
+
+## Keymap tests
+
+`tests/cases/*.test` script key presses on the real `config/corne.keymap` and
+list the expected HID output. The firmware is compiled for ZMK's `native_sim`
+board with a mock key matrix and runs as a Linux process: no keyboard and no
+host OS involved.
+
+```text
+# Удержание A (LGUI) + клавиша правой руки = GUI+H
+press A
+wait 300
+tap H
+release A
+---
+press LGUI
+press H
+release H
+release LGUI
+```
+
+- Script: `press|release|tap <key>`, `wait <ms>` (gap after the previous
+  event, default 10 ms). Key names are base-layer legends, thumbs are `T1`–`T6`
+  (see `POSITIONS` in `tests/run_tests.py`).
+- Expected: `press|release <usage> [MODS]`, `mouse <buttons>`.
+- `@xfail` in a comment marks a known issue.
+
+```sh
+scripts/zmk-docker.sh update        # once: fetch ZMK/Zephyr into a Docker volume
+scripts/zmk-docker.sh test          # all cases; `test hrm combo` filters by name
+ACCEPT=1 scripts/zmk-docker.sh test NAME   # write actual output as expected
+```
+
+CI runs the tests before building firmware.
