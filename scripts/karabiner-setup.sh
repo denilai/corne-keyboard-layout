@@ -17,10 +17,10 @@
 #     With "iso" macOS swaps ` ~ and § ± on the Corne.
 #   - Corne fn_function_keys: F1..F12 stay F-keys (Karabiner maps them to
 #     brightness/volume by default).
-#   - Corne simple_modifications: Control <-> Command, left and right. macOS
-#     "Modifier Keys" settings do not apply to a device Karabiner grabs (the
-#     events come from its virtual keyboard), so the swap set there for the
-#     Corne is repeated here.
+#
+# Modifiers are not remapped here: the macOS firmware build already puts Cmd
+# and Ctrl where they belong (README, "Target OS"). The Corne entry is
+# rewritten as a whole, so remaps left from earlier versions are removed.
 #   - complex_modifications: rules whose description starts with "Corne:" are
 #     replaced with the ones from macos/karabiner/*.json (the punctuation rule).
 #     The rule files are also copied to assets/complex_modifications, where the
@@ -58,13 +58,9 @@ profile.setdefault("virtual_hid_keyboard", {})["keyboard_type_v2"] = "ansi"
 
 ours = [CORNE, BUILT_IN]
 devices = [d for d in profile.get("devices", []) if d.get("identifiers") not in ours]
-swap = [("left_control", "left_command"), ("right_control", "right_command")]
 devices.append({
     "identifiers": CORNE,
     "ignore": False,
-    "simple_modifications": [
-        {"from": {"key_code": a}, "to": [{"key_code": b}]} for x, y in swap for a, b in ((x, y), (y, x))
-    ],
     "fn_function_keys": [
         {"from": {"key_code": f"f{i}"}, "to": [{"key_code": f"f{i}"}]} for i in range(1, 13)
     ],

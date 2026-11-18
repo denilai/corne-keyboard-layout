@@ -1,0 +1,9 @@
+# @os linux
+# Удержание BSPC (Utils) + R = скриншот: Print (окно скриншота GNOME)
+press T5
+wait 250
+tap R
+release T5
+---
+press PSCRN
+release PSCRN

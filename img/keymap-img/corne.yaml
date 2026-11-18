@@ -13,17 +13,17 @@ layers:
   - O
   - P
   - '['
-  - ⌃
-  - {t: A, h: ⌘}
+  - ⌘
+  - {t: A, h: ⌃}
   - {t: S, h: ⎇}
   - {t: D, h: ⇧}
-  - {t: F, h: ⌃}
+  - {t: F, h: ⌘}
   - G
   - H
-  - {t: J, h: ⌃}
+  - {t: J, h: ⌘}
   - {t: K, h: RSHIFT}
   - {t: L, h: ⎇}
-  - {t: ;, h: ⌘, s: ':'}
+  - {t: ;, h: ⌃, s: ':'}
   - '&sqtctrl'
   - {t: ⇧, h: sticky}
   - Z
@@ -37,12 +37,12 @@ layers:
   - {t: ., s: '>'}
   - /
   - {t: RSHIFT, h: sticky}
-  - ⌃
+  - ⌘
   - {t: ↹, h: Num}
-  - {t: ⏎, h: ⌘}
+  - {t: ⏎, h: ⌃}
   - {t: ⎵, h: Nav, s: _}
   - {t: ⌫, h: Utils}
-  - DEL
+  - {t: DEL, h: Hyper}
   Nav:
   - MOUSE ←
   - MOUSE ↓
@@ -60,20 +60,20 @@ layers:
   - ↓
   - ↑
   - →
-  - MENU
-  - ''
+  - Mission Ctrl
+  - App wins
   - ←
   - ↓
   - ↑
   - →
-  - MENU
-  - ''
+  - Desk ←
+  - Desk →
   - BACK
-  - HOME
-  - PG DN
-  - PG UP
-  - END
-  - FORWARD
+  - Undo
+  - Cut
+  - Copy
+  - Paste
+  - Redo
   - BACK
   - HOME
   - PG DN
@@ -98,25 +98,25 @@ layers:
   - '*'
   - (
   - )
-  - ⌃
+  - ⌘
   - '~'
-  - {t: '1', h: ⌘}
+  - {t: '1', h: ⌃}
   - {t: '2', h: ⎇}
   - {t: '3', h: ⇧}
-  - {t: '4', h: ⌃}
+  - {t: '4', h: ⌘}
   - '5'
   - '6'
-  - {t: '7', h: ⌃}
+  - {t: '7', h: ⌘}
   - {t: '8', h: RSHIFT}
   - {t: '9', h: ⎇}
-  - {t: '0', h: ⌘}
+  - {t: '0', h: ⌃}
   - {t: ▽, type: trans}
   - ⇧
   - ''
   - ''
   - ''
-  - Gui+F11
-  - Gui+F12
+  - Ctl+F11
+  - Ctl+F12
   - ''
   - KP EQUAL
   - ''
@@ -130,24 +130,24 @@ layers:
   - ','
   - '?'
   Utils:
-  - ''
-  - ''
-  - PSCRN
-  - ''
-  - ''
-  - ''
+  - Lock
+  - BRI DN
+  - BRI UP
+  - Shot screen
+  - Shot area
+  - Shot / rec
   - ''
   - LClk
   - RClk
   - Mid Clk
   - ''
   - UNLOCK
-  - ''
-  - ⏮
   - MUTE
-  - ⏯
+  - VOL DN
+  - VOL UP
+  - ⏮
+  - PP
   - ⏭
-  - ''
   - MOUSE ←
   - MOUSE ↓
   - MOUSE ↑

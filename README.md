@@ -4,6 +4,83 @@ ZMK (`main`, Zephyr 4.1) for Corne on nice!nano v2, with a dongle
 (nice!nano or XIAO BLE) or without one. Keymap is editable live in
 [ZMK Studio](https://zmk.studio).
 
+## Principle: everything in the firmware, the computer stays default
+
+The keyboard is meant to work on a computer with default settings: stock input
+sources (ABC, Russian – PC), stock system shortcuts, no key remapping in the
+OS. Every key, combo, modifier position and shortcut is defined in
+`config/corne.keymap`, and the keymap sends the shortcuts the OS already
+knows (e.g. Cmd+Shift+4 for a screenshot) instead of relying on custom ones.
+
+Host-side setup is the exception and is allowed only when the firmware cannot
+do it. Each exception is listed here, kept in this repo and applied by a script:
+
+- macOS, punctuation in any input source: Karabiner-Elements (see
+  [below](#macos-punctuation-in-any-input-source)). The keyboard cannot know the
+  active input source, so it cannot pick the key for `.` or `,`.
+- App launch shortcuts: the keymap sends a fixed chord (Hyper+letter), the OS
+  binds it to an app (see [App launch](#app-launch-hyper)). The firmware cannot
+  start programs.
+
+## Target OS: one keymap, a build per OS
+
+Shortcuts differ between systems (Cmd vs Ctrl, screenshots, lock), so the
+central part (dongle, or left half without a dongle) is built for one OS:
+`build.yaml` passes `-DOS_MAC` or `-DOS_LINUX` (GNOME) to the keymap, and the
+"Target OS" block at the top of `config/corne.keymap` defines everything that
+differs. The layers use only those names. A build without the flag fails.
+Halves have one build for both systems. To switch OS, reflash the central part.
+
+Modifiers are named by role:
+
+| Role | macOS | Linux | Keys |
+|---|---|---|---|
+| `SC`, shortcut modifier (copy, paste, save) | Cmd | Ctrl | F, J (hold), left thumb, outer left pinky |
+| `OT`, the other one | Ctrl | Super | A, ; (hold), Enter thumb (hold) |
+
+So copy is the same physical chord on both systems (`SC`+C), and nothing is
+remapped in the OS.
+
+System keys, with the default shortcuts they send:
+
+| Key | macOS | Linux (GNOME) |
+|---|---|---|
+| Utils (hold BSPC) + Esc: lock | Ctrl+Cmd+Q | Super+L |
+| Utils + Q / W: display brightness − / + | `C_BRI_DN` / `C_BRI_UP` | same |
+| Utils + E / R / T: screenshot screen / area / recording | Cmd+Shift+3 / 4 / 5 | Shift+Print / Print / Ctrl+Alt+Shift+R |
+| Utils + (Ctrl key, A, S, D, F, G): mute, volume −, volume +, prev, play/pause, next | consumer keys | same |
+| Nav (hold Space) + F / G: overview / app windows | Ctrl+↑ / Ctrl+↓ | Super / Super+A (app grid) |
+| Nav + ; / ': previous / next desktop | Ctrl+← / Ctrl+→ | Ctrl+Alt+← / → |
+| Nav + Z X C V B: undo, cut, copy, paste, redo | Cmd+Z… / Cmd+Shift+Z | Ctrl+Z… / Ctrl+Shift+Z |
+| Del thumb (hold): Hyper | Ctrl+Opt+Shift+Cmd | Ctrl+Alt+Shift+Super |
+
+The MacBook keyboard backlight has no HID usage for an external keyboard: use
+Control Center. F1–F12 are plain F-keys on both systems (macOS applies the
+"F1, F2 as standard keys" setting to Apple keyboards only); media and
+brightness are separate consumer keys, so no Fn key is needed.
+
+### App launch: Hyper
+
+Hold the Del thumb and press a letter: Hyper+letter is free on both systems.
+Bind it in the OS:
+
+- macOS: Shortcuts app → new shortcut → action "Open App" → shortcut details
+  (ⓘ) → "Add Keyboard Shortcut" → press Hyper+letter.
+- GNOME: Settings → Keyboard → View and Customize Shortcuts → Custom
+  Shortcuts → `+`, command e.g. `gnome-terminal`, press Hyper+letter.
+
+Keep the bindings you set up listed here, so they can be restored on a new
+machine.
+
+### Moving a Mac to the macOS build
+
+Earlier builds sent Linux modifiers and relied on a Ctrl ↔ Cmd swap in macOS.
+After flashing the `-mac` central:
+
+1. System Settings → Keyboard → Keyboard Shortcuts → Modifier Keys → select
+   Corne → "Restore Defaults".
+2. `scripts/karabiner-setup.sh`: removes the swap from Karabiner too.
+
 ![1](./img/keymap-img/corne.svg)
 
 The picture is rendered locally with [keymap-drawer](https://github.com/caksoylar/keymap-drawer)
@@ -17,17 +94,23 @@ git config core.hooksPath .githooks   # once per clone: pre-commit hook re-rende
                                       # and stages the images when the keymap is committed
 ```
 
+If a global `core.hooksPath` dispatches to `.git/hooks/<name>`, link the hook
+there instead, so the global hooks keep working:
+`ln -s ../../.githooks/pre-commit .git/hooks/pre-commit`.
+
 ## Firmware
 
 GitHub Actions (or `scripts/zmk-docker.sh build` locally, into `firmware/`) builds:
 
 | Setup | Part | File |
 |---|---|---|
-| dongle | dongle (nice!nano) | `corne_central_dongle-nice_nano_zmk.uf2` |
-| dongle | dongle (XIAO BLE) | `corne_central_dongle-xiao_ble_zmk.uf2` |
+| dongle | dongle (nice!nano) | `corne_central_dongle-nice_nano_zmk-{mac,linux}.uf2` |
+| dongle | dongle (XIAO BLE) | `corne_central_dongle-xiao_ble_zmk-{mac,linux}.uf2` |
 | dongle | left / right half | `corne_peripheral_left-…`, `corne_peripheral_right-…` |
-| no dongle | left half (central) / right half | `corne_central_left-…`, `corne_peripheral_right-…` |
+| no dongle | left half (central) / right half | `corne_central_left-nice_nano_zmk-{mac,linux}.uf2`, `corne_peripheral_right-…` |
 | any | clear bonds and settings | `settings_reset-…` |
+
+The central part has a file per OS (see [Target OS](#target-os-one-keymap-a-build-per-os)).
 
 Flash all parts from the same build: the split protocol between dongle and
 halves must match. Each part is flashed separately over USB: double-tap reset,
@@ -36,16 +119,18 @@ onto it, the part reboots.
 
 ```sh
 scripts/flash-all.sh              # guided: dongle, left, right, then Studio check
+scripts/flash-all.sh --os linux   # central for this OS (default: the OS of this computer)
 scripts/flash-all.sh --no-dongle  # left as central, right
 scripts/flash-all.sh --reset      # settings_reset before each part (halves don't pair)
-scripts/flash.sh dongle|left|right|central-left|reset   # one part
+scripts/flash.sh dongle|central-left mac|linux   # one central part
+scripts/flash.sh left|right|reset                # one half, or settings reset
 ```
 
 `flash.sh` waits for the drive, picks the file by board (`INFO_UF2.TXT`),
 copies it and waits for the drive to disappear. `flash-all.sh` prompts for
 each part, refuses to start a step while another part is still in the
 bootloader, and at the end reads the keymap over Studio and compares it with
-`tests/hardware/keymap.txt`. Left and right halves are not distinguishable by
+`tests/hardware/keymap.<os>.txt` (saves it on the first run). Left and right halves are not distinguishable by
 the script: connect the one it asks for.
 
 ### Bootloader key
@@ -74,8 +159,7 @@ reloads on save. The script changes only the Corne entries there, the rest stays
 - only the Corne is grabbed, the built-in keyboard is ignored;
 - virtual keyboard type `ansi` (with `iso` macOS swaps `` ` ~ `` and `§ ±`);
 - F1–F12 stay F-keys;
-- Control ↔ Command on the Corne (macOS "Modifier Keys" settings don't apply to
-  a device Karabiner grabs);
+- no modifier remaps: the macOS build already has Cmd and Ctrl in place;
 - rules from `macos/karabiner/*.json` (descriptions start with `Corne:`).
 
 To change the characters or add an input source, edit
@@ -116,11 +200,11 @@ Check that the keyboard answers Studio and reports the expected keymap
 
 ```sh
 scripts/studio_check.py                  # print layers read from the keyboard
-scripts/studio_check.py --check tests/hardware/keymap.txt   # diff against the reference dump
+scripts/studio_check.py --check tests/hardware/keymap.mac.txt   # diff against the reference dump
 ```
 
-`tests/hardware/keymap.txt` is the keymap read from the flashed keyboard
-(`--save` to refresh it after intentional changes).
+`tests/hardware/keymap.<os>.txt` is the keymap read from the keyboard flashed
+with that OS build (`--save` to refresh it after intentional changes).
 
 ## Keymap tests
 
@@ -130,22 +214,28 @@ board with a mock key matrix and runs as a Linux process: no keyboard and no
 host OS involved.
 
 ```text
-# Удержание A (LGUI) + клавиша правой руки = GUI+H
+# Удержание A (OT: Super на Linux, Ctrl на Mac) + клавиша правой руки
 press A
 wait 300
 tap H
 release A
 ---
-press LGUI
+press OT
 press H
 release H
-release LGUI
+release OT
 ```
 
 - Script: `press|release|tap <key>`, `wait <ms>` (gap after the previous
   event, default 10 ms). Key names are base-layer legends, thumbs are `T1`–`T6`
   (see `POSITIONS` in `tests/run_tests.py`).
 - Expected: `press|release <usage> [MODS]`, `mouse <buttons>`.
+- Each case runs for both OS builds (`-DOS_MAC`, `-DOS_LINUX`). Modifiers in
+  the expected block can be roles: `SC`/`SC_R`, `OT`/`OT_R` (see
+  [Target OS](#target-os-one-keymap-a-build-per-os)); concrete names
+  (`LCTRL`) are compared as written.
+- `@os mac` or `@os linux` in a comment runs a case for one OS only: for keys
+  whose output differs beyond the roles (screenshots, lock).
 - `@xfail` in a comment marks a known issue.
 
 ```sh

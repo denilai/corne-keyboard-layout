@@ -1,0 +1,10 @@
+# T3: удержание = OT (Super на Linux, Ctrl на Mac)
+press T3
+wait 250
+tap C
+release T3
+---
+press OT
+press C
+release C
+release OT

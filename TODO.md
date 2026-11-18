@@ -2,21 +2,25 @@
 
 ## macOS
 
-Прошивка одна для всех ОС, отдельной прошивки под Mac не нужно: клавиатура не
-знает, к какой системе подключена.
+Центральная часть собирается под ОС (`-mac` / `-linux`, README «Target OS»).
 
+- [ ] Прошить донгл `-mac`, затем сбросить «Клавиши модификации» для Corne в
+  настройках macOS и запустить `scripts/karabiner-setup.sh` (README «Moving a
+  Mac to the macOS build»). Снять эталон Studio `tests/hardware/keymap.mac.txt`
+  (`flash-all.sh` сохранит его сам).
+- [ ] Проверить на Mac: `KP_N1..3` (`.` `,` `?` в ABC и Russian – PC), тильду,
+  F10, Utils (блокировка, скриншоты, яркость, громкость), Nav (Mission
+  Control, рабочие столы, буфер), Hyper+буква.
+- [ ] Привязать приложения к Hyper+буква и записать список в README.
 - [ ] Поставить ZMK Studio на Mac (`.dmg` из релизов zmk-studio, первый запуск
   через правый клик → «Открыть»).
-- [ ] Проверить на Mac `KP_N1..3` (`.` `,` `?` в ABC и Russian – PC), тильду,
-  F10 и Cmd+F11/F12 после `scripts/karabiner-setup.sh`.
-- [ ] Дальше через Karabiner (`macos/karabiner/`, правила `Corne:`) или правки
-  раскладки:
-  - Globe (`C_AC_NEXT_KEYBOARD_LAYOUT_SELECT`) для смены языка
+- [ ] Дальше:
+  - Globe (`GLOBE`) для смены языка и Globe-сочетаний
   - навигация `Cmd/Alt+стрелки` вместо Home/End и Ctrl+стрелок
-  - на Mac не работают: `K_APPLICATION` (Nav), `PSCRN` (Utils),
-    `LG(F11)`/`LG(F12)` (Num), Ctrl+Enter в tap-dance `'` (на Mac нужен Cmd+Enter)
-  - Mac-слой с переключателем возможен, но ZMK не запоминает слой после
-    переподключения: переключать каждый раз
+  - `OT(F11)`/`OT(F12)` в Num: на Mac это Ctrl+F11/F12, ничего не делают;
+    решить, что там нужно на каждой ОС
+  - Del как Hyper: удержание Del больше не повторяет удаление (повтор: тап и
+    сразу удержание)
 
 ## Тесты
 

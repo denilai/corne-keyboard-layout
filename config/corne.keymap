@@ -53,6 +53,77 @@
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/pointing.h>
 
+/*
+ * ==============================================================================
+ * Target OS
+ * ==============================================================================
+ *
+ * Requirement: the computer keeps its default settings. No modifier swaps,
+ * no remapped keys, no custom system shortcuts in the OS. Everything that
+ * differs between operating systems is defined here, and the layers below
+ * use only these names.
+ *
+ * The OS is chosen at build time: build.yaml passes
+ * -DDTS_EXTRA_CPPFLAGS=-DOS_MAC (or -DOS_LINUX) to the central part (dongle,
+ * or the left half without a dongle). Peripherals compile the keymap but
+ * don't use it, so they have one build for both (built with OS_LINUX).
+ *
+ * Modifiers by role, not by name:
+ *   SC   the shortcut modifier (copy, paste, save...): Cmd on macOS,
+ *        Ctrl on Linux. Index finger (F, J) and the left thumb.
+ *   OT   the other one: Ctrl on macOS, Super on Linux. Pinky (A, ;) and
+ *        the hold of the Enter thumb.
+ *
+ * System actions use the OS default shortcuts:
+ *   macOS: Cmd+Shift+3/4/5 screenshots, Ctrl+Cmd+Q lock, Ctrl+arrows for
+ *          Mission Control / App windows / Spaces.
+ *   Linux: GNOME defaults: Shift+Print / Print / Ctrl+Alt+Shift+R,
+ *          Super+L lock, Super = overview, Ctrl+Alt+arrows workspaces.
+ */
+#if defined(OS_MAC)
+#define SC_L        LGUI
+#define SC_R        RGUI
+#define OT_L        LCTRL
+#define OT_R        RCTRL
+#define SC(k)       LG(k)
+#define OT(k)       LC(k)
+#define SHOT_FULL   LG(LS(N3))
+#define SHOT_AREA   LG(LS(N4))
+#define SHOT_VIDEO  LG(LS(N5))          /* screenshot panel, has screen recording */
+#define LOCK        LC(LG(Q))
+#define OVERVIEW    LC(UP)              /* Mission Control */
+#define APP_WINS    LC(DOWN)            /* App windows (App Exposé) */
+#define DESK_PREV   LC(LEFT)            /* previous Space */
+#define DESK_NEXT   LC(RIGHT)           /* next Space */
+#elif defined(OS_LINUX)
+#define SC_L        LCTRL
+#define SC_R        RCTRL
+#define OT_L        LGUI
+#define OT_R        RGUI
+#define SC(k)       LC(k)
+#define OT(k)       LG(k)
+#define SHOT_FULL   LS(PSCRN)
+#define SHOT_AREA   PSCRN               /* GNOME screenshot UI: area, window, screen */
+#define SHOT_VIDEO  LC(LA(LS(R)))       /* GNOME screencast UI */
+#define LOCK        LG(L)
+#define OVERVIEW    LGUI                /* Activities overview */
+#define APP_WINS    LG(A)               /* app grid: GNOME has no app-windows view */
+#define DESK_PREV   LC(LA(LEFT))
+#define DESK_NEXT   LC(LA(RIGHT))
+#else
+#error "Build with -DDTS_EXTRA_CPPFLAGS=-DOS_MAC or -DOS_LINUX (cmake-args in build.yaml)"
+#endif
+
+/* Same on both systems */
+#define UNDO        SC(Z)
+#define CUT         SC(X)
+#define COPY        SC(C)
+#define PASTE       SC(V)
+#define REDO        SC(LS(Z))
+/* Hyper = all four modifiers: free on both systems, for app launch shortcuts
+ * bound in the OS (README: "App launch shortcuts"). */
+#define HYPER       LC(LA(LS(LGUI)))
+
 
 &sk {
     release-after-ms = <1000>;
@@ -278,7 +349,7 @@
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <200>;
-            bindings = <&kp SQT>, <&kp LC(RET)>;
+            bindings = <&kp SQT>, <&kp SC(RET)>;
         };
     };
 
@@ -289,17 +360,17 @@
             display-name = "Base";
             bindings = <
 &gresc     &kp Q         &kp W            &kp E              &kp R         &kp T        &kp Y           &kp U            &kp I               &kp O            &kp P                 &kp LEFT_BRACKET
-&kp LCTRL  &lbhm LGUI A  &lbhm LALT S  &lbhm LEFT_SHIFT D  &lbhm LCTRL F  &kp G        &kp H           &rbhm RCTRL J     &rbhm RSHIFT K  &rbhm LALT L  &rbhm LGUI SEMICOLON  &sqtctrl
+&kp SC_L   &lbhm OT_L A  &lbhm LALT S  &lbhm LEFT_SHIFT D  &lbhm SC_L F   &kp G        &kp H           &rbhm SC_R J      &rbhm RSHIFT K  &rbhm LALT L  &rbhm OT_L SEMICOLON  &sqtctrl
 &sk LSHFT  &kp Z         &kp X            &kp C              &kp V         &kp B        &kp N           &kp M            &kp COMMA           &kp DOT          &kp FSLH              &sk RSHIFT
-                                          &kp LCTRL          &lt 2 TAB     &mt LGUI RET &underspace     &lt 3 BACKSPACE  &kp DEL
+                                          &kp SC_L           &lt 2 TAB     &mt OT_L RET &underspace     &lt 3 BACKSPACE  &mt HYPER DEL
             >;
         };
         nav_layer {
             display-name = "Nav";
             bindings = <
 &mmv MOVE_LEFT     &mmv MOVE_DOWN  &mmv MOVE_UP    &mmv MOVE_RIGHT  &mkp LCLK          &mkp RCLK            &mmv MOVE_LEFT     &mmv MOVE_DOWN  &mmv MOVE_UP    &mmv MOVE_RIGHT  &mkp LCLK          &mkp RCLK
-&kp LEFT           &kp DOWN_ARROW  &kp UP_ARROW    &kp RIGHT        &kp K_APPLICATION  &none                &kp LEFT           &kp DOWN_ARROW  &kp UP_ARROW    &kp RIGHT        &kp K_APPLICATION  &none
-&mkp MB4           &kp HOME        &kp PAGE_DOWN   &kp PG_UP        &kp END            &mkp MB5             &mkp MB4           &kp HOME        &kp PAGE_DOWN   &kp PG_UP        &kp END            &mkp MB5
+&kp LEFT           &kp DOWN_ARROW  &kp UP_ARROW    &kp RIGHT        &kp OVERVIEW       &kp APP_WINS         &kp LEFT           &kp DOWN_ARROW  &kp UP_ARROW    &kp RIGHT        &kp DESK_PREV      &kp DESK_NEXT
+&mkp MB4           &kp UNDO        &kp CUT         &kp COPY         &kp PASTE          &kp REDO             &mkp MB4           &kp HOME        &kp PAGE_DOWN   &kp PG_UP        &kp END            &mkp MB5
                                                    &trans           &trans             &trans               &trans             &trans          &trans
             >;
         };
@@ -307,9 +378,9 @@
         num_layer {
             display-name = "Num";
             bindings = <
-&kp GRAVE      &kp EXCL       &kp AT       &kp HASH      &kp DLLR     &kp PRCNT         &kp CARET     &kp AMPS      &kp ASTRK      &kp LPAR      &kp RPAR      &kp LCTRL
-&kp TILDE   &lbhm LGUI N1      &lbhm LALT  N2      &lbhm LSHFT N3      &lbhm LCTRL NUMBER_4  &kp N5             &kp N6     &rbhm RCTRL NUMBER_7  &rbhm RSHIFT N8      &rbhm RALT N9      &rbhm RGUI N0      &trans
-&kp LSHFT   &none       &none       &none       &kp LG(F11)          &kp LG(F12)        &none       &kp KP_EQUAL         &none       &none       &kp BSLH    &kp F10
+&kp GRAVE      &kp EXCL       &kp AT       &kp HASH      &kp DLLR     &kp PRCNT         &kp CARET     &kp AMPS      &kp ASTRK      &kp LPAR      &kp RPAR      &kp SC_L
+&kp TILDE   &lbhm OT_L N1      &lbhm LALT  N2      &lbhm LSHFT N3      &lbhm SC_L NUMBER_4   &kp N5             &kp N6     &rbhm SC_R NUMBER_7   &rbhm RSHIFT N8      &rbhm RALT N9      &rbhm OT_R N0      &trans
+&kp LSHFT   &none       &none       &none       &kp OT(F11)          &kp OT(F12)      &none       &kp KP_EQUAL         &none       &none       &kp BSLH    &kp F10
                                     &none       &none                &none              &kp KP_N1   &kp KP_N2            &kp KP_N3
             >;
         };
@@ -317,8 +388,8 @@
         kb_utils {
             display-name = "Utils";
             bindings = <
-&none        &none           &kp PSCRN     &none             &none         &none           &none            &mkp MB1        &mkp MB2        &mkp MB3          &none        &studio_unlock
-&none        &kp C_PREVIOUS  &kp C_MUTE    &kp C_PLAY_PAUSE  &kp C_NEXT    &none           &mmv MOVE_LEFT   &mmv MOVE_DOWN  &mmv MOVE_UP    &mmv MOVE_RIGHT   &none        &none
+&kp LOCK     &kp C_BRI_DN    &kp C_BRI_UP  &kp SHOT_FULL     &kp SHOT_AREA &kp SHOT_VIDEO  &none            &mkp MB1        &mkp MB2        &mkp MB3          &none        &studio_unlock
+&kp C_MUTE   &kp C_VOL_DN    &kp C_VOL_UP  &kp C_PREVIOUS    &kp C_PP      &kp C_NEXT      &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_UP    &mmv MOVE_RIGHT   &none        &none
 &bt BT_CLR   &bt BT_SEL 0    &bt BT_SEL 1  &bt BT_SEL 2      &bt BT_SEL 3  &bt BT_SEL 4    &none            &mkp MB4        &msc SCRL_DOWN  &msc SCRL_UP      &mkp MB5     &none
                                            &none             &none         &none           &mkp MB1         &mkp MB2        &none
             >;

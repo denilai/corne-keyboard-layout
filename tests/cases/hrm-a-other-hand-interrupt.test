@@ -1,9 +1,9 @@
-# A зажата, тап H правой рукой внутри tapping-term: balanced + другая рука = GUI+H
+# A зажата, тап H правой рукой внутри tapping-term: balanced + другая рука = OT+H (Super на Linux, Ctrl на Mac)
 press A
 tap H
 release A
 ---
-press LGUI
+press OT
 press H
 release H
-release LGUI
+release OT

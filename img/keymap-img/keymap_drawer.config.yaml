@@ -122,6 +122,23 @@ parse_config:
   preprocess: true
   skip_binding_parsing: false
   raw_binding_map:
+    # macOS build (zmk_preamble below): system keys from the "Target OS" block
+    "&kp LC(LG(Q))": Lock
+    "&kp LG(LS(N3))": Shot screen
+    "&kp LG(LS(N4))": Shot area
+    "&kp LG(LS(N5))": Shot / rec
+    "&kp LC(UP)": Mission Ctrl
+    "&kp LC(DOWN)": App wins
+    "&kp LC(LEFT)": Desk ←
+    "&kp LC(RIGHT)": Desk →
+    "&kp LG(Z)": Undo
+    "&kp LG(X)": Cut
+    "&kp LG(C)": Copy
+    "&kp LG(V)": Paste
+    "&kp LG(LS(Z))": Redo
+    "&mt LC(LA(LS(LGUI))) DEL":
+      t: DEL
+      h: Hyper
     # keypad 1 2 3: Karabiner turns them into . , ? on macOS (macos/karabiner)
     "&kp KP_N1": .
     "&kp KP_N2": ","
@@ -512,5 +529,6 @@ parse_config:
 
   zmk_combos: {"combo_f19": {"hidden": true}}
 
-  zmk_preamble: "#define KEYMAP_DRAWER"
+  # The keymap is built per OS ("Target OS" in config/corne.keymap): draw the macOS build.
+  zmk_preamble: "#define KEYMAP_DRAWER\n#define OS_MAC"
   zmk_additional_includes: []

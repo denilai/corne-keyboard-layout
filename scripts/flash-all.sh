@@ -6,6 +6,8 @@
 #   scripts/flash-all.sh --reset      # сначала settings_reset на все части
 #                                     # (если половины не соединяются с донглом)
 #   scripts/flash-all.sh --skip-check # без проверки через Studio в конце
+#   scripts/flash-all.sh --os linux   # ОС центральной части: mac | linux
+#                                     # (по умолчанию ОС этого компьютера)
 #
 # Каждый шаг: подсказка что сделать -> Enter -> ожидание флешки -> запись ->
 # ожидание перезагрузки. Прошивки берутся из firmware/ (scripts/zmk-docker.sh build).
@@ -15,22 +17,26 @@ REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 FLASH="$REPO/scripts/flash.sh"
 export FLASH_TIMEOUT="${FLASH_TIMEOUT:-600}"
 
-mode=dongle reset=0 check=1
-for a in "$@"; do
+mode=dongle reset=0 check=1 os=""
+case "$(uname)" in Darwin) os=mac ;; Linux) os=linux ;; esac
+while [ $# -gt 0 ]; do
+    a="$1"; shift
     case "$a" in
+    --os) os="${1:-}"; shift || true ;;
     --no-dongle) mode=no-dongle ;;
     --reset) reset=1 ;;
     --skip-check) check=0 ;;
-    -h | --help) sed -n '2,11p' "$0"; exit 0 ;;
+    -h | --help) sed -n '2,13p' "$0"; exit 0 ;;
     *) echo "неизвестный аргумент: $a" >&2; exit 2 ;;
     esac
 done
+case "$os" in mac | linux) ;; *) echo "--os mac|linux" >&2; exit 2 ;; esac
 
 b=$'\e[1m' g=$'\e[32m' y=$'\e[33m' r=$'\e[31m' n=$'\e[0m'
-say() { printf '\n%s\n' "$b$*$n"; }
-ok() { printf '%s\n' "$g✔ $*$n"; }
-warn() { printf '%s\n' "$y! $*$n"; }
-die() { printf '%s\n' "$r✘ $*$n" >&2; exit 1; }
+say() { printf '\n%s\n' "${b}$*${n}"; }
+ok() { printf '%s\n' "${g}✔ $*${n}"; }
+warn() { printf '%s\n' "${y}! $*${n}"; }
+die() { printf '%s\n' "${r}✘ $*${n}" >&2; exit 1; }
 
 uf2_drive() {
     local d
@@ -58,7 +64,9 @@ step() { # step <номер> <part> <текст подсказки>
     say "[$num/$total] $text"
     ensure_no_drive
     read -rp "  Нажми Enter, когда подключил кабель (затем дважды reset)... " _
-    "$FLASH" "$part" || die "шаг $num ($part) не удался. Повтори: scripts/flash.sh $part"
+    local args=("$part")
+    case "$part" in dongle | central-left) args+=("$os") ;; esac
+    "$FLASH" "${args[@]}" || die "шаг $num ($part) не удался. Повтори: scripts/flash.sh ${args[*]}"
     ok "шаг $num готов"
 }
 
@@ -66,16 +74,19 @@ step() { # step <номер> <part> <текст подсказки>
 say "Проверка"
 need=()
 if [ "$mode" = dongle ]; then
-    need+=(corne_central_dongle corne_peripheral_left corne_peripheral_right)
+    need+=("corne_central_dongle-*-$os" corne_peripheral_left corne_peripheral_right)
 else
-    need+=(corne_central_left corne_peripheral_right)
+    need+=("corne_central_left-*-$os" corne_peripheral_right)
 fi
 [ $reset = 1 ] && need+=(settings_reset)
 for s in "${need[@]}"; do
-    ls "$REPO/firmware/$s-"*.uf2 >/dev/null 2>&1 || die "нет firmware/$s-*.uf2. Собери: scripts/zmk-docker.sh build"
+    ls "$REPO"/firmware/$s*.uf2 >/dev/null 2>&1 || die "нет firmware/$s*.uf2. Собери: scripts/zmk-docker.sh build"
 done
 ok "прошивки на месте: $(ls "$REPO"/firmware/*.uf2 | wc -l | tr -d ' ') файлов в firmware/"
 
+if [ $check = 1 ] && ! python3 -c 'import serial' 2>/dev/null; then
+    die "для проверки Studio нужен pyserial: python3 -m pip install --user pyserial (или --skip-check)"
+fi
 if [ "$(uname)" = Linux ] && [ ! -f /etc/udev/rules.d/70-zmk-studio.rules ]; then
     warn "нет udev-правила: Studio не получит доступ к порту. Поставь:"
     echo "    sudo cp $REPO/scripts/udev/70-zmk-studio.rules /etc/udev/rules.d/ && sudo udevadm control --reload-rules"
@@ -104,7 +115,7 @@ else
 fi
 total=${#steps[@]}
 
-say "План, шагов: $total"
+say "План, шагов: $total (центральная часть — под $os)"
 for i in "${!steps[@]}"; do echo "  $((i + 1)). ${steps[$i]#*|}"; done
 echo
 echo "Reset: nice!nano — кнопка или дважды замкнуть RST и GND; XIAO — кнопка RST у USB-C."
@@ -136,11 +147,16 @@ ok "порт: $port"
 
 echo "Набери что-нибудь на клавиатуре: половины должны печатать."
 echo "Затем разблокируй Studio: зажми BSPC (правый thumb, средняя) + правая верхняя клавиша."
-ref="$REPO/tests/hardware/keymap.txt"
+ref="$REPO/tests/hardware/keymap.$os.txt"
 args=(--port "$port" --wait-unlock 300)
-[ -f "$ref" ] && args+=(--check "$ref")
+if [ -f "$ref" ]; then
+    args+=(--check "$ref")
+else
+    args+=(--save "$ref")
+    warn "эталона $ref нет: сохраню прочитанную раскладку, проверь её и закоммить"
+fi
 if python3 "$REPO/scripts/studio_check.py" "${args[@]}"; then
-    ok "клавиатура отвечает, раскладка совпадает с эталоном"
+    ok "клавиатура отвечает, раскладка совпадает с эталоном (или сохранена как эталон)"
 else
     die "проверка не прошла (см. вывод выше). Если половины не печатают: scripts/flash-all.sh --reset"
 fi

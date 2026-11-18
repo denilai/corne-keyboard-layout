@@ -1,0 +1,9 @@
+# @os mac
+# Удержание BSPC (Utils) + R = скриншот области: Cmd+Shift+4
+press T5
+wait 250
+tap R
+release T5
+---
+press N4 [LGUI+LSHIFT]
+release N4 [LGUI+LSHIFT]

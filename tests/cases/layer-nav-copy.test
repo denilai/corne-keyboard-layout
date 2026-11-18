@@ -1,0 +1,8 @@
+# Удержание пробела (Nav) + C = копировать: SC+C (Ctrl+C на Linux, Cmd+C на Mac)
+press T4
+wait 250
+tap C
+release T4
+---
+press C [SC]
+release C [SC]

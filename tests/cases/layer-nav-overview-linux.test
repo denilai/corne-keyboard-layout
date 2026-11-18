@@ -1,0 +1,9 @@
+# @os linux
+# Удержание пробела (Nav) + F = обзор GNOME: Super
+press T4
+wait 250
+tap F
+release T4
+---
+press LGUI
+release LGUI

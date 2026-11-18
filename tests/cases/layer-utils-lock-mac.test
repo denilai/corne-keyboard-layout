@@ -1,0 +1,9 @@
+# @os mac
+# Удержание BSPC (Utils) + ESC = блокировка: Ctrl+Cmd+Q
+press T5
+wait 250
+tap ESC
+release T5
+---
+press Q [LCTRL+LGUI]
+release Q [LCTRL+LGUI]

@@ -1,7 +1,7 @@
-# Удержание BSPC (Utils) + S = Mute
+# Удержание BSPC (Utils) + LCTL = Mute
 press T5
 wait 250
-tap S
+tap LCTL
 release T5
 ---
 press C_MUTE

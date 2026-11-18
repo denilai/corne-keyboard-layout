@@ -1,0 +1,8 @@
+# Удержание BSPC (Utils) + W = яркость экрана +
+press T5
+wait 250
+tap W
+release T5
+---
+press C_BRI_UP
+release C_BRI_UP

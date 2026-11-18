@@ -17,6 +17,7 @@ framed with SOF 0xAB / ESC 0xAC / EOF 0xAD.
 """
 import argparse
 import glob
+import os
 import sys
 import time
 
@@ -164,7 +165,7 @@ KEY_NAMES.update({0x3A + i: f"F{i + 1}" for i in range(12)})
 KEY_NAMES.update({0x59 + i: "KP_N" + c for i, c in enumerate("1234567890")})
 MODS = ["LCTRL", "LSHIFT", "LALT", "LGUI", "RCTRL", "RSHIFT", "RALT", "RGUI"]
 KEY_NAMES.update({0xE0 + i: m for i, m in enumerate(MODS)})
-CONSUMER = {0xE9: "C_VOL_UP", 0xEA: "C_VOL_DN", 0xE2: "C_MUTE", 0xCD: "C_PP",
+CONSUMER = {0x6F: "C_BRI_UP", 0x70: "C_BRI_DN", 0xE9: "C_VOL_UP", 0xEA: "C_VOL_DN", 0xE2: "C_MUTE", 0xCD: "C_PP",
             0xB5: "C_NEXT", 0xB6: "C_PREV"}
 
 
@@ -287,6 +288,7 @@ def main():
 
     text = "\n".join(lines) + "\n"
     if a.save:
+        os.makedirs(os.path.dirname(a.save) or ".", exist_ok=True)
         open(a.save, "w").write(text)
         print(f"\nsaved to {a.save}")
     if a.check:

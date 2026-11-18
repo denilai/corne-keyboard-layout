@@ -1,0 +1,10 @@
+# T6: удержание = Hyper (Ctrl+Alt+Shift+Cmd/Super) для запуска приложений
+press T6
+wait 250
+tap T
+release T6
+---
+press LGUI [LALT+LCTRL+LSHIFT]
+press T
+release T
+release LGUI [LALT+LCTRL+LSHIFT]

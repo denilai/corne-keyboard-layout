@@ -1,6 +1,6 @@
-# Tap-dance: двойной тап = Ctrl+Enter
+# Tap-dance: двойной тап = SC+Enter (Ctrl+Enter на Linux, Cmd+Enter на Mac)
 tap SQT
 tap SQT
 ---
-press RET [LCTRL]
-release RET [LCTRL]
+press RET [SC]
+release RET [SC]

@@ -3,7 +3,7 @@
 
 Runs inside the zmk-build container (see scripts/zmk-docker.sh).
 Usage: build_matrix.py [substring filter...]
-Output: /repo/firmware/<shield>-<board>.uf2
+Output: /repo/firmware/<artifact-name>.uf2 (default <shield>-<board>), as in CI
 """
 import re
 import shutil
@@ -36,7 +36,8 @@ def main():
     OUT.mkdir(exist_ok=True)
     failed = []
     for t in load_matrix():
-        name = f"{t.get('shield', '')}-{t['board'].replace('//', '_').replace('/', '_')}"
+        name = t.get("artifact-name") or \
+            f"{t.get('shield', '')}-{t['board'].replace('//', '_').replace('/', '_')}"
         if filters and not any(f in name for f in filters):
             continue
         bdir = WS / "build" / name

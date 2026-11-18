@@ -19,14 +19,27 @@ Case file format (tests/cases/<name>.test)
     release A
     tap C            # = press C, 10 ms, release C
     ---
-    press LGUI       # expected HID output: press/release <usage> [+MODS]
+    press OT         # expected HID output: press/release <usage> [+MODS]
     press C
     release C
-    release LGUI
+    release OT
+
+Target OS
+---------
+The keymap is built for one OS (-DOS_MAC / -DOS_LINUX, see the "Target OS"
+block in the keymap). Every case runs for each OS in OSES. In the expected
+block, modifiers may be written by role, so one case covers both systems:
+    SC / SC_R   shortcut modifier: LGUI / RGUI on mac, LCTRL / RCTRL on linux
+    OT / OT_R   the other one:     LCTRL / RCTRL on mac, LGUI / RGUI on linux
+Concrete names (LCTRL, LGUI...) are compared as written. A case whose output
+differs in more than these roles is split: `@os mac` / `@os linux` in a
+comment limits a case to one OS.
 
 Runs inside the zmk-build container (see scripts/zmk-docker.sh test).
-Env: ACCEPT=1 overwrites the expected block with the actual output.
-A case whose comments contain `@xfail` is a known issue: a mismatch is
+Env: ACCEPT=1 overwrites the expected block with the actual output. A case
+running for both OS is written with SC/OT roles and only if both outputs agree
+in those terms; keys that are the same on both systems (e.g. Hyper) are
+written by hand with concrete names. A case whose comments contain `@xfail` is a known issue: a mismatch is
 reported as XFAIL and does not fail the run.
 """
 import os
@@ -85,8 +98,47 @@ def _keyboard_names():
 USAGE = {
     0x07: _keyboard_names(),
     0x0C: {0xE9: "C_VOL_UP", 0xEA: "C_VOL_DN", 0xE2: "C_MUTE",
-           0xCD: "C_PP", 0xB5: "C_NEXT", 0xB6: "C_PREV"},
+           0xCD: "C_PP", 0xB5: "C_NEXT", 0xB6: "C_PREV",
+           0x6F: "C_BRI_UP", 0x70: "C_BRI_DN"},
 }
+
+OSES = ["linux", "mac"]
+# Role -> concrete modifier per OS (see "Target OS" in the docstring).
+ROLES = {
+    "linux": {"SC": "LCTRL", "SC_R": "RCTRL", "OT": "LGUI", "OT_R": "RGUI"},
+    "mac": {"SC": "LGUI", "SC_R": "RGUI", "OT": "LCTRL", "OT_R": "RCTRL"},
+}
+TOKEN_RE = re.compile(r"[A-Z_0-9]+")
+
+
+def _sub(line, table):
+    return TOKEN_RE.sub(lambda m: table.get(m.group(0), m.group(0)), line)
+
+
+def _sort_mods(line):
+    # Modifier order in [..] follows HID bits, which differ per OS for the
+    # same role: compare as a set.
+    return re.sub(r"\[([^\]]*)\]",
+                  lambda m: "[" + "+".join(sorted(m.group(1).split("+"))) + "]", line)
+
+
+def concrete(lines, os_name):
+    """Expected lines with roles resolved for os_name, comparable with actual."""
+    return [_sort_mods(_sub(l, ROLES[os_name])) for l in lines]
+
+
+def to_roles(lines, os_name):
+    """Actual lines with concrete modifiers written as roles (for ACCEPT)."""
+    back = {v: k for k, v in ROLES[os_name].items()}
+    return [_sort_mods(_sub(l, back)) for l in lines]
+
+
+def case_oses(script):
+    marks = re.findall(r"@os\s+(\w+)", script)
+    for m in marks:
+        if m not in OSES:
+            raise ValueError(f"unknown @os {m!r}, expected one of {OSES}")
+    return marks or OSES
 
 HID_RE = re.compile(r"hid_listener_keycode_(pressed|released): usage_page 0x(\w+) "
                     r"keycode 0x(\w+) implicit_mods 0x(\w+) explicit_mods 0x(\w+)")
@@ -161,38 +213,50 @@ def write_config(name, events):
     return cfg
 
 
-def run_case(path):
-    name = path.stem
-    try:
-        script, events, expected = parse_case(path)
-    except ValueError as e:
-        return name, "ERROR", str(e)
+def run_case(path, os_name):
+    """Build and run one case for one OS. Returns (status, detail, actual)."""
+    name = f"{path.stem}-{os_name}"
+    script, events, expected = parse_case(path)
     cfg = write_config(name, events)
     bdir = BUILD / name / "build"
     b = subprocess.run(
         ["west", "build", "-p", "auto", "-s", str(WS / "zmk" / "app"), "-d", str(bdir),
          "-b", "native_sim//zmk_test_mock", "--",
-         "-DCONFIG_ASSERT=y", f"-DZMK_CONFIG={cfg}"],
+         "-DCONFIG_ASSERT=y", f"-DZMK_CONFIG={cfg}",
+         f"-DDTS_EXTRA_CPPFLAGS=-DOS_{os_name.upper()}"],
         cwd=WS, capture_output=True, text=True)
     if b.returncode:
-        return name, "BUILD", (b.stdout + b.stderr)[-4000:]
+        return "BUILD", (b.stdout + b.stderr)[-4000:], None
     r = subprocess.run([str(bdir / "zephyr" / "zmk.exe")], capture_output=True,
                        text=True, timeout=60)
-    (BUILD / name / "full.log").write_text(r.stdout + r.stderr)
-    actual = render(r.stdout + r.stderr)
+    log = BUILD / name / "full.log"
+    log.write_text(r.stdout + r.stderr)
+    actual = [_sort_mods(l) for l in render(r.stdout + r.stderr)]
+    expected = concrete(expected, os_name)
     xfail = "@xfail" in script
     if actual == expected:
-        return name, ("XPASS" if xfail else "PASS"), (
-            "marked @xfail but passes now: remove the mark" if xfail else "")
-    if os.environ.get("ACCEPT"):
-        path.write_text(script + "\n---\n" + "\n".join(actual) + "\n")
-        return name, "ACCEPTED", ""
+        return ("XPASS" if xfail else "PASS"), (
+            "marked @xfail but passes now: remove the mark" if xfail else ""), actual
     diff = ["   expected | actual"]
     for i in range(max(len(expected), len(actual))):
         e = expected[i] if i < len(expected) else ""
         a = actual[i] if i < len(actual) else ""
         diff.append(f"{'  ' if e == a else '>>'} {e:<24} | {a}")
-    return name, ("XFAIL" if xfail else "FAIL"), "\n".join(diff) + f"\n   full log: {BUILD / name / 'full.log'}"
+    return ("XFAIL" if xfail else "FAIL"), "\n".join(diff) + f"\n   full log: {log}", actual
+
+
+def accept(path, runs):
+    """ACCEPT=1: write the actual output (with roles) as the expected block."""
+    script = parse_case(path)[0]
+    # Roles only when the case runs for several OS; one OS reads better concrete.
+    if len(runs) == 1:
+        outs = {tuple(actual) for _, _, actual in runs.values()}
+    else:
+        outs = {tuple(to_roles(actual, o)) for o, (_, _, actual) in runs.items()}
+    if len(outs) != 1:
+        return "ERROR", "output differs between OS beyond SC/OT roles: split the case with @os"
+    path.write_text(script + "\n---\n" + "\n".join(outs.pop()) + "\n")
+    return "ACCEPTED", ""
 
 
 def main():
@@ -202,8 +266,25 @@ def main():
         cases = [c for c in cases if any(n in c.stem for n in names)]
     if not cases:
         sys.exit("no test cases matched")
+    jobs, results = [], []
+    for c in cases:
+        try:
+            parse_case(c)
+            jobs += [(c, o) for o in case_oses(c.read_text().split("\n---", 1)[0])]
+        except ValueError as e:
+            results.append((c.stem, "ERROR", str(e)))
     with ThreadPoolExecutor(int(os.environ.get("J", os.cpu_count() or 4))) as pool:
-        results = list(pool.map(run_case, cases))
+        done = list(pool.map(lambda j: run_case(*j), jobs))
+    by_case = {}
+    for (c, o), res in zip(jobs, done):
+        by_case.setdefault(c, {})[o] = res
+    for c, runs in by_case.items():
+        failed = any(s in ("FAIL", "XFAIL") for s, _, _ in runs.values())
+        if os.environ.get("ACCEPT") and failed and all(a is not None for _, _, a in runs.values()):
+            results.append((c.stem, *accept(c, runs)))
+            continue
+        for o, (status, detail, _) in runs.items():
+            results.append((f"{c.stem} [{o}]", status, detail))
     bad = 0
     for name, status, detail in results:
         print(f"{status:8} {name}")

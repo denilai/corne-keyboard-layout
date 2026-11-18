@@ -6,24 +6,24 @@ layers: 4 used, 2 free
 
 [Base] (42 keys)
   Grave/Esca |          Q |          W |          E |          R |          T |          Y |          U |          I |          O |          P |       LBKT
-       LCTRL | left_balan | left_balan | left_balan | left_balan |          G |          H | right_bala | right_bala | right_bala | right_bala | squote_lct
+        LGUI | left_balan | left_balan | left_balan | left_balan |          G |          H | right_bala | right_bala | right_bala | right_bala | squote_lct
   Sticky Key |          Z |          X |          C |          V |          B |          N |          M |      COMMA |        DOT |       FSLH | Sticky Key
-                                              LCTRL | Layer-Tap  | MT LGUI/RE | UNDERSPACE | Layer-Tap  |        DEL
+                                               LGUI | Layer-Tap  | MT LCTRL/R | UNDERSPACE | Layer-Tap  | MT LA(LS(L
 
 [Nav] (42 keys)
   mouse_move | mouse_move | mouse_move | mouse_move | Mouse Key  | Mouse Key  | mouse_move | mouse_move | mouse_move | mouse_move | Mouse Key  | Mouse Key 
-        LEFT |       DOWN |         UP |      RIGHT |      K_APP |       None |       LEFT |       DOWN |         UP |      RIGHT |      K_APP |       None
-  Mouse Key  |       HOME |      PG_DN |      PG_UP |        END | Mouse Key  | Mouse Key  |       HOME |      PG_DN |      PG_UP |        END | Mouse Key 
+        LEFT |       DOWN |         UP |      RIGHT |     LC(UP) |   LC(DOWN) |       LEFT |       DOWN |         UP |      RIGHT |   LC(LEFT) |  LC(RIGHT)
+  Mouse Key  |      LG(Z) |      LG(X) |      LG(C) |      LG(V) |  LG(LS(Z)) | Mouse Key  |       HOME |      PG_DN |      PG_UP |        END | Mouse Key 
                                          Transparen | Transparen | Transparen | Transparen | Transparen | Transparen
 
 [Num] (42 keys)
-       GRAVE |     LS(N1) |     LS(N2) |     LS(N3) |     LS(N4) |     LS(N5) |     LS(N6) |     LS(N7) |     LS(N8) |     LS(N9) |     LS(N0) |      LCTRL
+       GRAVE |     LS(N1) |     LS(N2) |     LS(N3) |     LS(N4) |     LS(N5) |     LS(N6) |     LS(N7) |     LS(N8) |     LS(N9) |     LS(N0) |       LGUI
    LS(GRAVE) | left_balan | left_balan | left_balan | left_balan |         N5 |         N6 | right_bala | right_bala | right_bala | right_bala | Transparen
-      LSHIFT |       None |       None |       None |    LG(F11) |    LG(F12) |       None |   KP_EQUAL |       None |       None |       BSLH |        F10
+      LSHIFT |       None |       None |       None |    LC(F11) |    LC(F12) |       None |   KP_EQUAL |       None |       None |       BSLH |        F10
                                                None |       None |       None |      KP_N1 |      KP_N2 |      KP_N3
 
 [Utils] (42 keys)
-        None |       None |      PSCRN |       None |       None |       None |       None | Mouse Key  | Mouse Key  | Mouse Key  |       None | Studio Unl
-        None |     C_PREV |     C_MUTE |       C_PP |     C_NEXT |       None | mouse_move | mouse_move | mouse_move | mouse_move |       None |       None
+   LG(LC(Q)) |   C_BRI_DN |   C_BRI_UP | LG(LS(N3)) | LG(LS(N4)) | LG(LS(N5)) |       None | Mouse Key  | Mouse Key  | Mouse Key  |       None | Studio Unl
+      C_MUTE |   C_VOL_DN |   C_VOL_UP |     C_PREV |       C_PP |     C_NEXT | mouse_move | mouse_move | mouse_move | mouse_move |       None |       None
    Bluetooth | Bluetooth  | Bluetooth  | Bluetooth  | Bluetooth  | Bluetooth  |       None | Mouse Key  | mouse_scro | mouse_scro | Mouse Key  |       None
                                                None |       None |       None | Mouse Key  | Mouse Key  |       None

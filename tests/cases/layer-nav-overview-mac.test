@@ -1,0 +1,9 @@
+# @os mac
+# Удержание пробела (Nav) + F = Mission Control: Ctrl+Up
+press T4
+wait 250
+tap F
+release T4
+---
+press UP [LCTRL]
+release UP [LCTRL]

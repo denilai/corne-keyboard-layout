@@ -1,0 +1,5 @@
+# T6: тап = Delete
+tap T6
+---
+press DEL
+release DEL
