@@ -126,9 +126,9 @@ layers:
   - ''
   - {type: held}
   - ''
-  - KP 1
-  - KP 2
-  - KP 3
+  - .
+  - ','
+  - '?'
   Utils:
   - ''
   - ''

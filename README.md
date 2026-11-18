@@ -55,6 +55,33 @@ on the part where the key is pressed (ZMK "event source" locality): a key on
 the left half puts the **left half** into the bootloader, never the dongle.
 The dongle only enters the bootloader by double-tapping its reset.
 
+## macOS: punctuation in any input source
+
+The keyboard sends key codes, the input source turns them into characters, so
+`.` `,` `?` sit on different keys in ABC and Russian – PC. The thumb keys of the
+Num layer send keypad `1` `2` `3` (`KP_N1..3`), and
+[Karabiner-Elements](https://karabiner-elements.pqrs.org) turns them into
+`.` `,` `?` for the current input source. On other systems they stay keypad digits.
+
+```sh
+scripts/karabiner-setup.sh --diff   # what would change in ~/.config/karabiner/karabiner.json
+scripts/karabiner-setup.sh          # apply (backup first) and start Karabiner
+```
+
+Karabiner is configured by `~/.config/karabiner/karabiner.json`, which it
+reloads on save. The script changes only the Corne entries there, the rest stays:
+
+- only the Corne is grabbed, the built-in keyboard is ignored;
+- virtual keyboard type `ansi` (with `iso` macOS swaps `` ` ~ `` and `§ ±`);
+- F1–F12 stay F-keys;
+- Control ↔ Command on the Corne (macOS "Modifier Keys" settings don't apply to
+  a device Karabiner grabs);
+- rules from `macos/karabiner/*.json` (descriptions start with `Corne:`).
+
+To change the characters or add an input source, edit
+[macos/karabiner/corne-punctuation.json](macos/karabiner/corne-punctuation.json)
+(key names: Karabiner-EventViewer) and run the script again.
+
 ## ZMK Studio
 
 Studio runs on the central part (dongle, or left half without a dongle), over USB.
