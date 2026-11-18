@@ -17,7 +17,8 @@ VOLUME="${ZMK_VOLUME:-zmk-corne-workspace}"
 run() {
     local tty=()
     [ -t 0 ] && tty=(-it)
-    docker run --rm "${tty[@]}" \
+    # ${tty[@]+...}: an empty array is "unbound" under set -u in bash 3.2 (macOS)
+    docker run --rm ${tty[@]+"${tty[@]}"} \
         -u "$(id -u):$(id -g)" -e HOME=/ws/.home -e ZEPHYR_BASE=/ws/zephyr -e ACCEPT -e J \
         -v "$VOLUME:/ws" -v "$REPO:/repo" -w /ws \
         "$IMAGE" bash -c "$1" _ "${@:2}"
