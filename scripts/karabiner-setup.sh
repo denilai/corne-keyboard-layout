@@ -99,5 +99,8 @@ for f in "$RULES_DIR"/*.json; do   # with {{REPO}} filled in, as in karabiner.js
     sed "s#{{REPO}}#$REPO#g" "$f" >"$KDIR/assets/complex_modifications/$(basename "$f")"
 done
 
+# The keymap-view rule opens KeymapView.app: build it now, not on first use.
+"$REPO/scripts/keymap-view.sh" build && echo "built ~/Applications/KeymapView.app"
+
 open -g -a Karabiner-Elements
 echo "Karabiner-Elements is running. Check Settings → Devices: only Corne is modified."

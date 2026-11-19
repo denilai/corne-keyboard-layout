@@ -144,8 +144,11 @@ combo sends F19, unused on both systems, and the OS runs
 `scripts/keymap-view.sh toggle`:
 
 - macOS: Karabiner rule `macos/karabiner/corne-keymap-view.json` (installed by
-  `scripts/karabiner-setup.sh`), the picture opens in Quick Look; Esc also
-  closes it.
+  `scripts/karabiner-setup.sh`). The picture opens in `~/Applications/KeymapView.app`
+  (`scripts/keymap-view.swift`, built by the setup), in front of other windows
+  and focused; Esc or Cmd+W also closes it. Quick Look is not used: started
+  from the background it opens without focus. The viewer draws the SVG with
+  WebKit, as a browser does.
 - GNOME: Settings → Keyboard → View and Customize Shortcuts → Custom
   Shortcuts → `+`, command `<repo>/scripts/keymap-view.sh`, shortcut: press the
   combo. The picture opens in the image viewer (Loupe or eog).
