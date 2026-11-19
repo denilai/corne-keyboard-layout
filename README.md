@@ -53,18 +53,50 @@ Pressing chords (each is a test in `tests/cases/shortcut-*.test`):
   J+K at once is the `'` combo), press C.
 - Shift and Alt on home row: K / D (Shift), L / S (Alt), hold + key of the other hand.
 
-System keys, with the default shortcuts they send:
+### System keys: how they work
 
-| Key | macOS | Linux (GNOME) |
-|---|---|---|
-| Utils (hold BSPC) + Esc: lock | Ctrl+Cmd+Q | Super+L |
-| Utils + Q / W: display brightness − / + | `C_BRI_DN` / `C_BRI_UP` | same |
-| Utils + E / R / T: screenshot screen / area / recording | Cmd+Shift+3 / 4 / 5 | Shift+Print / Print / Ctrl+Alt+Shift+R |
-| Utils + (Ctrl key, A, S, D, F, G): mute, volume −, volume +, prev, play/pause, next | consumer keys | same |
-| Nav (hold Space) + F / G: overview / app windows | Ctrl+↑ / Ctrl+↓ | Super / Super+A (app grid) |
-| Nav + ; / ': previous / next desktop | Ctrl+← / Ctrl+→ | Ctrl+Alt+← / → |
-| Nav + Z X C V B: undo, cut, copy, paste, redo | Cmd+Z… / Cmd+Shift+Z | Ctrl+Z… / Ctrl+Shift+Z |
-| Del thumb (hold): Hyper | Ctrl+Opt+Shift+Cmd | Ctrl+Alt+Shift+Super |
+The keyboard has no custom shortcuts and nothing in the OS is bound for it.
+Each system key sends one of two things:
+
+- a **consumer key** (volume, media, brightness): a separate HID usage, like
+  the media keys of any keyboard. The OS acts on it directly, no shortcut or
+  setting is involved.
+- the **OS default shortcut** for the action (screenshot, lock, Mission
+  Control, desktops): the names in the "Target OS" block of
+  `config/corne.keymap` (`SHOT_AREA`, `LOCK`, `DESK_PREV`…) are defined as
+  macOS shortcuts in the `-mac` build and as GNOME ones in the `-linux` build,
+  so the same physical key does the same thing on both systems.
+
+So if a key stops working, check that its shortcut is still enabled in the OS
+(column "macOS setting").
+
+| Action | Key | macOS sends | macOS setting | Linux (GNOME) sends |
+|---|---|---|---|---|
+| Volume + / − | combo `[`+`'` / `'`+right Shift; or Utils + S / A | consumer `C_VOL_UP` / `C_VOL_DN` | none | same |
+| Mute | Utils + outer left (`⌘` key) | consumer `C_MUTE` | none | same |
+| Previous / play-pause / next | Utils + D / F / G | consumer keys | none | same |
+| Display brightness − / + | Utils + Q / W | consumer `C_BRI_DN` / `C_BRI_UP` | none | same |
+| Lock screen | Utils + Esc | ⌃⌘Q | Apple menu, fixed | Super+L |
+| Screenshot: screen | Utils + E | ⇧⌘3 | Keyboard Shortcuts → Screenshots | Shift+Print |
+| Screenshot: area | Utils + R | ⇧⌘4 | Keyboard Shortcuts → Screenshots | Print (screenshot UI) |
+| Screenshot panel, screen recording | Utils + T | ⇧⌘5 | Keyboard Shortcuts → Screenshots | Ctrl+Alt+Shift+R |
+| Mission Control / overview | Nav + F | ⌃↑ | Keyboard Shortcuts → Mission Control | Super |
+| App windows (App Exposé) | Nav + G | ⌃↓ | Keyboard Shortcuts → Mission Control | Super+A (app grid) |
+| Previous / next desktop | Nav + `;` / `'` | ⌃← / ⌃→ | Keyboard Shortcuts → Mission Control → Mission Control → Move left / right a space | Ctrl+Alt+← / → |
+| Undo, cut, copy, paste, redo | Nav + Z X C V B | ⌘Z ⌘X ⌘C ⌘V ⇧⌘Z | app standard | Ctrl+Z… / Ctrl+Shift+Z |
+| Hyper (app launch) | hold Del thumb | ⌃⌥⇧⌘ + letter | Shortcuts app, see below | Ctrl+Alt+Shift+Super |
+| `,` `.` `?` | Num + right thumbs | keypad 1 2 3 | Karabiner, see below | keypad 1 2 3 |
+| Caps Lock | combo T+Y | Caps Lock held 300 ms | none | same |
+
+"Keyboard Shortcuts" is System Settings → Keyboard → Keyboard Shortcuts…
+Utils is held on the Backspace thumb, Nav on the Space thumb, Num on the Tab
+thumb. The keymap picture shows each of these keys with the shortcut it sends
+in small text on top.
+
+On this Mac (checked 2026-11-19) all of these shortcuts are at the macOS
+defaults; "Move left / right a space" are set explicitly and enabled. There
+are no app-specific shortcuts (`NSUserKeyEquivalents`) and no Hyper bindings
+yet.
 
 The MacBook keyboard backlight has no HID usage for an external keyboard: use
 Control Center. F1–F12 are plain F-keys on both systems (macOS applies the
@@ -97,7 +129,16 @@ After flashing the `-mac` central:
 
 The picture is rendered locally with [keymap-drawer](https://github.com/caksoylar/keymap-drawer)
 (version pinned in the script, runs in Docker if not installed) and committed
-together with the keymap. CI does not draw or check it.
+together with the keymap. CI does not draw or check it. It shows the macOS
+build; the legend at the bottom explains the marks (hold, shifted / shortcut,
+sticky, layer keys, combos) and the symbols.
+
+- Labels: `img/keymap-img/keymap_drawer.config.yaml`, `raw_binding_map` for
+  whole bindings (`&caps_lock`, `&kp LG(LS(N4))` → "Shot area" with "⇧⌘4" on
+  top), `zmk_keycode_map` for key codes.
+- `scripts/keymap_legend.py` post-processes the SVG: keymap-drawer has no
+  legend and draws every combo on every layer, so the script keeps combos on
+  Base only and appends the legend (its text is in the script).
 
 ```sh
 scripts/draw-keymap.sh           # updates img/keymap-img/corne.{yaml,svg}

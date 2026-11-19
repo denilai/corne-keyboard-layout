@@ -35,6 +35,7 @@ render() {
     trap 'rm -rf "$WORK"' EXIT
     keymap -c "$CFG" parse -z "$KEYMAP" >"$WORK/corne.yaml"
     keymap -c "$CFG" draw .draw-tmp/corne.yaml >"$WORK/corne.svg"
+    python3 "$REPO/scripts/keymap_legend.py" "$WORK/corne.svg"   # combos on Base only, legend
 }
 
 case "${1:-}" in

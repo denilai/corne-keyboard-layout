@@ -122,23 +122,36 @@ parse_config:
   preprocess: true
   skip_binding_parsing: false
   raw_binding_map:
-    # macOS build (zmk_preamble below): system keys from the "Target OS" block
-    "&kp LC(LG(Q))": Lock
-    "&kp LG(LS(N3))": Shot screen
-    "&kp LG(LS(N4))": Shot area
-    "&kp LG(LS(N5))": Shot / rec
-    "&kp LC(UP)": Mission Ctrl
-    "&kp LC(DOWN)": App wins
-    "&kp LC(LEFT)": Desk ←
-    "&kp LC(RIGHT)": Desk →
-    "&kp LG(Z)": Undo
-    "&kp LG(X)": Cut
-    "&kp LG(C)": Copy
-    "&kp LG(V)": Paste
-    "&kp LG(LS(Z))": Redo
+    # macOS build (zmk_preamble below): system keys from the "Target OS" block.
+    # t = what the key does, s (small, top) = the shortcut it sends.
+    "&kp LC(LG(Q))": {t: Lock, s: ⌃⌘Q}
+    "&kp LG(LS(N3))": {t: Shot screen, s: ⇧⌘3}
+    "&kp LG(LS(N4))": {t: Shot area, s: ⇧⌘4}
+    "&kp LG(LS(N5))": {t: "Rec\npanel", s: ⇧⌘5}
+    "&kp LC(UP)": {t: "Mission\nCtrl", s: ⌃↑}
+    "&kp LC(DOWN)": {t: "App\nwins", s: ⌃↓}
+    "&kp LC(LEFT)": {t: Desk ←, s: ⌃←}
+    "&kp LC(RIGHT)": {t: Desk →, s: ⌃→}
+    "&kp LG(Z)": {t: Undo, s: ⌘Z}
+    "&kp LG(X)": {t: Cut, s: ⌘X}
+    "&kp LG(C)": {t: Copy, s: ⌘C}
+    "&kp LG(V)": {t: Paste, s: ⌘V}
+    "&kp LG(LS(Z))": {t: Redo, s: ⇧⌘Z}
+    "&kp LC(F11)": ⌃F11
+    "&kp LC(F12)": ⌃F12
     "&mt LC(LA(LS(LGUI))) DEL":
-      t: DEL
+      t: ⌦
       h: Hyper
+    "&gresc": {t: ⎋, s: "` ~"}
+    "&sqtctrl": {t: "'", s: 2× ⌘⏎}
+    "&mkp RCLK": RClk
+    "&kp KP_EQUAL": "="
+    "&bt BT_CLR": BT CLR
+    "&bt BT_SEL 0": BT 0
+    "&bt BT_SEL 1": BT 1
+    "&bt BT_SEL 2": BT 2
+    "&bt BT_SEL 3": BT 3
+    "&bt BT_SEL 4": BT 4
     # keypad 1 2 3: Karabiner turns them into . , ? on macOS (macos/karabiner)
     "&kp KP_N1": ","
     "&kp KP_N2": .
@@ -241,10 +254,10 @@ parse_config:
       s: "=>"
     "&emdsh": "---"
 
-    "&mmv MOVE_LEFT": MOUSE ←
-    "&mmv MOVE_RIGHT": MOUSE →
-    "&mmv MOVE_UP": MOUSE ↑
-    "&mmv MOVE_DOWN": MOUSE ↓
+    "&mmv MOVE_LEFT": "Mouse\n←"
+    "&mmv MOVE_RIGHT": "Mouse\n→"
+    "&mmv MOVE_UP": "Mouse\n↑"
+    "&mmv MOVE_DOWN": "Mouse\n↓"
 
     "&mkp LCLK": LClk
     "&mkp MB1": LClk
@@ -361,7 +374,7 @@ parse_config:
       s: '"'
     K_APPLICATION: MENU
     K_APPLICATION: MENU
-    APOSTROPHE: <
+    APOSTROPHE: "'"
     ASTERISK: "*"
     ASTRK: "*"
     AT: "@"
@@ -385,7 +398,7 @@ parse_config:
       t: .
       s: ">"
     # DOUBLE_QUOTES: '"'
-    DOUBLE_QUOTES: '@'
+    DOUBLE_QUOTES: '"'
     DQT: '"'
     EQUAL:
       t: "="
@@ -466,15 +479,25 @@ parse_config:
     RALT: ⎇
     RGUI: ⌘
     RSHFT: ⇧
+    RSHIFT: ⇧
+    C_PP: ⏯
+    C_VOL_DN: |-
+      VOL
+      DOWN
+    C_VOL_UP: |-
+      VOL
+      UP
+    C_BRI_DN: ☀↓
+    C_BRI_UP: ☀↑
     RIGHT_CONTROL: ⌃
     RIGHT_ALT: ⎇
     RIGHT_GUI: ⌘
     RIGHT_SHFT: ⇧
     RIGHT_SHIFT: ⇧
-    MOVE_LEFT: MOUSE ←
-    MOVE_RIGHT: MOUSE →
-    MOVE_UP: MOUSE ↑
-    MOVE_DOWN: MOUSE ↓
+    MOVE_LEFT: "Mouse\n←"
+    MOVE_RIGHT: "Mouse\n→"
+    MOVE_UP: "Mouse\n↑"
+    MOVE_DOWN: "Mouse\n↓"
     LEFT: ←
     RIGHT: →
     UP: ↑

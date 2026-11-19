@@ -1,7 +1,7 @@
 layout: {zmk_keyboard: corne}
 layers:
   Base:
-  - {t: ESC, s: '`'}
+  - {t: ⎋, s: '` ~'}
   - Q
   - W
   - E
@@ -21,10 +21,10 @@ layers:
   - G
   - H
   - {t: J, h: ⌘}
-  - {t: K, h: RSHIFT}
+  - {t: K, h: ⇧}
   - {t: L, h: ⎇}
   - {t: ;, h: ⌃, s: ':'}
-  - '&sqtctrl'
+  - {t: '''', s: 2× ⌘⏎}
   - {t: ⇧, h: sticky}
   - Z
   - X
@@ -36,44 +36,64 @@ layers:
   - {t: ',', s: <}
   - {t: ., s: '>'}
   - /
-  - {t: RSHIFT, h: sticky}
+  - {t: ⇧, h: sticky}
   - ⌘
   - {t: ↹, h: Num}
   - {t: ⏎, h: ⌃}
   - {t: ⎵, h: Nav, s: _}
   - {t: ⌫, h: Utils}
-  - {t: DEL, h: Hyper}
+  - {t: ⌦, h: Hyper}
   Nav:
-  - MOUSE ←
-  - MOUSE ↓
-  - MOUSE ↑
-  - MOUSE →
+  - 'Mouse
+
+    ←'
+  - 'Mouse
+
+    ↓'
+  - 'Mouse
+
+    ↑'
+  - 'Mouse
+
+    →'
   - LClk
-  - '&mkp RCLK'
-  - MOUSE ←
-  - MOUSE ↓
-  - MOUSE ↑
-  - MOUSE →
+  - RClk
+  - 'Mouse
+
+    ←'
+  - 'Mouse
+
+    ↓'
+  - 'Mouse
+
+    ↑'
+  - 'Mouse
+
+    →'
   - LClk
-  - '&mkp RCLK'
+  - RClk
   - ←
   - ↓
   - ↑
   - →
-  - Mission Ctrl
-  - App wins
+  - {t: 'Mission
+
+      Ctrl', s: ⌃↑}
+  - {t: 'App
+
+      wins', s: ⌃↓}
   - ←
   - ↓
   - ↑
   - →
-  - Desk ←
-  - Desk →
+  - {t: Desk ←, s: ⌃←}
+  - {t: Desk →, s: ⌃→}
   - BACK
-  - Undo
-  - Cut
-  - Copy
-  - Paste
-  - Redo
+  - {t: Undo, s: ⌘Z}
+  - {t: Cut, s: ⌘X}
+  - {t: Copy, s: ⌘C}
+  - {t: Paste, s: ⌘V}
+  - {t: Redo, s: ⇧⌘Z}
   - BACK
   - HOME
   - PG DN
@@ -107,7 +127,7 @@ layers:
   - '5'
   - '6'
   - {t: '7', h: ⌘}
-  - {t: '8', h: RSHIFT}
+  - {t: '8', h: ⇧}
   - {t: '9', h: ⎇}
   - {t: '0', h: ⌃}
   - {t: ▽, type: trans}
@@ -115,10 +135,10 @@ layers:
   - ''
   - ''
   - ''
-  - Ctl+F11
-  - Ctl+F12
+  - ⌃F11
+  - ⌃F12
   - ''
-  - KP EQUAL
+  - '='
   - ''
   - ''
   - \
@@ -130,12 +150,14 @@ layers:
   - .
   - '?'
   Utils:
-  - Lock
-  - BRI DN
-  - BRI UP
-  - Shot screen
-  - Shot area
-  - Shot / rec
+  - {t: Lock, s: ⌃⌘Q}
+  - ☀↓
+  - ☀↑
+  - {t: Shot screen, s: ⇧⌘3}
+  - {t: Shot area, s: ⇧⌘4}
+  - {t: 'Rec
+
+      panel', s: ⇧⌘5}
   - ''
   - LClk
   - RClk
@@ -143,23 +165,35 @@ layers:
   - ''
   - UNLOCK
   - MUTE
-  - VOL DN
-  - VOL UP
+  - 'VOL
+
+    DOWN'
+  - 'VOL
+
+    UP'
   - ⏮
-  - PP
+  - ⏯
   - ⏭
-  - MOUSE ←
-  - MOUSE ↓
-  - MOUSE ↑
-  - MOUSE →
+  - 'Mouse
+
+    ←'
+  - 'Mouse
+
+    ↓'
+  - 'Mouse
+
+    ↑'
+  - 'Mouse
+
+    →'
   - ''
   - ''
   - BT CLR
-  - {t: BT, h: '0'}
-  - {t: BT, h: '1'}
-  - {t: BT, h: '2'}
-  - {t: BT, h: '3'}
-  - {t: BT, h: '4'}
+  - BT 0
+  - BT 1
+  - BT 2
+  - BT 3
+  - BT 4
   - ''
   - BACK
   - SCROLL ↓
@@ -186,9 +220,9 @@ combos:
 - p: [30, 31]
   k: '}'
 - p: [15, 16]
-  k: '@'
+  k: '"'
 - p: [19, 20]
-  k: <
+  k: ''''
 - p: [0, 12]
   k: '~'
 - p: [12, 24]
