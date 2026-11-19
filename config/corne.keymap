@@ -271,6 +271,15 @@
             layers = <0>;
         };
 
+        // Show / hide the keymap picture: outer keys of the middle row.
+        // F19 is unused on both systems; the OS runs scripts/keymap-view.sh
+        // on it (macOS: Karabiner rule, GNOME: custom shortcut).
+        combo_keymap_view {
+            bindings = <&kp F19>;
+            key-positions = <12 23>;
+            layers = <0>;
+        };
+
 
         combo_gt {
             bindings = <&kp GREATER_THAN>;

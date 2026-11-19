@@ -1,0 +1,16 @@
+{
+  "title": "Corne: show / hide the keymap picture",
+  "rules": [
+    {
+      "description": "Corne: F19 = show / hide the keymap (combo of the outer middle-row keys)",
+      "manipulators": [
+        { "type": "basic",
+          "from": { "key_code": "f19", "modifiers": { "optional": ["any"] } },
+          "to": [{ "shell_command": "'{{REPO}}/scripts/keymap-view.sh' toggle" }],
+          "conditions": [
+            { "type": "device_if", "identifiers": [{ "vendor_id": 7504, "product_id": 24926 }] }
+          ] }
+      ]
+    }
+  ]
+}

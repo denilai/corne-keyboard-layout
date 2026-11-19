@@ -1,0 +1,9 @@
+# Комбо крайних клавиш среднего ряда = F19: ОС показывает / прячет картинку
+# раскладки (scripts/keymap-view.sh через Karabiner или GNOME)
+press LCTL
+press SQT
+release LCTL
+release SQT
+---
+press F19
+release F19

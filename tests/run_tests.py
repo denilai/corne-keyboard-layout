@@ -93,6 +93,8 @@ def _keyboard_names():
     })
     for i in range(12):
         n[0x3A + i] = f"F{i + 1}"
+    for i in range(12):
+        n[0x68 + i] = f"F{i + 13}"
     for i, c in enumerate("1234567890"):
         n[0x59 + i] = "KP_N" + c
     for i, m in enumerate(MODS):

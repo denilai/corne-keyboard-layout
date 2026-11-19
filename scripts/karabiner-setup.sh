@@ -45,8 +45,8 @@ new="$(mktemp)"
 trap 'rm -f "$new"' EXIT
 [ -f "$CONFIG" ] || echo '{"profiles":[{"name":"Default profile","selected":true}]}' >"$CONFIG"
 
-python3 - "$CONFIG" "$new" "$RULES_DIR"/*.json <<'PY'
-import json, sys
+CORNE_REPO="$REPO" python3 - "$CONFIG" "$new" "$RULES_DIR"/*.json <<'PY'
+import json, os, sys
 src, dst, *rule_files = sys.argv[1:]
 cfg = json.load(open(src))
 
@@ -70,8 +70,10 @@ profile["devices"] = devices
 
 cm = profile.setdefault("complex_modifications", {})
 rules = [r for r in cm.get("rules", []) if not r.get("description", "").startswith("Corne:")]
+# "{{REPO}}" in rules (shell_command paths) is this repo's path.
+repo = os.environ["CORNE_REPO"]
 for f in rule_files:
-    rules += json.load(open(f))["rules"]
+    rules += json.loads(open(f).read().replace("{{REPO}}", repo))["rules"]
 cm["rules"] = rules
 
 json.dump(cfg, open(dst, "w"), indent=4, ensure_ascii=False)
@@ -92,7 +94,9 @@ else
 fi
 
 mkdir -p "$KDIR/assets/complex_modifications"
-cp "$RULES_DIR"/*.json "$KDIR/assets/complex_modifications/"
+for f in "$RULES_DIR"/*.json; do   # with {{REPO}} filled in, as in karabiner.json
+    sed "s#{{REPO}}#$REPO#g" "$f" >"$KDIR/assets/complex_modifications/$(basename "$f")"
+done
 
 open -g -a Karabiner-Elements
 echo "Karabiner-Elements is running. Check Settings → Devices: only Corne is modified."

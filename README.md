@@ -133,6 +133,18 @@ After flashing the `-mac` central:
 
 ![1](./img/keymap-img/corne.svg)
 
+**Show it from the keyboard:** press the outer keys of the middle row together
+(left ⌘ key + right `'` key, Base layer); press them again to hide it. The
+combo sends F19, unused on both systems, and the OS runs
+`scripts/keymap-view.sh toggle`:
+
+- macOS: Karabiner rule `macos/karabiner/corne-keymap-view.json` (installed by
+  `scripts/karabiner-setup.sh`), the picture opens in Quick Look; Esc also
+  closes it.
+- GNOME: Settings → Keyboard → View and Customize Shortcuts → Custom
+  Shortcuts → `+`, command `<repo>/scripts/keymap-view.sh`, shortcut: press the
+  combo. The picture opens in the image viewer (Loupe or eog).
+
 The picture is rendered locally with [keymap-drawer](https://github.com/caksoylar/keymap-drawer)
 (version pinned in the script, runs in Docker if not installed) and committed
 together with the keymap. CI does not draw or check it. It shows the macOS
@@ -183,16 +195,21 @@ under `config/boards/shields/corne/` (key pins are in `corne_left.dtsi` /
 
 ## Battery and sleep
 
-Halves (and the left half as central without the dongle) go to deep sleep
-after 10 minutes without key presses (`CONFIG_ZMK_SLEEP`,
-`CONFIG_ZMK_IDLE_SLEEP_TIMEOUT` in the shield `.conf` files). A key press
-wakes the half: the key matrix is a `wakeup-source` (`corne.dtsi`), the half
-reboots and reconnects in a second or two, the waking key press is not typed.
-The dongle is on USB and never sleeps.
+Halves go to deep sleep after a time without key presses
+(`CONFIG_ZMK_SLEEP`, `CONFIG_ZMK_IDLE_SLEEP_TIMEOUT` in the shield `.conf`
+files). A key press wakes the half: the key matrix is a `wakeup-source`
+(`corne.dtsi`), the half reboots and reconnects in a second or two, the waking
+key press is not typed. The dongle is on USB and never sleeps.
 
-Each half sleeps on its own timer, counted from its own key presses. Typing
-only with one hand for 10 minutes puts the other half to sleep: its first key
-press then only wakes it.
+| Part | Sleeps after | Counts key presses of |
+|---|---|---|
+| left half as central (no dongle) | 10 min | both halves |
+| peripheral halves (right; both with the dongle) | 30 min | itself only |
+
+ZMK counts activity per part: a peripheral sees only its own keys, so typing
+with the other hand alone does not keep it awake (there is no activity sync
+between halves). The peripherals' longer timeout covers one-handed typing; if
+a half did fall asleep, its first key press only wakes it.
 
 To check sleep without waiting 10 minutes, build with a 1 minute timeout and
 watch the Bluetooth connection (the left half disconnects when it sleeps):
