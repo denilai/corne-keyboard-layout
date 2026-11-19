@@ -11,9 +11,14 @@ Usage: build_matrix.py [--mode dongle|no-dongle] [--os mac|linux] [--reset]
                     override for a test build:
                     --cmake-arg=-DCONFIG_ZMK_IDLE_SLEEP_TIMEOUT=60000 (with "=")
                     The .uf2 names stay the same: rebuild without it after testing.
-Output: /repo/firmware/<artifact-name>.uf2 (default <shield>-<board>), as in CI
+Output: /repo/firmware/<artifact-name>.uf2 (default <shield>-<board>), as in CI,
+and <artifact-name>.info next to it: commit, date, extra CMake arguments and
+the resulting sleep setting. scripts/flash.sh prints it before flashing and
+warns about a test build (one with --cmake-arg).
 """
 import argparse
+import datetime
+import re
 import shutil
 import subprocess
 import sys
@@ -24,6 +29,36 @@ import firmware
 REPO = Path("/repo")
 WS = Path("/ws")
 OUT = REPO / "firmware"
+
+
+def git(*args):
+    r = subprocess.run(["git", "-c", "safe.directory=*", "-C", str(REPO), *args],
+                       capture_output=True, text=True)
+    return r.stdout.strip()
+
+
+def build_info(bdir, extra):
+    """Text of firmware/<name>.info: where the build came from, what it does."""
+    kconfig = (bdir / "zephyr" / ".config").read_text()
+
+    def opt(name):
+        m = re.search(rf"^CONFIG_{name}=(.*)$", kconfig, re.M)
+        return m.group(1).strip('"') if m else None
+
+    dirty = ", uncommitted changes" if git("status", "--porcelain", "--untracked-files=no") else ""
+    if opt("ZMK_SLEEP") == "y":
+        sleep = f"after {int(opt('ZMK_IDLE_SLEEP_TIMEOUT')) / 60000:g} min without key presses"
+    else:
+        sleep = "off"
+    lines = [
+        f"built:  {datetime.datetime.now(datetime.timezone.utc):%Y-%m-%d %H:%M} UTC",
+        f"commit: {git('rev-parse', '--short', 'HEAD')} ({git('branch', '--show-current')}{dirty})",
+        f"sleep:  {sleep}",
+        f"extra:  {' '.join(extra) or 'none'}",
+    ]
+    if extra:
+        lines.append("TEST BUILD: extra CMake arguments, rebuild without --cmake-arg for normal use")
+    return "\n".join(lines) + "\n"
 
 
 def main():
@@ -63,7 +98,11 @@ def main():
             continue
         uf2 = bdir / "zephyr" / "zmk.uf2"
         shutil.copy(uf2, OUT / f"{name}.uf2")
+        info = build_info(bdir, a.cmake_arg)
+        (OUT / f"{name}.info").write_text(info)
         print(f"    ok -> firmware/{name}.uf2")
+        if a.cmake_arg:
+            print("    TEST BUILD: " + " ".join(a.cmake_arg))
     if failed:
         sys.exit("FAILED: " + ", ".join(failed))
 

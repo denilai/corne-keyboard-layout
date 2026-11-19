@@ -184,17 +184,17 @@ under `config/boards/shields/corne/` (key pins are in `corne_left.dtsi` /
 ## Battery and sleep
 
 Halves (and the left half as central without the dongle) go to deep sleep
-after 30 minutes without key presses (`CONFIG_ZMK_SLEEP`,
+after 10 minutes without key presses (`CONFIG_ZMK_SLEEP`,
 `CONFIG_ZMK_IDLE_SLEEP_TIMEOUT` in the shield `.conf` files). A key press
 wakes the half: the key matrix is a `wakeup-source` (`corne.dtsi`), the half
 reboots and reconnects in a second or two, the waking key press is not typed.
 The dongle is on USB and never sleeps.
 
 Each half sleeps on its own timer, counted from its own key presses. Typing
-only with one hand for 30 minutes puts the other half to sleep: its first key
+only with one hand for 10 minutes puts the other half to sleep: its first key
 press then only wakes it.
 
-To check sleep without waiting 30 minutes, build with a 1 minute timeout and
+To check sleep without waiting 10 minutes, build with a 1 minute timeout and
 watch the Bluetooth connection (the left half disconnects when it sleeps):
 
 ```sh
@@ -206,7 +206,18 @@ scripts/zmk-docker.sh build --mode no-dongle --os mac   # then flash the normal 
 ```
 
 `--cmake-arg` passes any CMake argument to every target, so any Kconfig option
-can be overridden for a test build; the file names stay the same.
+can be overridden for a test build. The file names stay the same; each `.uf2`
+gets a `.info` next to it (commit, date, sleep setting, extra arguments), and
+`flash.sh` prints it before flashing, with a red warning for a test build:
+
+```text
+  built:  2026-11-19 08:50 UTC
+  commit: 8cf486d (battery-sleep)
+  sleep:  after 1 min without key presses
+  extra:  -DCONFIG_ZMK_IDLE_SLEEP_TIMEOUT=60000
+  TEST BUILD: extra CMake arguments, rebuild without --cmake-arg for normal use
+  !!! ТЕСТОВАЯ СБОРКА (--cmake-arg), не для обычной работы
+```
 
 `scripts/battery.sh` prints the battery level of each half (no-dongle setup:
 the left half is the Bluetooth device, it sends its own level and proxies the

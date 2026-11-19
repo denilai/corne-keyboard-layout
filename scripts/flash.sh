@@ -66,6 +66,16 @@ esac
 uf2="$FW/$shield-$board$suffix.uf2"
 [ -f "$uf2" ] || { echo "нет файла $uf2 (собери: scripts/zmk-docker.sh build)" >&2; exit 1; }
 echo "Флешка: $drive ($board)"
+# Паспорт сборки (scripts/build_matrix.py): коммит, сон, тестовые параметры.
+info="${uf2%.uf2}.info"
+if [ -f "$info" ]; then
+    sed 's/^/  /' "$info"
+    if grep -q '^TEST BUILD' "$info"; then
+        printf '\e[1;31m  !!! ТЕСТОВАЯ СБОРКА (--cmake-arg), не для обычной работы\e[0m\n'
+    fi
+else
+    echo "  (нет $(basename "$info"): сборка не локальная или старая)"
+fi
 echo "Записываю $(basename "$uf2")..."
 # Плата перезагружается сразу после записи, поэтому cp может вернуть ошибку.
 cp "$uf2" "$drive/" 2>/dev/null || true

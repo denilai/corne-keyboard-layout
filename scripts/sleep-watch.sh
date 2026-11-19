@@ -9,7 +9,7 @@
 # The right half sleeps on its own timer; its state is not visible here, check
 # it by typing on it after the left one woke up.
 #
-# Test with a short timeout instead of 30 min:
+# Test with a short timeout instead of 10 min:
 #   scripts/zmk-docker.sh build --mode no-dongle --os mac \
 #       --cmake-arg=-DCONFIG_ZMK_IDLE_SLEEP_TIMEOUT=60000
 #   flash both halves, run this, keep hands off the keyboard for a minute.
