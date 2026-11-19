@@ -1,0 +1,8 @@
+# Nav + U = Page Up (над ←)
+press T4
+wait 250
+tap U
+release T4
+---
+press PG_UP
+release PG_UP

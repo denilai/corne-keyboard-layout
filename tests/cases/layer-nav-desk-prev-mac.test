@@ -1,0 +1,9 @@
+# @os mac
+# Nav + H = предыдущий рабочий стол: Ctrl+← (слева от стрелок)
+press T4
+wait 250
+tap H
+release T4
+---
+press LEFT [LCTRL]
+release LEFT [LCTRL]

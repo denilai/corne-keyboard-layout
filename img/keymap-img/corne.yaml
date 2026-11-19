@@ -58,20 +58,12 @@ layers:
     →'
   - LClk
   - RClk
-  - 'Mouse
-
-    ←'
-  - 'Mouse
-
-    ↓'
-  - 'Mouse
-
-    ↑'
-  - 'Mouse
-
-    →'
-  - LClk
-  - RClk
+  - ''
+  - PG UP
+  - {t: Word ←, s: ⌥←}
+  - {t: Word →, s: ⌥→}
+  - {t: Line start, s: ⌘←}
+  - DEL
   - ←
   - ↓
   - ↑
@@ -82,11 +74,11 @@ layers:
   - {t: 'App
 
       wins', s: ⌃↓}
+  - {t: Desk ←, s: ⌃←}
   - ←
   - ↓
   - ↑
   - →
-  - {t: Desk ←, s: ⌃←}
   - {t: Desk →, s: ⌃→}
   - BACK
   - {t: Undo, s: ⌘Z}
@@ -95,10 +87,10 @@ layers:
   - {t: Paste, s: ⌘V}
   - {t: Redo, s: ⇧⌘Z}
   - BACK
-  - HOME
   - PG DN
-  - PG UP
-  - END
+  - {t: Doc start, s: ⌘↑}
+  - {t: Doc end, s: ⌘↓}
+  - {t: Line end, s: ⌘→}
   - FORWARD
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}

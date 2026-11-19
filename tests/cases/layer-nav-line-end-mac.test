@@ -1,0 +1,9 @@
+# @os mac
+# Nav + / = конец строки: Cmd+→ (End на Mac листает документ)
+press T4
+wait 250
+tap FSLH
+release T4
+---
+press RIGHT [LGUI]
+release RIGHT [LGUI]

@@ -1,0 +1,9 @@
+# @os linux
+# Nav + / = конец строки: End
+press T4
+wait 250
+tap FSLH
+release T4
+---
+press END
+release END

@@ -1,0 +1,9 @@
+# @os mac
+# Nav + I = слово назад: Opt+←
+press T4
+wait 250
+tap I
+release T4
+---
+press LEFT [LALT]
+release LEFT [LALT]

@@ -95,6 +95,12 @@
 #define APP_WINS    LC(DOWN)            /* App windows (App Exposé) */
 #define DESK_PREV   LC(LEFT)            /* previous Space */
 #define DESK_NEXT   LC(RIGHT)           /* next Space */
+#define WORD_PREV   LA(LEFT)
+#define WORD_NEXT   LA(RIGHT)
+#define LINE_START  LG(LEFT)            /* Home/End scroll the document on macOS */
+#define LINE_END    LG(RIGHT)
+#define DOC_START   LG(UP)
+#define DOC_END     LG(DOWN)
 #elif defined(OS_LINUX)
 #define SC_L        LCTRL
 #define SC_R        RCTRL
@@ -110,6 +116,12 @@
 #define APP_WINS    LG(A)               /* app grid: GNOME has no app-windows view */
 #define DESK_PREV   LC(LA(LEFT))
 #define DESK_NEXT   LC(LA(RIGHT))
+#define WORD_PREV   LC(LEFT)
+#define WORD_NEXT   LC(RIGHT)
+#define LINE_START  HOME
+#define LINE_END    END
+#define DOC_START   LC(HOME)
+#define DOC_END     LC(END)
 #else
 #error "Build with -DDTS_EXTRA_CPPFLAGS=-DOS_MAC or -DOS_LINUX (cmake-args in build.yaml)"
 #endif
@@ -378,10 +390,12 @@
         };
         nav_layer {
             display-name = "Nav";
+            // Right hand: arrows on J K L ; with page, word, line and document
+            // moves around them, desktops on both sides of the arrows.
             bindings = <
-&mmv MOVE_LEFT     &mmv MOVE_DOWN  &mmv MOVE_UP    &mmv MOVE_RIGHT  &mkp LCLK          &mkp RCLK            &mmv MOVE_LEFT     &mmv MOVE_DOWN  &mmv MOVE_UP    &mmv MOVE_RIGHT  &mkp LCLK          &mkp RCLK
-&kp LEFT           &kp DOWN_ARROW  &kp UP_ARROW    &kp RIGHT        &kp OVERVIEW       &kp APP_WINS         &kp LEFT           &kp DOWN_ARROW  &kp UP_ARROW    &kp RIGHT        &kp DESK_PREV      &kp DESK_NEXT
-&mkp MB4           &kp UNDO        &kp CUT         &kp COPY         &kp PASTE          &kp REDO             &mkp MB4           &kp HOME        &kp PAGE_DOWN   &kp PG_UP        &kp END            &mkp MB5
+&mmv MOVE_LEFT     &mmv MOVE_DOWN  &mmv MOVE_UP    &mmv MOVE_RIGHT  &mkp LCLK          &mkp RCLK            &none              &kp PG_UP       &kp WORD_PREV   &kp WORD_NEXT    &kp LINE_START     &kp DEL
+&kp LEFT           &kp DOWN_ARROW  &kp UP_ARROW    &kp RIGHT        &kp OVERVIEW       &kp APP_WINS         &kp DESK_PREV      &kp LEFT        &kp DOWN_ARROW  &kp UP_ARROW     &kp RIGHT          &kp DESK_NEXT
+&mkp MB4           &kp UNDO        &kp CUT         &kp COPY         &kp PASTE          &kp REDO             &mkp MB4           &kp PG_DN       &kp DOC_START   &kp DOC_END      &kp LINE_END       &mkp MB5
                                                    &trans           &trans             &trans               &trans             &trans          &trans
             >;
         };

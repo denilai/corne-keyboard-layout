@@ -1,0 +1,9 @@
+# @os linux
+# Nav + I = слово назад: Ctrl+←
+press T4
+wait 250
+tap I
+release T4
+---
+press LEFT [LCTRL]
+release LEFT [LCTRL]

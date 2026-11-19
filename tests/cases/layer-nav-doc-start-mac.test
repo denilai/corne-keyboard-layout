@@ -1,0 +1,9 @@
+# @os mac
+# Nav + , = начало документа: Cmd+↑
+press T4
+wait 250
+tap COMMA
+release T4
+---
+press UP [LGUI]
+release UP [LGUI]

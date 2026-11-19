@@ -1,0 +1,12 @@
+# Del thumb: быстрый тап и сразу удержание (quick-tap 219 мс) = Del держится,
+# ОС повторяет удаление; Hyper при этом не включается
+tap T6
+wait 100
+press T6
+wait 800
+release T6
+---
+press DEL
+release DEL
+press DEL
+release DEL after>=700

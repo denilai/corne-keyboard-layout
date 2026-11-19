@@ -132,6 +132,12 @@ parse_config:
     "&kp LC(DOWN)": {t: "App\nwins", s: ⌃↓}
     "&kp LC(LEFT)": {t: Desk ←, s: ⌃←}
     "&kp LC(RIGHT)": {t: Desk →, s: ⌃→}
+    "&kp LA(LEFT)": {t: Word ←, s: ⌥←}
+    "&kp LA(RIGHT)": {t: Word →, s: ⌥→}
+    "&kp LG(LEFT)": {t: Line start, s: ⌘←}
+    "&kp LG(RIGHT)": {t: Line end, s: ⌘→}
+    "&kp LG(UP)": {t: Doc start, s: ⌘↑}
+    "&kp LG(DOWN)": {t: Doc end, s: ⌘↓}
     "&kp LG(Z)": {t: Undo, s: ⌘Z}
     "&kp LG(X)": {t: Cut, s: ⌘X}
     "&kp LG(C)": {t: Copy, s: ⌘C}

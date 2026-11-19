@@ -1,7 +1,7 @@
-# Удержание пробела (Nav) + H = стрелка влево
+# Удержание пробела (Nav) + J = стрелка влево (стрелки на J K L ;)
 press T4
 wait 250
-tap H
+tap J
 release T4
 ---
 press LEFT

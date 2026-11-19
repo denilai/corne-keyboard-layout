@@ -1,0 +1,9 @@
+# @os linux
+# Nav + , = начало документа: Ctrl+Home
+press T4
+wait 250
+tap COMMA
+release T4
+---
+press HOME [LCTRL]
+release HOME [LCTRL]
