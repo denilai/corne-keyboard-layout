@@ -6,7 +6,7 @@
 # <swiftbar.hideDisablePlugin>true</swiftbar.hideDisablePlugin>
 #
 # SwiftBar plugin, refreshed every 5 minutes (".5m" in the file name).
-# Installed by scripts/swiftbar-setup.sh as a link from the plugin folder.
+# Installed by scripts/swiftbar.sh install as a link from the plugin folder.
 #
 # SwiftBar runs plugins as its child processes and has no Bluetooth
 # permission, so the reader (scripts/battery-mac.swift) is built into its own
@@ -27,7 +27,7 @@ trap 'rm -f "$out"' EXIT
 if [ ! -d "$APP" ]; then
     echo "⌨ ?"
     echo "---"
-    echo "CorneBattery.app is missing: run scripts/swiftbar-setup.sh"
+    echo "CorneBattery.app is missing: run scripts/swiftbar.sh install"
     exit 0
 fi
 

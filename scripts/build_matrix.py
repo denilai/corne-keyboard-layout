@@ -3,10 +3,14 @@
 
 Runs inside the zmk-build container (see scripts/zmk-docker.sh).
 Usage: build_matrix.py [--mode dongle|no-dongle] [--os mac|linux] [--reset]
-                       [substring filter...]
+                       [--cmake-arg=-DCONFIG_...=...]... [substring filter...]
   no options        every target from scripts/firmware.py (all setups, both OSes)
   --mode/--os       only the parts of that setup / OS (--reset adds settings_reset)
   filters           keep targets whose name contains any of the substrings
+  --cmake-arg       extra CMake argument for every target, e.g. a Kconfig
+                    override for a test build:
+                    --cmake-arg=-DCONFIG_ZMK_IDLE_SLEEP_TIMEOUT=60000 (with "=")
+                    The .uf2 names stay the same: rebuild without it after testing.
 Output: /repo/firmware/<artifact-name>.uf2 (default <shield>-<board>), as in CI
 """
 import argparse
@@ -27,6 +31,7 @@ def main():
     ap.add_argument("--mode", choices=list(firmware.MODES))
     ap.add_argument("--os", choices=firmware.OSES)
     ap.add_argument("--reset", action="store_true")
+    ap.add_argument("--cmake-arg", action="append", default=[])
     ap.add_argument("filters", nargs="*")
     a = ap.parse_args()
     if a.mode or a.os:
@@ -49,6 +54,7 @@ def main():
             cmd += [f"-DSHIELD={t['shield']}"]
         if t.get("cmake-args"):
             cmd += t["cmake-args"].split()
+        cmd += a.cmake_arg
         print(f"=== {name}", flush=True)
         r = subprocess.run(cmd, cwd=WS, capture_output=True, text=True)
         if r.returncode:

@@ -190,6 +190,24 @@ wakes the half: the key matrix is a `wakeup-source` (`corne.dtsi`), the half
 reboots and reconnects in a second or two, the waking key press is not typed.
 The dongle is on USB and never sleeps.
 
+Each half sleeps on its own timer, counted from its own key presses. Typing
+only with one hand for 30 minutes puts the other half to sleep: its first key
+press then only wakes it.
+
+To check sleep without waiting 30 minutes, build with a 1 minute timeout and
+watch the Bluetooth connection (the left half disconnects when it sleeps):
+
+```sh
+scripts/zmk-docker.sh build --mode no-dongle --os mac --cmake-arg=-DCONFIG_ZMK_IDLE_SLEEP_TIMEOUT=60000
+scripts/flash.sh central-left mac && scripts/flash.sh right
+scripts/sleep-watch.sh      # "12:01:05 not connected (was connected for 60 s)"
+# press a key on the left half: "connected" again in a few seconds
+scripts/zmk-docker.sh build --mode no-dongle --os mac   # then flash the normal build back
+```
+
+`--cmake-arg` passes any CMake argument to every target, so any Kconfig option
+can be overridden for a test build; the file names stay the same.
+
 `scripts/battery.sh` prints the battery level of each half (no-dongle setup:
 the left half is the Bluetooth device, it sends its own level and proxies the
 right half's one, `..._BATTERY_LEVEL_FETCHING` / `_PROXY` in
@@ -228,13 +246,19 @@ How it works:
   `~/Applications/CorneBattery.app`, a background app (no Dock icon) with its
   own permission; the plugin starts it with `open` and reads its output.
 
-Install (once per Mac):
+Everything is done with `scripts/swiftbar.sh`:
 
 ```sh
-scripts/swiftbar-setup.sh
+scripts/swiftbar.sh install     # SwiftBar, CorneBattery.app, plugin link, start SwiftBar
+scripts/swiftbar.sh status      # installed / running / linked / built / Bluetooth allowed + plugin output
+scripts/swiftbar.sh show        # run the plugin here: what the menu bar shows
+scripts/swiftbar.sh refresh     # refresh the menu bar item now
+scripts/swiftbar.sh rebuild     # rebuild CorneBattery.app after editing battery-mac.swift
+scripts/swiftbar.sh start|stop  # start / quit SwiftBar
+scripts/swiftbar.sh uninstall [--all]   # --all: also SwiftBar and its settings
 ```
 
-It installs SwiftBar with Homebrew into `~/Applications` (no sudo), builds and
+`install` installs SwiftBar with Homebrew into `~/Applications` (no sudo), builds and
 signs (ad hoc) `CorneBattery.app`, sets the plugin folder if SwiftBar has none,
 links the plugin and starts SwiftBar. Then:
 
@@ -247,12 +271,12 @@ Maintain:
 
 | Task | How |
 |---|---|
-| Changed `battery-mac.swift` | `scripts/swiftbar-setup.sh` again (rebuilds the app; Bluetooth permission may be asked again) |
-| Changed the plugin | nothing, it is a link; "Refresh" to see it now |
-| Other interval | rename the file (`.10m.` = 10 minutes), run the setup, delete the old link in `~/.config/swiftbar` |
+| Changed `battery-mac.swift` | `scripts/swiftbar.sh rebuild` (Bluetooth permission may be asked again) |
+| Changed the plugin | nothing, it is a link; `scripts/swiftbar.sh refresh` to see it now |
+| Other interval | `scripts/swiftbar.sh uninstall`, rename the plugin (`.10m.` = 10 minutes) and `PLUGIN=` in `scripts/swiftbar.sh`, then `install` |
 | Other threshold | `LOW=` in the plugin |
 | Update SwiftBar | its own updater (SwiftBar → Check for Updates), or `brew upgrade --cask swiftbar` |
-| Check by hand | `macos/swiftbar/corne-battery.5m.sh` in a terminal prints what SwiftBar shows |
+| Check everything | `scripts/swiftbar.sh status` |
 
 Troubleshooting (what the menu bar shows):
 
@@ -261,18 +285,11 @@ Troubleshooting (what the menu bar shows):
 | `⌨ –` | Corne is not connected over Bluetooth | keyboard asleep (press a key), off, or in the dongle setup (USB: no battery to read) |
 | `⌨ –` | no Bluetooth access | System Settings → Privacy & Security → Bluetooth → CorneBattery on |
 | `⌨ –` | timeout after 15 s | the left half is reconnecting after sleep: "Refresh" in a few seconds |
-| `⌨ ?` | CorneBattery.app is missing | `scripts/swiftbar-setup.sh` |
-| no `⌨` at all | | SwiftBar is not running: `open -a SwiftBar`; or the link is missing in `~/.config/swiftbar` |
+| `⌨ ?` | CorneBattery.app is missing | `scripts/swiftbar.sh install` |
+| no `⌨` at all | | `scripts/swiftbar.sh status`: SwiftBar not running or plugin not linked |
 
-Remove:
-
-```sh
-rm ~/.config/swiftbar/corne-battery.5m.sh
-rm -rf ~/Applications/CorneBattery.app
-tccutil reset BluetoothAlways local.corne.battery   # forget its permission
-brew uninstall --cask swiftbar                       # if SwiftBar is not needed
-defaults delete com.ameba.SwiftBar                   # its settings
-```
+Remove: `scripts/swiftbar.sh uninstall` (plugin link, CorneBattery.app, its
+Bluetooth permission), `uninstall --all` also removes SwiftBar and its settings.
 
 ## Firmware
 
