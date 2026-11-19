@@ -1,0 +1,12 @@
+# Cmd+Shift+C (Mac) / Ctrl+Shift+C (Linux): держать T1, тап LSFT (sticky), тап C
+press T1
+tap LSFT
+tap C
+release T1
+---
+press SC
+press LSHIFT
+press C
+release LSHIFT
+release C
+release SC

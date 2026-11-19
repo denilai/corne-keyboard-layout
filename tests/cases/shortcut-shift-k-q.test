@@ -1,0 +1,9 @@
+# Удержание K (Shift правой руки) + Q = Shift+Q
+press K
+tap Q
+release K
+---
+press RSHIFT
+press Q
+release Q
+release RSHIFT

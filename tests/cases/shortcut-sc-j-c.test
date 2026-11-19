@@ -1,0 +1,9 @@
+# Удержание J (SC правой руки) + C левой рукой = SC+C, без ожидания
+press J
+tap C
+release J
+---
+press SC_R
+press C
+release C
+release SC_R

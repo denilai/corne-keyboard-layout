@@ -1,0 +1,9 @@
+# Удержание ; (OT правой руки: Ctrl на Mac, Super на Linux) + C = OT+C
+press SEMI
+tap C
+release SEMI
+---
+press OT
+press C
+release C
+release OT

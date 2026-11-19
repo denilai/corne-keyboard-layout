@@ -1,0 +1,16 @@
+# SC+Shift+C одной левой рукой: F, затем D, каждую держать дольше
+# tapping-term (219 мс), потом C. Быстро так не выйдет: C той же рукой.
+press F
+wait 300
+press D
+wait 300
+tap C
+release D
+release F
+---
+press SC
+press LSHIFT
+press C
+release C
+release LSHIFT
+release SC

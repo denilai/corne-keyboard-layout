@@ -1,0 +1,11 @@
+# Ловушка: J и K нажаты одновременно = комбо апострофа, а не SC+Shift
+press J
+press K
+tap C
+release K
+release J
+---
+press SQT
+press C
+release C
+release SQT

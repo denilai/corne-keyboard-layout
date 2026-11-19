@@ -1,0 +1,9 @@
+# SC+Space (Spotlight на Mac): держать T1, тап T4 (пробел)
+press T1
+tap T4
+release T1
+---
+press SC
+press SPACE
+release SPACE
+release SC

@@ -1,0 +1,9 @@
+# Удержание L (Alt/Opt правой руки) + E = Alt+E
+press L
+tap E
+release L
+---
+press LALT
+press E
+release E
+release LALT

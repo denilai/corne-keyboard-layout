@@ -1,0 +1,16 @@
+# SC+Shift+C правой рукой: J (SC), затем K (Shift), тап C левой.
+# J и K вместе (в пределах 30 мс) — комбо апострофа, поэтому K позже J.
+# hold-trigger-on-release: два мода одной руки можно зажать вместе.
+press J
+wait 50
+press K
+tap C
+release K
+release J
+---
+press SC_R
+press RSHIFT
+press C
+release C
+release RSHIFT
+release SC_R

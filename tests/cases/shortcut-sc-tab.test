@@ -1,0 +1,9 @@
+# Переключение приложений: держать T1 (SC), тап T2 (Tab) = SC+Tab (Cmd+Tab на Mac)
+press T1
+tap T2
+release T1
+---
+press SC
+press TAB
+release TAB
+release SC

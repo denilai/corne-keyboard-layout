@@ -1,0 +1,13 @@
+# SC+Shift+C: держать T1 и LSFT (sticky при удержании работает как обычный Shift), тап C
+press T1
+press LSFT
+tap C
+release LSFT
+release T1
+---
+press SC
+press LSHIFT
+press C
+release C
+release LSHIFT
+release SC

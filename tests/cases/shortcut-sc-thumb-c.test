@@ -1,0 +1,10 @@
+# Левый внешний thumb (T1) = SC, обычная клавиша без hold-tap: SC+C сразу
+# (Cmd+C на Mac, Ctrl+C на Linux)
+press T1
+tap C
+release T1
+---
+press SC
+press C
+release C
+release SC

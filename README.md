@@ -41,6 +41,18 @@ Modifiers are named by role:
 So copy is the same physical chord on both systems (`SC`+C), and nothing is
 remapped in the OS.
 
+Pressing chords (each is a test in `tests/cases/shortcut-*.test`):
+
+- Hold a home-row modifier and press a key of the **other hand**: J+C is
+  `SC`+C at once. With a key of the same hand (F+C) a fast roll types the
+  letters; hold the modifier longer than 219 ms first, or use a thumb.
+- Left thumb `SC` is a plain key, it works with anything: thumb+C, thumb+Tab
+  (app switch), thumb+Space.
+- `SC`+Shift+C (Cmd+Shift+C on macOS): hold the left thumb, tap the outer
+  left Shift (sticky) or hold it, press C. Or hold J, then K (not together:
+  J+K at once is the `'` combo), press C.
+- Shift and Alt on home row: K / D (Shift), L / S (Alt), hold + key of the other hand.
+
 System keys, with the default shortcuts they send:
 
 | Key | macOS | Linux (GNOME) |
