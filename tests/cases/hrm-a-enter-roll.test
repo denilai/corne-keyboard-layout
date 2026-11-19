@@ -1,0 +1,11 @@
+# Перекат A -> Enter (T3) при наборе: A отпущена раньше Enter = буква a и Enter,
+# а не SC+Enter, хотя thumb-клавиши в hold-trigger-позициях A
+press A
+press T3
+release A
+release T3
+---
+press A
+release A
+press RET
+release RET

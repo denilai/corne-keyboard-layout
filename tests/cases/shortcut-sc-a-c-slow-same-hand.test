@@ -1,0 +1,10 @@
+# A держать дольше tapping-term (219 мс), затем C той же рукой = SC+C
+press A
+wait 300
+tap C
+release A
+---
+press SC
+press C
+release C
+release SC

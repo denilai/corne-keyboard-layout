@@ -1,0 +1,9 @@
+# Удержание J (OT: Ctrl на Mac, Super на Linux) + C левой рукой = OT+C, без ожидания
+press J
+tap C
+release J
+---
+press OT
+press C
+release C
+release OT

@@ -1,0 +1,10 @@
+# Переключение окон мизинцем и большим пальцем одной руки: держать A (SC),
+# тап T2 (Tab) = SC+Tab (Cmd+Tab на Mac). Thumb-клавиши в hold-trigger-позициях.
+press A
+tap T2
+release A
+---
+press SC
+press TAB
+release TAB
+release SC

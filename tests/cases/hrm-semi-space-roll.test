@@ -1,0 +1,10 @@
+# Перекат ; -> пробел (T4) при наборе: ; отпущена раньше пробела = ; и пробел
+press SEMI
+press T4
+release SEMI
+release T4
+---
+press SEMI
+release SEMI
+press SPACE
+release SPACE

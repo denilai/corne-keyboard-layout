@@ -1,0 +1,10 @@
+# Ловушка: A (SC левой руки) + C той же рукой быстро = буквы a c, не SC+C.
+# C не в hold-trigger-позициях A. Для SC+C: thumb T1, или ; правой рукой.
+press A
+tap C
+release A
+---
+press A
+press C
+release C
+release A

@@ -70,9 +70,12 @@
  *
  * Modifiers by role, not by name:
  *   SC   the shortcut modifier (copy, paste, save...): Cmd on macOS,
- *        Ctrl on Linux. Index finger (F, J) and the left thumb.
- *   OT   the other one: Ctrl on macOS, Super on Linux. Pinky (A, ;) and
- *        the hold of the Enter thumb.
+ *        Ctrl on Linux. Pinky (A, ;) and the left thumb: pinky + thumb
+ *        gives SC+Tab / SC+Space / SC+Backspace.
+ *   OT   the other one: Ctrl on macOS, Super on Linux. Index finger (F, J)
+ *        and the hold of the Enter thumb.
+ * Home-row mods resolve as hold with a key of the other hand or with any
+ * thumb key (hold-trigger-key-positions), so pinky + thumb of one hand works.
  *
  * System actions use the OS default shortcuts:
  *   macOS: Cmd+Shift+3/4/5 screenshots, Ctrl+Cmd+Q lock, Ctrl+arrows for
@@ -346,7 +349,7 @@
             quick-tap-ms = <175>;
             flavor = "balanced";
             bindings = <&kp>, <&kp>;
-            hold-trigger-key-positions = < 6 7 8 9 10 11 18 19 20 21 22 23 30 31 32 33 34 35 39 40 41 >;
+            hold-trigger-key-positions = < 6 7 8 9 10 11 18 19 20 21 22 23 30 31 32 33 34 35 36 37 38 39 40 41 >;
             hold-trigger-on-release;
         };
 
@@ -357,7 +360,7 @@
             quick-tap-ms = <175>;
             flavor = "balanced";
             bindings = <&kp>, <&kp>;
-            hold-trigger-key-positions = < 0 1 2 3 4 5 12 13 14 15 16 17 24 25 26 27 28 29 36 37 38 >;
+            hold-trigger-key-positions = < 0 1 2 3 4 5 12 13 14 15 16 17 24 25 26 27 28 29 36 37 38 39 40 41 >;
             hold-trigger-on-release;
         };
 
@@ -392,7 +395,7 @@
             display-name = "Base";
             bindings = <
 &gresc     &kp Q         &kp W            &kp E              &kp R         &kp T        &kp Y           &kp U            &kp I               &kp O            &kp P                 &kp LEFT_BRACKET
-&kp SC_L   &lbhm OT_L A  &lbhm LALT S  &lbhm LEFT_SHIFT D  &lbhm SC_L F   &kp G        &kp H           &rbhm SC_R J      &rbhm RSHIFT K  &rbhm LALT L  &rbhm OT_L SEMICOLON  &sqtctrl
+&kp SC_L   &lbhm SC_L A  &lbhm LALT S  &lbhm LEFT_SHIFT D  &lbhm OT_L F   &kp G        &kp H           &rbhm OT_L J      &rbhm RSHIFT K  &rbhm LALT L  &rbhm SC_R SEMICOLON  &sqtctrl
 &sk LSHFT  &kp Z         &kp X            &kp C              &kp V         &kp B        &kp N           &kp M            &kp COMMA           &kp DOT          &kp FSLH              &sk RSHIFT
                                           &kp SC_L           &lt 2 TAB     &mt OT_L RET &underspace     &lt 3 BACKSPACE  &mt HYPER DEL
             >;
@@ -413,7 +416,7 @@
             display-name = "Num";
             bindings = <
 &kp GRAVE      &kp EXCL       &kp AT       &kp HASH      &kp DLLR     &kp PRCNT         &kp CARET     &kp AMPS      &kp ASTRK      &kp LPAR      &kp RPAR      &kp SC_L
-&kp TILDE   &lbhm OT_L N1      &lbhm LALT  N2      &lbhm LSHFT N3      &lbhm SC_L NUMBER_4   &kp N5             &kp N6     &rbhm SC_R NUMBER_7   &rbhm RSHIFT N8      &rbhm RALT N9      &rbhm OT_R N0      &trans
+&kp TILDE   &lbhm SC_L N1      &lbhm LALT  N2      &lbhm LSHFT N3      &lbhm OT_L NUMBER_4   &kp N5             &kp N6     &rbhm OT_R NUMBER_7   &rbhm RSHIFT N8      &rbhm RALT N9      &rbhm SC_R N0      &trans
 &kp LSHFT   &none       &none       &none       &kp OT(F11)          &kp OT(F12)      &none       &kp KP_EQUAL         &none       &none       &kp BSLH    &kp F10
                                     &none       &none                &none              &kp KP_N1   &kp KP_N2            &kp KP_N3
             >;

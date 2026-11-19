@@ -1,0 +1,10 @@
+# Удержание A (SC: Cmd на Mac, Ctrl на Linux) + клавиша правой руки = SC+H
+press A
+wait 300
+tap H
+release A
+---
+press SC
+press H
+release H
+release SC

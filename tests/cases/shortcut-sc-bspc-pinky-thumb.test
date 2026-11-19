@@ -1,0 +1,9 @@
+# Правый мизинец ; (SC) + T5 (Backspace) = SC+Backspace (удалить строку на Mac)
+press SEMI
+tap T5
+release SEMI
+---
+press SC_R
+press BSPC
+release BSPC
+release SC_R

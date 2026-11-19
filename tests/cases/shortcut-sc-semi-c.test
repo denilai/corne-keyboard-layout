@@ -1,0 +1,9 @@
+# Удержание ; (SC правой руки: Cmd на Mac, Ctrl на Linux) + C левой рукой = SC+C
+press SEMI
+tap C
+release SEMI
+---
+press SC_R
+press C
+release C
+release SC_R
