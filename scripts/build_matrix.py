@@ -1,44 +1,43 @@
 #!/usr/bin/env python3
-"""Build every target from build.yaml (same matrix as GitHub Actions).
+"""Build firmware targets (same list as build.yaml / GitHub Actions).
 
 Runs inside the zmk-build container (see scripts/zmk-docker.sh).
-Usage: build_matrix.py [substring filter...]
+Usage: build_matrix.py [--mode dongle|no-dongle] [--os mac|linux] [--reset]
+                       [substring filter...]
+  no options        every target from scripts/firmware.py (all setups, both OSes)
+  --mode/--os       only the parts of that setup / OS (--reset adds settings_reset)
+  filters           keep targets whose name contains any of the substrings
 Output: /repo/firmware/<artifact-name>.uf2 (default <shield>-<board>), as in CI
 """
-import re
+import argparse
 import shutil
 import subprocess
 import sys
 from pathlib import Path
+
+import firmware
 
 REPO = Path("/repo")
 WS = Path("/ws")
 OUT = REPO / "firmware"
 
 
-def load_matrix():
-    # build.yaml is a flat list of maps; parse it without PyYAML.
-    items, cur = [], None
-    for line in (REPO / "build.yaml").read_text().splitlines():
-        line = line.split("#", 1)[0].rstrip()
-        m = re.match(r"^\s*(-\s+)?([\w-]+):\s*(.*)$", line)
-        if not m or m.group(2) == "include":
-            continue
-        if m.group(1):
-            cur = {}
-            items.append(cur)
-        cur[m.group(2)] = m.group(3).strip().strip('"')
-    return items
-
-
 def main():
-    filters = sys.argv[1:]
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--mode", choices=list(firmware.MODES))
+    ap.add_argument("--os", choices=firmware.OSES)
+    ap.add_argument("--reset", action="store_true")
+    ap.add_argument("filters", nargs="*")
+    a = ap.parse_args()
+    if a.mode or a.os:
+        todo = firmware.targets(a.mode, a.os, reset=a.reset)
+    else:
+        todo = firmware.targets()
     OUT.mkdir(exist_ok=True)
     failed = []
-    for t in load_matrix():
-        name = t.get("artifact-name") or \
-            f"{t.get('shield', '')}-{t['board'].replace('//', '_').replace('/', '_')}"
-        if filters and not any(f in name for f in filters):
+    for t in todo:
+        name = firmware.name(t)
+        if a.filters and not any(f in name for f in a.filters):
             continue
         bdir = WS / "build" / name
         cmd = ["west", "build", "-p", "auto", "-s", "zmk/app", "-d", str(bdir),

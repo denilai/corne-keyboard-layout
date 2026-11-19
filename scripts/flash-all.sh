@@ -1,36 +1,51 @@
 #!/usr/bin/env bash
 # Пошаговая прошивка всей клавиатуры с подсказками (Linux и macOS).
 #
-#   scripts/flash-all.sh              # донгл, левая, правая + проверка Studio
-#   scripts/flash-all.sh --no-dongle  # левая (central), правая
-#   scripts/flash-all.sh --reset      # сначала settings_reset на все части
-#                                     # (если половины не соединяются с донглом)
-#   scripts/flash-all.sh --skip-check # без проверки через Studio в конце
-#   scripts/flash-all.sh --os linux   # ОС центральной части: mac | linux
-#                                     # (по умолчанию ОС этого компьютера)
+#   scripts/flash-all.sh                    # схема с донглом: донгл, левая, правая + проверка Studio
+#   scripts/flash-all.sh --mode no-dongle   # без донгла: левая (central), правая
+#                                           # (--no-dongle — то же самое)
+#   scripts/flash-all.sh --reset            # сначала settings_reset на все части
+#                                           # (если половины не соединяются с central)
+#   scripts/flash-all.sh --no-reset         # не сбрасывать, даже если схема сменилась
+#   scripts/flash-all.sh --skip-check       # без проверки через Studio в конце
+#   scripts/flash-all.sh --os linux         # ОС центральной части: mac | linux
+#                                           # (по умолчанию ОС этого компьютера)
+#
+# Схемы и их части описаны в scripts/firmware.py. Схема последней прошивки
+# запоминается (.git/corne-flashed-mode); при смене схемы сброс включается
+# сам: половины хранят пару со старым central и к новому не подключатся.
 #
 # Каждый шаг: подсказка что сделать -> Enter -> ожидание флешки -> запись ->
-# ожидание перезагрузки. Прошивки берутся из firmware/ (scripts/zmk-docker.sh build).
+# ожидание перезагрузки. Прошивки берутся из firmware/
+# (scripts/zmk-docker.sh build --mode <схема> --os <ос> --reset).
 set -euo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 FLASH="$REPO/scripts/flash.sh"
 export FLASH_TIMEOUT="${FLASH_TIMEOUT:-600}"
 
-mode=dongle reset=0 check=1 os=""
+mode=dongle reset=0 no_reset=0 check=1 os=""
 case "$(uname)" in Darwin) os=mac ;; Linux) os=linux ;; esac
 while [ $# -gt 0 ]; do
     a="$1"; shift
     case "$a" in
     --os) os="${1:-}"; shift || true ;;
+    --mode) mode="${1:-}"; shift || true ;;
     --no-dongle) mode=no-dongle ;;
     --reset) reset=1 ;;
+    --no-reset) no_reset=1 ;;
     --skip-check) check=0 ;;
-    -h | --help) sed -n '2,13p' "$0"; exit 0 ;;
+    -h | --help) sed -n '2,22p' "$0"; exit 0 ;;
     *) echo "неизвестный аргумент: $a" >&2; exit 2 ;;
     esac
 done
 case "$os" in mac | linux) ;; *) echo "--os mac|linux" >&2; exit 2 ;; esac
+python3 "$REPO/scripts/firmware.py" modes | grep -qx -- "$mode" ||
+    { echo "--mode $(python3 "$REPO/scripts/firmware.py" modes | paste -sd'|' -)" >&2; exit 2; }
+
+# Схема последней прошивки этой клавиатуры с этого клона.
+state="$(git -C "$REPO" rev-parse --absolute-git-dir 2>/dev/null || echo "$REPO/firmware")/corne-flashed-mode"
+last="$(cat "$state" 2>/dev/null || true)"
 
 b=$'\e[1m' g=$'\e[32m' y=$'\e[33m' r=$'\e[31m' n=$'\e[0m'
 say() { printf '\n%s\n' "${b}$*${n}"; }
@@ -72,16 +87,29 @@ step() { # step <номер> <part> <текст подсказки>
 
 # ---- проверки перед началом ----------------------------------------------
 say "Проверка"
-need=()
-if [ "$mode" = dongle ]; then
-    need+=("corne_central_dongle-*-$os" corne_peripheral_left corne_peripheral_right)
-else
-    need+=("corne_central_left-*-$os" corne_peripheral_right)
+if [ -n "$last" ] && [ "$last" != "$mode" ] && [ $reset = 0 ]; then
+    if [ $no_reset = 1 ]; then
+        warn "схема меняется ($last -> $mode), сброс отключён (--no-reset): половины могут не соединиться"
+    else
+        warn "схема меняется ($last -> $mode): включаю сброс настроек (settings_reset) на каждой части"
+        reset=1
+    fi
 fi
-[ $reset = 1 ] && need+=(settings_reset)
-for s in "${need[@]}"; do
-    ls "$REPO"/firmware/$s*.uf2 >/dev/null 2>&1 || die "нет firmware/$s*.uf2. Собери: scripts/zmk-docker.sh build"
+[ -z "$last" ] && [ $reset = 0 ] &&
+    warn "схема прошлой прошивки неизвестна: если она была не $mode, запусти с --reset"
+build_hint="scripts/zmk-docker.sh build --mode $mode --os $os --reset"
+reset_flag=(); [ $reset = 1 ] && reset_flag=(--reset)
+# Донгл бывает nice!nano или XIAO: хватает любого из вариантов.
+missing=0
+for f in $(python3 "$REPO/scripts/firmware.py" list --mode "$mode" --os "$os" ${reset_flag[@]+"${reset_flag[@]}"}); do
+    [ -f "$REPO/firmware/$f.uf2" ] && continue
+    case "$f" in
+    *xiao_ble*) ls "$REPO/firmware/${f/xiao_ble/nice_nano}.uf2" >/dev/null 2>&1 && continue ;;
+    *nice_nano*) ls "$REPO/firmware/${f/nice_nano/xiao_ble}.uf2" >/dev/null 2>&1 && continue ;;
+    esac
+    warn "нет firmware/$f.uf2"; missing=1
 done
+[ $missing = 0 ] || die "собери прошивки: $build_hint"
 ok "прошивки на месте: $(ls "$REPO"/firmware/*.uf2 | wc -l | tr -d ' ') файлов в firmware/"
 
 if [ $check = 1 ] && ! python3 -c 'import serial' 2>/dev/null; then
@@ -115,7 +143,7 @@ else
 fi
 total=${#steps[@]}
 
-say "План, шагов: $total (центральная часть — под $os)"
+say "План, шагов: $total (схема $mode, центральная часть — под $os)"
 for i in "${!steps[@]}"; do echo "  $((i + 1)). ${steps[$i]#*|}"; done
 echo
 echo "Reset: nice!nano — кнопка или дважды замкнуть RST и GND; XIAO — кнопка RST у USB-C."
@@ -127,11 +155,13 @@ for i in "${!steps[@]}"; do
 done
 
 # ---- проверка ------------------------------------------------------------
+echo "$mode" >"$state"
 say "Прошивка завершена"
 if [ "$mode" = dongle ]; then
     echo "Подключи донгл в USB, отключи кабель от половины, включи обе половины."
 else
-    echo "Подключи левую половину в USB, включи правую."
+    echo "Отключи донгл (иначе он перехватит правую половину), подключи левую половину в USB, включи правую."
+    echo "К компьютеру по Bluetooth: «Corne» в настройках Bluetooth (связь идёт через левую половину)."
 fi
 [ $check = 1 ] || exit 0
 

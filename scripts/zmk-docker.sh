@@ -2,7 +2,9 @@
 # Local ZMK build and keymap tests in Docker, without installing the toolchain.
 #
 #   scripts/zmk-docker.sh update            # west update (re-fetch ZMK main and modules)
-#   scripts/zmk-docker.sh build [filter]    # build firmware from build.yaml -> firmware/*.uf2
+#   scripts/zmk-docker.sh build [filter]    # build all firmware (scripts/firmware.py) -> firmware/*.uf2
+#   scripts/zmk-docker.sh build --mode no-dongle --os mac --reset
+#                                           # only the parts of one setup
 #   scripts/zmk-docker.sh test  [case...]   # run keymap tests from tests/cases
 #   scripts/zmk-docker.sh shell             # shell inside the build container
 #
@@ -62,6 +64,6 @@ shell)
     run "$WS_INIT"'exec bash'
     ;;
 *)
-    sed -n '2,10p' "$0"; exit 1
+    sed -n '2,12p' "$0"; exit 1
     ;;
 esac

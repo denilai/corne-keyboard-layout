@@ -1,4 +1,4 @@
-# CORNE ZMK WITH DONGLE
+# CORNE ZMK
 
 ZMK (`main`, Zephyr 4.1) for Corne on nice!nano v2, with a dongle
 (nice!nano or XIAO BLE) or without one. Keymap is editable live in
@@ -98,6 +98,30 @@ If a global `core.hooksPath` dispatches to `.git/hooks/<name>`, link the hook
 there instead, so the global hooks keep working:
 `ln -s ../../.githooks/pre-commit .git/hooks/pre-commit`.
 
+## Setups: with or without the dongle
+
+| Setup | Central (talks to the computer, runs the keymap and Studio) | Peripherals |
+|---|---|---|
+| `dongle` | dongle on USB (nice!nano or XIAO BLE) | left and right half over BLE |
+| `no-dongle` | left half, over USB or Bluetooth | right half over BLE |
+
+The split role is compiled into the firmware (Kconfig), so the setup is
+switched by flashing, not by a key. The right half has the same firmware in
+both setups; the left half (and the dongle) change. A half keeps its pairing
+with the old central, so switching needs a settings reset on every part:
+`flash-all.sh` remembers the setup it flashed last (`.git/corne-flashed-mode`)
+and turns `--reset` on by itself when the setup changes. Without the dongle,
+unplug it: a powered dongle would take the right half back. The left half drains
+its battery faster without the dongle: it keeps both the computer and the
+right half connected.
+
+Setups, boards and OSes are described once in `scripts/firmware.py`:
+`build.yaml` is generated from it (`scripts/firmware.py gen`; the pre-commit
+hook does it and CI checks it), and local builds and flashing pick the parts
+of a setup from it. To add a setup (e.g. right half as central), add a shield
+under `config/boards/shields/corne/` (key pins are in `corne_left.dtsi` /
+`corne_right.dtsi`) and an entry in `MODES`.
+
 ## Firmware
 
 GitHub Actions (or `scripts/zmk-docker.sh build` locally, into `firmware/`) builds:
@@ -118,10 +142,14 @@ the part shows up as a UF2 drive (`NICENANO`, `XIAO-SENSE`), copy the `.uf2`
 onto it, the part reboots.
 
 ```sh
-scripts/flash-all.sh              # guided: dongle, left, right, then Studio check
-scripts/flash-all.sh --os linux   # central for this OS (default: the OS of this computer)
-scripts/flash-all.sh --no-dongle  # left as central, right
-scripts/flash-all.sh --reset      # settings_reset before each part (halves don't pair)
+scripts/zmk-docker.sh build --mode no-dongle --os mac --reset   # only the parts of one setup
+scripts/firmware.py list --mode no-dongle --os mac             # which files that is
+
+scripts/flash-all.sh                    # guided: dongle, left, right, then Studio check
+scripts/flash-all.sh --mode no-dongle   # left as central, right (also: --no-dongle)
+scripts/flash-all.sh --os linux         # central for this OS (default: the OS of this computer)
+scripts/flash-all.sh --reset            # settings_reset before each part (halves don't pair)
+scripts/flash-all.sh --no-reset         # no automatic reset when the setup changes
 scripts/flash.sh dongle|central-left mac|linux   # one central part
 scripts/flash.sh left|right|reset                # one half, or settings reset
 ```

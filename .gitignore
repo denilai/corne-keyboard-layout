@@ -1,3 +1,4 @@
 **/.vscode/
 firmware/
 .draw-tmp/
+__pycache__/
