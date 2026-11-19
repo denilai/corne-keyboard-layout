@@ -181,6 +181,20 @@ of a setup from it. To add a setup (e.g. right half as central), add a shield
 under `config/boards/shields/corne/` (key pins are in `corne_left.dtsi` /
 `corne_right.dtsi`) and an entry in `MODES`.
 
+## Battery and sleep
+
+Halves (and the left half as central without the dongle) go to deep sleep
+after 30 minutes without key presses (`CONFIG_ZMK_SLEEP`,
+`CONFIG_ZMK_IDLE_SLEEP_TIMEOUT` in the shield `.conf` files). A key press
+wakes the half: the key matrix is a `wakeup-source` (`corne.dtsi`), the half
+reboots and reconnects in a second or two, the waking key press is not typed.
+The dongle is on USB and never sleeps.
+
+`scripts/battery.sh` prints the battery levels the computer gets from the
+Corne over Bluetooth (macOS: `system_profiler`, Linux: `upower`). The central
+sends its own level and proxies the peripherals' ones
+(`..._BATTERY_LEVEL_FETCHING` / `_PROXY` in `config/corne.conf`).
+
 ## Firmware
 
 GitHub Actions (or `scripts/zmk-docker.sh build` locally, into `firmware/`) builds:
