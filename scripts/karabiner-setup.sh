@@ -94,6 +94,7 @@ else
 fi
 
 mkdir -p "$KDIR/assets/complex_modifications"
+rm -f "$KDIR/assets/complex_modifications"/corne-*.json   # renamed or removed rule files
 for f in "$RULES_DIR"/*.json; do   # with {{REPO}} filled in, as in karabiner.json
     sed "s#{{REPO}}#$REPO#g" "$f" >"$KDIR/assets/complex_modifications/$(basename "$f")"
 done

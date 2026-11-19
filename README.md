@@ -21,8 +21,9 @@ do it. Each exception is listed here, kept in this repo and applied by a script:
 - App launch shortcuts: the keymap sends a fixed chord (Hyper+letter), the OS
   binds it to an app (see [App launch](#app-launch-hyper)). The firmware cannot
   start programs.
-- Cmd+C as interrupt in terminals and VS Code (macOS): the firmware does
-  not know the app (see [below](#macos-cmdc-in-terminals)).
+- Cmd+C as interrupt (macOS, Karabiner): Cmd+C = Ctrl+C, Cmd+Shift+C = copy.
+  The firmware could do it; kept in Karabiner to switch it off without
+  reflashing (see [below](#macos-cmdc-interrupts-cmdshiftc-copies)).
 
 ## Target OS: one keymap, a build per OS
 
@@ -420,21 +421,22 @@ To change the characters or add an input source, edit
 [macos/karabiner/corne-punctuation.json](macos/karabiner/corne-punctuation.json)
 (key names: Karabiner-EventViewer) and run the script again.
 
-## macOS: Cmd+C in terminals
+## macOS: Cmd+C interrupts, Cmd+Shift+C copies
 
 Ctrl+C (SIGINT) is J+C now (Ctrl is on the index fingers), but Cmd+C is the
-habit. Karabiner rule `macos/karabiner/corne-terminal-sigint.json` (installed
-by `scripts/karabiner-setup.sh`), for the Corne only, in Terminal.app, VS Code
-and Cursor:
+habit. Karabiner rule `macos/karabiner/corne-cmd-c.json` (installed by
+`scripts/karabiner-setup.sh`), for the Corne only, in every app:
 
 | Keys | Sends | Does |
 |---|---|---|
-| Cmd+C | Ctrl+C | interrupt (SIGINT) in a terminal; nothing in the editor |
+| Cmd+C | Ctrl+C | interrupt (SIGINT) in a terminal; in other apps usually nothing |
 | Cmd+Shift+C | Cmd+C | copy (as Ctrl+Shift+C in Linux terminals) |
 
-Karabiner sees only the frontmost app, not the focus inside it or the
-selection, so in VS Code / Cursor this applies to the editor too. The MacBook
-keyboard keeps the normal Cmd+C. Other apps are not touched.
+This one is an exception to the firmware-first rule by choice: the firmware
+could do it (a mod-morph on C), but in Karabiner it can be switched off or
+limited to some apps without reflashing. The MacBook keyboard keeps the
+normal Cmd+C. Apps' own Cmd+Shift+C (Chrome DevTools "inspect element", Finder
+"Computer") is not reachable from the Corne.
 
 ## ZMK Studio
 
