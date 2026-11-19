@@ -1,0 +1,10 @@
+# Комбо T+Y = Caps Lock. macOS не замечает короткое нажатие Caps Lock
+# (а с «Caps Lock переключает на ABC» короткое нажатие меняет язык),
+# поэтому Caps Lock держится не меньше 300 мс, даже если комбо отпустили сразу.
+press T
+press Y
+release T
+release Y
+---
+press CAPS
+release CAPS after>=300

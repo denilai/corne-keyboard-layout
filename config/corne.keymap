@@ -254,7 +254,7 @@
         };
 
         combo_caps_lock {
-            bindings = <&kp CAPSLOCK>;
+            bindings = <&caps_lock>;
             key-positions = <5 6>;
             layers = <0>;
         };
@@ -287,6 +287,17 @@
     };
 
     macros {
+        // Caps Lock held for a fixed time, however short the combo is.
+        // macOS ignores a Caps Lock press shorter than ~100 ms, and with
+        // "Use Caps Lock to switch to and from ABC" a short press switches
+        // the input source instead. 300 ms stays under the key repeat delay.
+        caps_lock: caps_lock {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            tap-ms = <300>;
+            bindings = <&kp CAPSLOCK>;
+        };
+
         arrow_func: arrow_func {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;

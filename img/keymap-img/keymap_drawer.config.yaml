@@ -194,6 +194,7 @@ parse_config:
       Caps
       Word
     "&caps_word": ⇪ WORD
+    "&caps_lock": ⇪ LOCK
     "&CAPS_LOCK": ⇪ LOCK
     "&td_shift_l": ⇧
     "&td_shift_r": ⇧

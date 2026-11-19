@@ -258,6 +258,9 @@ release OT
   event, default 10 ms). Key names are base-layer legends, thumbs are `T1`–`T6`
   (see `POSITIONS` in `tests/run_tests.py`).
 - Expected: `press|release <usage> [MODS]`, `mouse <buttons>`.
+- `after>=<ms>` at the end of an expected line: the event comes at least that
+  long after the previous one (e.g. `release CAPS after>=300`, how long a key
+  is held).
 - Each case runs for both OS builds (`-DOS_MAC`, `-DOS_LINUX`). Modifiers in
   the expected block can be roles: `SC`/`SC_R`, `OT`/`OT_R` (see
   [Target OS](#target-os-one-keymap-a-build-per-os)); concrete names
