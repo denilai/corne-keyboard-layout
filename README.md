@@ -82,12 +82,12 @@ So if a key stops working, check that its shortcut is still enabled in the OS
 | Screenshot panel, screen recording | Utils + T | ⇧⌘5 | Keyboard Shortcuts → Screenshots | Ctrl+Alt+Shift+R |
 | Mission Control / overview | Nav + F | ⌃↑ | Keyboard Shortcuts → Mission Control | Super |
 | App windows (App Exposé) | Nav + G | ⌃↓ | Keyboard Shortcuts → Mission Control | Super+A (app grid) |
-| Previous / next desktop | Nav + H / `'` (around the arrows) | ⌃← / ⌃→ | Keyboard Shortcuts → Mission Control → Mission Control → Move left / right a space | Ctrl+Alt+← / → |
+| Previous / next desktop | Nav + `;` / `'` (after the arrows) | ⌃← / ⌃→ | Keyboard Shortcuts → Mission Control → Mission Control → Move left / right a space | Ctrl+Alt+← / → |
 | Undo, cut, copy, paste, redo | Nav + Z X C V B | ⌘Z ⌘X ⌘C ⌘V ⇧⌘Z | app standard | Ctrl+Z… / Ctrl+Shift+Z |
-| Arrows | Nav + J K L `;` (← ↓ ↑ →), also left hand Ctrl-key A S D | arrows | none | same |
-| Page up / down | Nav + U / M (above / below ←) | PgUp / PgDn | none | same |
+| Arrows | Nav + H J K L (← ↓ ↑ →, as in vim), also left hand Ctrl-key A S D | arrows | none | same |
+| Page up / down | Nav + U / M | PgUp / PgDn | none | same |
 | Word left / right | Nav + I / O | ⌥← / ⌥→ | text standard | Ctrl+← / → |
-| Line start / end | Nav + P / `/` (above / below →) | ⌘← / ⌘→ | text standard | Home / End |
+| Line start / end | Nav + P / `/` | ⌘← / ⌘→ | text standard | Home / End |
 | Document start / end | Nav + `,` / `.` | ⌘↑ / ⌘↓ | text standard | Ctrl+Home / End |
 | Delete forward | Nav + `[` | Del | none | same |
 | Hyper (app launch) | hold Del thumb | ⌃⌥⇧⌘ + letter | Shortcuts app, see below | Ctrl+Alt+Shift+Super |

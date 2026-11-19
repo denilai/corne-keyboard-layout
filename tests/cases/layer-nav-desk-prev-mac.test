@@ -1,8 +1,8 @@
 # @os mac
-# Nav + H = предыдущий рабочий стол: Ctrl+← (слева от стрелок)
+# Nav + ; = предыдущий рабочий стол: Ctrl+← (после стрелок)
 press T4
 wait 250
-tap H
+tap SEMI
 release T4
 ---
 press LEFT [LCTRL]

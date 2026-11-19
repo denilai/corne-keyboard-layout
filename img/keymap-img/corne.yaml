@@ -74,11 +74,11 @@ layers:
   - {t: 'App
 
       wins', s: ⌃↓}
-  - {t: Desk ←, s: ⌃←}
   - ←
   - ↓
   - ↑
   - →
+  - {t: Desk ←, s: ⌃←}
   - {t: Desk →, s: ⌃→}
   - BACK
   - {t: Undo, s: ⌘Z}

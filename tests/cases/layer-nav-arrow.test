@@ -1,7 +1,7 @@
-# Удержание пробела (Nav) + J = стрелка влево (стрелки на J K L ;)
+# Удержание пробела (Nav) + H = стрелка влево (стрелки на H J K L, как в vim)
 press T4
 wait 250
-tap J
+tap H
 release T4
 ---
 press LEFT

@@ -390,11 +390,11 @@
         };
         nav_layer {
             display-name = "Nav";
-            // Right hand: arrows on J K L ; with page, word, line and document
-            // moves around them, desktops on both sides of the arrows.
+            // Right hand: arrows on H J K L (as in vim), desktops after them on
+            // ; and '; page, word, line and document moves above and below.
             bindings = <
 &mmv MOVE_LEFT     &mmv MOVE_DOWN  &mmv MOVE_UP    &mmv MOVE_RIGHT  &mkp LCLK          &mkp RCLK            &none              &kp PG_UP       &kp WORD_PREV   &kp WORD_NEXT    &kp LINE_START     &kp DEL
-&kp LEFT           &kp DOWN_ARROW  &kp UP_ARROW    &kp RIGHT        &kp OVERVIEW       &kp APP_WINS         &kp DESK_PREV      &kp LEFT        &kp DOWN_ARROW  &kp UP_ARROW     &kp RIGHT          &kp DESK_NEXT
+&kp LEFT           &kp DOWN_ARROW  &kp UP_ARROW    &kp RIGHT        &kp OVERVIEW       &kp APP_WINS         &kp LEFT           &kp DOWN_ARROW  &kp UP_ARROW    &kp RIGHT        &kp DESK_PREV      &kp DESK_NEXT
 &mkp MB4           &kp UNDO        &kp CUT         &kp COPY         &kp PASTE          &kp REDO             &mkp MB4           &kp PG_DN       &kp DOC_START   &kp DOC_END      &kp LINE_END       &mkp MB5
                                                    &trans           &trans             &trans               &trans             &trans          &trans
             >;
