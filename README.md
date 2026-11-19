@@ -21,6 +21,8 @@ do it. Each exception is listed here, kept in this repo and applied by a script:
 - App launch shortcuts: the keymap sends a fixed chord (Hyper+letter), the OS
   binds it to an app (see [App launch](#app-launch-hyper)). The firmware cannot
   start programs.
+- Cmd+C as interrupt in terminals (macOS): the firmware does not know the
+  app or the selection (see [below](#macos-cmdc-in-terminals)).
 
 ## Target OS: one keymap, a build per OS
 
@@ -417,6 +419,28 @@ reloads on save. The script changes only the Corne entries there, the rest stays
 To change the characters or add an input source, edit
 [macos/karabiner/corne-punctuation.json](macos/karabiner/corne-punctuation.json)
 (key names: Karabiner-EventViewer) and run the script again.
+
+## macOS: Cmd+C in terminals
+
+Ctrl+C (SIGINT) is J+C now (Ctrl is on the index fingers), but Cmd+C is the
+habit. Two host-side settings make Cmd+C interrupt in a terminal:
+
+- VS Code / Cursor terminal: Cmd+C sends Ctrl+C when nothing is selected,
+  copies when there is a selection. User `keybindings.json` (not in this repo):
+
+  ```json
+  {
+      "key": "cmd+c",
+      "command": "workbench.action.terminal.sendSequence",
+      "args": { "text": "\u0003" },
+      "when": "terminalFocus && !terminalTextSelected"
+  }
+  ```
+
+- Terminal.app cannot check the selection: Karabiner rule
+  `macos/karabiner/corne-terminal-sigint.json` (Corne only, Terminal.app only):
+  Cmd+C = Ctrl+C, Cmd+Shift+C = copy (as Ctrl+Shift+C in Linux terminals).
+  Installed by `scripts/karabiner-setup.sh`.
 
 ## ZMK Studio
 
