@@ -1,21 +1,21 @@
 {
-  "title": "Corne: Terminal.app, Cmd+C = interrupt",
+  "title": "Corne: Cmd+C = interrupt in terminals and VS Code / Cursor",
   "rules": [
     {
-      "description": "Corne: Terminal.app, Cmd+C = Ctrl+C (SIGINT), Cmd+Shift+C = copy",
+      "description": "Corne: Terminal.app, VS Code, Cursor: Cmd+C = Ctrl+C (SIGINT), Cmd+Shift+C = copy",
       "manipulators": [
         { "type": "basic",
           "from": { "key_code": "c", "modifiers": { "mandatory": ["command", "shift"] } },
           "to": [{ "key_code": "c", "modifiers": ["left_command"] }],
           "conditions": [
-            { "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.apple\\.Terminal$"] },
+            { "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.apple\\.Terminal$", "^com\\.microsoft\\.VSCode$", "^com\\.todesktop\\.230313mzl4w4u92$"] },
             { "type": "device_if", "identifiers": [{ "vendor_id": 7504, "product_id": 24926 }] }
           ] },
         { "type": "basic",
           "from": { "key_code": "c", "modifiers": { "mandatory": ["command"] } },
           "to": [{ "key_code": "c", "modifiers": ["left_control"] }],
           "conditions": [
-            { "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.apple\\.Terminal$"] },
+            { "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.apple\\.Terminal$", "^com\\.microsoft\\.VSCode$", "^com\\.todesktop\\.230313mzl4w4u92$"] },
             { "type": "device_if", "identifiers": [{ "vendor_id": 7504, "product_id": 24926 }] }
           ] }
       ]

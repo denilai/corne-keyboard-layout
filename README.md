@@ -21,8 +21,8 @@ do it. Each exception is listed here, kept in this repo and applied by a script:
 - App launch shortcuts: the keymap sends a fixed chord (Hyper+letter), the OS
   binds it to an app (see [App launch](#app-launch-hyper)). The firmware cannot
   start programs.
-- Cmd+C as interrupt in terminals (macOS): the firmware does not know the
-  app or the selection (see [below](#macos-cmdc-in-terminals)).
+- Cmd+C as interrupt in terminals and VS Code (macOS): the firmware does
+  not know the app (see [below](#macos-cmdc-in-terminals)).
 
 ## Target OS: one keymap, a build per OS
 
@@ -423,24 +423,18 @@ To change the characters or add an input source, edit
 ## macOS: Cmd+C in terminals
 
 Ctrl+C (SIGINT) is J+C now (Ctrl is on the index fingers), but Cmd+C is the
-habit. Two host-side settings make Cmd+C interrupt in a terminal:
+habit. Karabiner rule `macos/karabiner/corne-terminal-sigint.json` (installed
+by `scripts/karabiner-setup.sh`), for the Corne only, in Terminal.app, VS Code
+and Cursor:
 
-- VS Code / Cursor terminal: Cmd+C sends Ctrl+C when nothing is selected,
-  copies when there is a selection. User `keybindings.json` (not in this repo):
+| Keys | Sends | Does |
+|---|---|---|
+| Cmd+C | Ctrl+C | interrupt (SIGINT) in a terminal; nothing in the editor |
+| Cmd+Shift+C | Cmd+C | copy (as Ctrl+Shift+C in Linux terminals) |
 
-  ```json
-  {
-      "key": "cmd+c",
-      "command": "workbench.action.terminal.sendSequence",
-      "args": { "text": "\u0003" },
-      "when": "terminalFocus && !terminalTextSelected"
-  }
-  ```
-
-- Terminal.app cannot check the selection: Karabiner rule
-  `macos/karabiner/corne-terminal-sigint.json` (Corne only, Terminal.app only):
-  Cmd+C = Ctrl+C, Cmd+Shift+C = copy (as Ctrl+Shift+C in Linux terminals).
-  Installed by `scripts/karabiner-setup.sh`.
+Karabiner sees only the frontmost app, not the focus inside it or the
+selection, so in VS Code / Cursor this applies to the editor too. The MacBook
+keyboard keeps the normal Cmd+C. Other apps are not touched.
 
 ## ZMK Studio
 
