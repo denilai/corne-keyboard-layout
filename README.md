@@ -207,6 +207,15 @@ left half : 56%
 right half: 73%
 ```
 
+In the menu bar (macOS): `scripts/swiftbar-setup.sh` installs
+[SwiftBar](https://github.com/swiftbar/SwiftBar) and the plugin
+`macos/swiftbar/corne-battery.5m.sh`, which shows `⌨ <left>·<right>` and
+refreshes every 5 minutes; the title turns red and a notification comes once
+when a half drops below 20 %. SwiftBar has no Bluetooth permission, so the
+reader is compiled into `~/Applications/CorneBattery.app` (background app with
+its own permission, asked once) and the plugin runs it with `open`. Re-run the
+setup after changing `battery-mac.swift`.
+
 ## Firmware
 
 GitHub Actions (or `scripts/zmk-docker.sh build` locally, into `firmware/`) builds:
