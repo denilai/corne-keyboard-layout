@@ -441,6 +441,27 @@ habit. In terminals Cmd+C interrupts, everywhere else it copies as usual:
   `macos/karabiner/corne-terminal-sigint.json`, Corne only, Terminal.app only:
   Cmd+C = Ctrl+C, Cmd+Shift+C = copy (as Ctrl+Shift+C in Linux terminals).
 
+## Terminal: Shift+arrows select in the command line (zsh)
+
+Terminals send Shift+← as `ESC [1;2D`; plain zsh has nothing bound to it and
+prints `;2D` or, in vi mode, deletes text. [zsh-shift-select](https://github.com/jirutka/zsh-shift-select)
+binds the Shift keys like an editor; `scripts/zsh-setup.sh` clones it (pinned
+commit) into `~/.local/share/zsh-shift-select` and adds a marked block to
+`~/.zshrc` with `bindkey -e` (the plugin needs the emacs keymap; `EDITOR=vim`
+can start zsh in vi mode).
+
+| Keys | Does |
+|---|---|
+| Shift+← → ↑ ↓ | select by character / line |
+| Shift+Home / End | select to the start / end of the line |
+| Shift+Opt+← → (Nav: Shift + word keys) | select by word |
+| Backspace / Delete | delete the selection; typing replaces it |
+| Opt+W, then Ctrl+Y | copy the selection to the zsh kill buffer, paste it |
+
+This is the line editor's selection, not the terminal's: Cmd+C does not copy
+it. If a key does nothing, run `cat` and press it: no output means the
+terminal took the key itself.
+
 ## ZMK Studio
 
 Studio runs on the central part (dongle, or left half without a dongle), over USB.
