@@ -80,7 +80,13 @@ def main():
         if a.filters and not any(f in name for f in a.filters):
             continue
         bdir = WS / "build" / name
-        cmd = ["west", "build", "-p", "auto", "-s", "zmk/app", "-d", str(bdir),
+        # CMake keeps -D values in its cache: a test override (--cmake-arg)
+        # would survive a later build without it. Start clean when the extra
+        # arguments differ from the previous build in this directory.
+        extra_file = bdir / "extra-cmake-args"
+        prev = extra_file.read_text() if extra_file.exists() else ""
+        pristine = "always" if prev != " ".join(a.cmake_arg) else "auto"
+        cmd = ["west", "build", "-p", pristine, "-s", "zmk/app", "-d", str(bdir),
                "-b", t["board"]]
         if t.get("snippet"):
             cmd += ["-S", t["snippet"]]
@@ -96,6 +102,7 @@ def main():
             print(r.stdout[-6000:], r.stderr[-6000:], sep="\n")
             failed.append(name)
             continue
+        extra_file.write_text(" ".join(a.cmake_arg))
         uf2 = bdir / "zephyr" / "zmk.uf2"
         shutil.copy(uf2, OUT / f"{name}.uf2")
         info = build_info(bdir, a.cmake_arg)
