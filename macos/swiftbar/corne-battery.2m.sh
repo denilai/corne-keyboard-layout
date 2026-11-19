@@ -5,7 +5,9 @@
 # <swiftbar.hideRunInTerminal>true</swiftbar.hideRunInTerminal>
 # <swiftbar.hideDisablePlugin>true</swiftbar.hideDisablePlugin>
 #
-# SwiftBar plugin, refreshed every 5 minutes (".5m" in the file name).
+# SwiftBar plugin, refreshed every 2 minutes (".2m" in the file name). Reading the battery
+# does not count as key activity: it does not keep the halves from sleeping,
+# and a sleeping left half is just shown as not connected.
 # Installed by scripts/swiftbar.sh install as a link from the plugin folder.
 #
 # SwiftBar runs plugins as its child processes and has no Bluetooth

@@ -248,8 +248,8 @@ How it works:
 - [SwiftBar](https://github.com/swiftbar/SwiftBar) runs every script in its
   plugin folder on a timer and shows its output: the first line in the menu
   bar, lines after `---` in the dropdown, `| color=… refresh=… href=…` set the
-  look and actions. The timer is in the file name: `.5m.` = every 5 minutes.
-- Plugin: `macos/swiftbar/corne-battery.5m.sh`. The plugin folder is
+  look and actions. The timer is in the file name: `.2m.` = every 2 minutes.
+- Plugin: `macos/swiftbar/corne-battery.2m.sh`. The plugin folder is
   `~/.config/swiftbar`; it holds a link to the file in the repo, so edits of
   the plugin apply on the next refresh.
 - SwiftBar has no Bluetooth permission, and macOS kills a process it starts

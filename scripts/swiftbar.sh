@@ -16,7 +16,7 @@
 #   ~/Applications/CorneBattery.app scripts/battery-mac.swift as a background app
 #                                   with its own Bluetooth permission (SwiftBar has
 #                                   none, a plugin it starts may not use Bluetooth)
-#   ~/.config/swiftbar/             plugin folder, link to macos/swiftbar/corne-battery.5m.sh
+#   ~/.config/swiftbar/             plugin folder, link to macos/swiftbar/corne-battery.2m.sh
 #                                   (edits of the plugin apply on the next refresh)
 # Start at login: SwiftBar → Preferences → "Launch at Login" (not set by this script).
 set -euo pipefail
@@ -25,7 +25,7 @@ REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 APPS="$HOME/Applications"
 APP="$APPS/CorneBattery.app"
 BUNDLE_ID=local.corne.battery
-PLUGIN="$REPO/macos/swiftbar/corne-battery.5m.sh"
+PLUGIN="$REPO/macos/swiftbar/corne-battery.2m.sh"
 NAME=corne-battery            # plugin name for swiftbar:// URLs
 DOMAIN=com.ameba.SwiftBar
 
