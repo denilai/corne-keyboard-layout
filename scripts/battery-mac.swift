@@ -1,6 +1,15 @@
 // Battery levels of the Corne over Bluetooth on macOS, both halves.
 //
-//   swift scripts/battery-mac.swift     (scripts/battery.sh calls it)
+//   swift scripts/battery-mac.swift            # print the levels once (scripts/battery.sh)
+//   corne-battery --watch                      # stream, for the SwiftBar plugin
+//
+// --watch prints "levels <left> <right>" at once and again on every change,
+// then "disconnected" and exits when the left half goes away. The levels come
+// as GATT notifications: the left half (central) notifies its own level and,
+// as a proxy, the right half's one, also when the right half connects to it
+// after sleep. "-" = the right half is not connected to the left one (asleep):
+// ZMK reports 0 for it then. "alive" every 60 s: if nobody reads the output
+// any more, the write fails (SIGPIPE) and the process ends.
 //
 // macOS shows the battery of a keyboard only from HID reports and ignores
 // the GATT Battery Service, which ZMK uses: the central's own level, plus one
@@ -18,6 +27,8 @@ let userDescription = CBUUID(string: "2901")
 // Over Bluetooth only the no-dongle setup talks to the computer: the left
 // half is the central, the right half is its only peripheral.
 let half = ["central": "left half ", "Peripheral 0": "right half"]
+let watch = CommandLine.arguments.contains("--watch")
+setvbuf(stdout, nil, _IOLBF, 0)
 
 final class Reader: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     var central: CBCentralManager!
@@ -33,14 +44,35 @@ final class Reader: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         central = CBCentralManager(delegate: self, queue: nil)
     }
 
-    func report() -> Never {
+    var ready = false                     // first values read (watch mode)
+    var readOnce = Set<ObjectIdentifier>()
+
+    // The central's own level comes first; proxied peripherals follow,
+    // usually with a user description (descriptor 2901).
+    func name(_ i: Int, _ ch: CBCharacteristic) -> String {
+        labels[ObjectIdentifier(ch)] ?? (i == 0 ? "central" : "Peripheral \(i - 1)")
+    }
+
+    func level(_ name: String) -> String {
+        guard let i = chars.indices.first(where: { self.name($0, chars[$0]) == name }),
+              let v = values[ObjectIdentifier(chars[i])] else { return "-" }
+        // A peripheral that is not connected to the central is reported as 0.
+        return name != "central" && v == 0 ? "-" : String(v)
+    }
+
+    func report() {
+        if watch {
+            ready = true
+            print("levels \(level("central")) \(level("Peripheral 0"))")
+            return
+        }
         if chars.isEmpty { print("Corne: no Battery Level characteristics") }
-        // The central's own level comes first; proxied peripherals follow,
-        // usually with a user description (descriptor 2901).
         for (i, ch) in chars.enumerated() {
-            let id = ObjectIdentifier(ch)
-            let name = labels[id] ?? (i == 0 ? "central" : "Peripheral \(i - 1)")
-            print("\(half[name] ?? name): " + (values[id].map { "\($0)%" } ?? "no value"))
+            let n = name(i, ch)
+            let v = values[ObjectIdentifier(ch)]
+            let text = v == nil ? "no value"
+                : (n != "central" && v == 0 ? "not connected (asleep)" : "\(v!)%")
+            print("\(half[n] ?? n): " + text)
         }
         exit(0)
     }
@@ -56,8 +88,8 @@ final class Reader: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
             let found = c.retrieveConnectedPeripherals(withServices: [batteryService])
                 .filter { ($0.name ?? "").lowercased().contains("corne") }
             guard let p = found.first else {
-                print("Corne is not connected over Bluetooth (with the dongle it is on USB)")
-                exit(1)
+                print(watch ? "disconnected" : "Corne is not connected over Bluetooth (with the dongle it is on USB)")
+                exit(watch ? 0 : 1)
             }
             peripheral = p
             p.delegate = self
@@ -71,6 +103,13 @@ final class Reader: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
             exit(1)
         default:
             break
+        }
+    }
+
+    func centralManager(_ c: CBCentralManager, didDisconnectPeripheral p: CBPeripheral, error: Error?) {
+        if watch {
+            print("disconnected")
+            exit(0)
         }
     }
 
@@ -90,6 +129,7 @@ final class Reader: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         for ch in (s.characteristics ?? []) where ch.uuid == batteryLevel {
             chars.append(ch)
             pending += 2
+            if watch { p.setNotifyValue(true, for: ch) }
             p.readValue(for: ch)
             p.discoverDescriptors(for: ch)
         }
@@ -97,8 +137,15 @@ final class Reader: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
 
     func peripheral(_ p: CBPeripheral, didUpdateValueFor ch: CBCharacteristic, error: Error?) {
-        if let v = ch.value?.first { values[ObjectIdentifier(ch)] = Int(v) }
-        answered()
+        let id = ObjectIdentifier(ch)
+        let first = !readOnce.contains(id)
+        readOnce.insert(id)
+        if let v = ch.value?.first { values[id] = Int(v) }
+        if ready {          // a notification after the first read
+            report()
+            return
+        }
+        if first { answered() }   // a notification before the read answered: not a reply
     }
 
     func peripheral(_ p: CBPeripheral, didDiscoverDescriptorsFor ch: CBCharacteristic, error: Error?) {
@@ -119,7 +166,11 @@ final class Reader: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
 
 let reader = Reader()
 DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
+    if reader.ready { return }
     print("timeout after 15 s, stage: \(reader.stage)")
     exit(1)
+}
+if watch {
+    Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { _ in print("alive") }
 }
 RunLoop.main.run()

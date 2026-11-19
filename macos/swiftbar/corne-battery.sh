@@ -10,16 +10,21 @@
 # each "~~~" line. Installed by scripts/swiftbar.sh install as a link from the
 # plugin folder.
 #
-# When to read the battery: corne-watch (scripts/corne-watch.swift) reports
-# IOKit events, so the menu follows the keyboard at once:
-#   connected      the left half woke up / connected: read after SETTLE s
-#   disconnected   it fell asleep or went away: show "asleep", no reading
-#   tick           every CONNECTED_S while connected, ASLEEP_S while not
-# Reading does not count as key activity, it does not keep the halves awake.
+# Two sources write lines into one FIFO, the plugin redraws on each:
+#   corne-watch (scripts/corne-watch.swift), IOKit, no permission:
+#     connected / disconnected   the left half woke up / fell asleep
+#     tick                       timer: make sure the reader runs
+#   CorneBattery.app --watch (scripts/battery-mac.swift), Bluetooth:
+#     levels <left> <right>      at start and on every change, as GATT
+#                                notifications: also when the right half wakes
+#                                up and connects to the left one ("-" = asleep)
+#     disconnected               the left half went away; the reader exits
+#     alive                      heartbeat, ignored
+# The reader runs only while the left half is connected. Reading does not
+# count as key activity, it does not keep the halves awake.
 #
-# SwiftBar has no Bluetooth permission, so the reader (scripts/battery-mac.swift)
-# is built into its own app, CorneBattery.app; `open` starts it and its output
-# comes back through a file.
+# SwiftBar has no Bluetooth permission, so the reader is its own app with its
+# own permission; `open` starts it with its output going into the FIFO.
 #
 # Menu format: first line is the menu bar title, after "---" the dropdown;
 # "| key=value" sets color, actions etc.
@@ -28,13 +33,14 @@ set -uo pipefail
 APP="$HOME/Applications/CorneBattery.app"
 WATCH="$HOME/Library/Application Support/CorneBattery/corne-watch"
 LOW=20          # % for the red title and a notification
-SETTLE=5        # s after connecting before reading: services and the right half
-CONNECTED_S=120
-ASLEEP_S=300
+SETTLE=3        # s after the left half connects before the reader starts
+TICK_S=120      # how often to check that the reader runs (connected)
+ASLEEP_TICK_S=300
 DATA="${SWIFTBAR_PLUGIN_DATA_PATH:-${TMPDIR:-/tmp}/corne-battery}"
 mkdir -p "$DATA"
 LOW_FLAG="$DATA/low"   # a notification was sent for the current drop
 LAST="$DATA/last"      # "left right HH:MM" of the last read
+FIFO="$DATA/events"
 
 footer() {
     echo "---"
@@ -56,42 +62,32 @@ asleep() {
     footer
 }
 
-read_battery() {
-    local out left right min color
-    out="$(mktemp)"
-    # open's own stderr: "Unable to block on application" when the reader exits
-    # before open has its pid (keyboard not connected), harmless.
-    open -g -j -W -n --stdout "$out" --stderr "$out" "$APP" 2>/dev/null
-    left="$(sed -n 's/^left half *: *\([0-9]*\)%.*/\1/p' "$out")"
-    right="$(sed -n 's/^right half *: *\([0-9]*\)%.*/\1/p' "$out")"
+problem() {   # a message from the reader instead of levels
+    echo "⌨ –"
+    echo "---"
+    echo "$*" | sed 's/|/¦/g'   # "|" would be parsed by SwiftBar
+    last_line
+    footer
+}
 
-    if [ -z "$left$right" ] && grep -q "not connected" "$out"; then
-        rm -f "$out"
-        asleep
-        return
-    fi
-    if [ -z "$left$right" ]; then
-        echo "⌨ –"
-        echo "---"
-        sed 's/|/¦/g' "$out"   # the reason ("|" would be parsed by SwiftBar)
-        last_line
-        footer
-        rm -f "$out"
-        return
-    fi
-    rm -f "$out"
-    echo "${left:-?} ${right:-?} $(date +%H:%M)" >"$LAST"
+# levels <left> <right>, "-" = that half is not connected
+levels() {
+    local left="$1" right="$2" min=100 color="" shown_r="$2" shown_l="$1"
+    [ "$right" = - ] && shown_r=zz
+    [ "$left" = - ] && shown_l=?
+    echo "$left $right $(date +%H:%M)" >"$LAST"
 
-    min=100
-    for v in $left $right; do [ "$v" -lt "$min" ] && min=$v; done
-    color=""
+    for v in $left $right; do
+        [ "$v" = - ] && continue
+        [ "$v" -lt "$min" ] && min=$v
+    done
     [ "$min" -lt "$LOW" ] && color=" | color=red"
-    echo "⌨ ${left:-?}·${right:-?}${color}"
+    echo "⌨ ${shown_l}·${shown_r}${color}"
 
     # One notification per drop below LOW, again only after charging above it.
     if [ "$min" -lt "$LOW" ]; then
         if [ ! -f "$LOW_FLAG" ]; then
-            osascript -e "display notification \"Left ${left:-?}%, right ${right:-?}%\" with title \"Corne battery low\"" 2>/dev/null
+            osascript -e "display notification \"Left $left%, right $right%\" with title \"Corne battery low\"" 2>/dev/null
             touch "$LOW_FLAG"
         fi
     else
@@ -99,10 +95,18 @@ read_battery() {
     fi
 
     echo "---"
-    echo "Left half: ${left:-?}%"
-    echo "Right half: ${right:-?}%"
+    echo "Left half: $([ "$left" = - ] && echo "no value" || echo "$left%")"
+    echo "Right half: $([ "$right" = - ] && echo "asleep (a key press on it wakes it)" || echo "$right%")"
     echo "Updated $(date +%H:%M) | size=11"
     footer
+}
+
+reader_running() { pgrep -qf "corne-battery --watch"; }
+
+start_reader() {
+    reader_running && return 0
+    # open's own stderr: "Unable to block on application" and similar, harmless.
+    open -g -j -n --stdout "$FIFO" --stderr /dev/null "$APP" --args --watch 2>/dev/null
 }
 
 for f in "$APP" "$WATCH"; do
@@ -116,17 +120,45 @@ done
 
 # CORNE_ONCE=1: print one menu and exit (scripts/swiftbar.sh show / status).
 if [ -n "${CORNE_ONCE:-}" ]; then
-    read_battery
+    out="$(mktemp)"
+    open -g -j -W -n --stdout "$out" --stderr "$out" "$APP" 2>/dev/null
+    l="$(sed -n 's/^left half *: *\([0-9]*\)%.*/\1/p' "$out")"
+    r="$(sed -n 's/^right half *: *\([0-9]*\)%.*/\1/p' "$out")"
+    if [ -n "$l$r" ]; then
+        levels "${l:--}" "${r:--}"
+    elif grep -q "not connected" "$out"; then
+        asleep
+    else
+        problem "$(cat "$out")"
+    fi
+    rm -f "$out"
     exit 0
 fi
 
+rm -f "$FIFO"
+mkfifo "$FIFO"
+exec 3<>"$FIFO"   # read end kept open: no EOF when a writer exits
+cleanup() {
+    pkill -f "corne-battery --watch" 2>/dev/null
+    [ -n "${watch_pid:-}" ] && kill "$watch_pid" 2>/dev/null
+    rm -f "$FIFO"
+}
+trap cleanup EXIT
+trap 'exit 0' TERM INT
+
+"$WATCH" "$TICK_S" "$ASLEEP_TICK_S" >"$FIFO" &
+watch_pid=$!
+
 first=1
-"$WATCH" "$CONNECTED_S" "$ASLEEP_S" | while read -r event; do
-    [ "$first" = 1 ] || echo "~~~"
-    first=0
+redraw() { [ "$first" = 1 ] || echo "~~~"; first=0; }
+
+while read -r event a b <&3; do
     case "$event" in
-    connected) sleep "$SETTLE"; read_battery ;;
-    tick) read_battery ;;
-    disconnected) asleep ;;
+    connected) sleep "$SETTLE"; start_reader ;;
+    tick) start_reader ;;
+    disconnected) redraw; asleep ;;
+    levels) redraw; levels "$a" "$b" ;;
+    alive) ;;
+    *) redraw; problem "$event $a $b" ;;
     esac
 done
