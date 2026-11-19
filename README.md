@@ -190,10 +190,22 @@ wakes the half: the key matrix is a `wakeup-source` (`corne.dtsi`), the half
 reboots and reconnects in a second or two, the waking key press is not typed.
 The dongle is on USB and never sleeps.
 
-`scripts/battery.sh` prints the battery levels the computer gets from the
-Corne over Bluetooth (macOS: `system_profiler`, Linux: `upower`). The central
-sends its own level and proxies the peripherals' ones
-(`..._BATTERY_LEVEL_FETCHING` / `_PROXY` in `config/corne.conf`).
+`scripts/battery.sh` prints the battery level of each half (no-dongle setup:
+the left half is the Bluetooth device, it sends its own level and proxies the
+right half's one, `..._BATTERY_LEVEL_FETCHING` / `_PROXY` in
+`config/corne.conf`). With the dongle on USB there is nothing to read.
+
+macOS does not show it anywhere: it takes a keyboard's battery only from HID
+reports and ignores the Bluetooth Battery Service that ZMK uses. The script
+reads that service with CoreBluetooth (`scripts/battery-mac.swift`, run by
+`swift`, Command Line Tools); the first run asks to allow Bluetooth for the
+terminal app. On Linux `upower` reads it.
+
+```text
+$ scripts/battery.sh
+left half : 56%
+right half: 73%
+```
 
 ## Firmware
 
