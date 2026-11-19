@@ -9,6 +9,15 @@ prints what it reports: device name, physical layout, layers and bindings.
     scripts/studio_check.py --check FILE        # diff against a saved dump
     scripts/studio_check.py --port /dev/ttyACM0
 
+A saved dump (reference, tests/hardware/keymap.<os>.txt) starts with
+"# keymap: <git blob of config/corne.keymap>": the keymap it was taken from.
+On a mismatch this tells the two cases apart:
+  - the keymap changed since the reference (blob differs): expected, check the
+    diff and refresh the reference with --save;
+  - same keymap, other keys on the keyboard: a different build is flashed
+    (see firmware/*.info) or keys were changed in Studio.
+Exit code: 0 OK, 1 Studio / layout problem, 2 only differs from the reference.
+
 Keymap reads need the Studio lock open: press &studio_unlock
 (Utils layer: hold the BSPC thumb, then the top-right key). The script waits.
 
@@ -18,6 +27,7 @@ framed with SOF 0xAB / ESC 0xAC / EOF 0xAD.
 import argparse
 import glob
 import os
+import subprocess
 import sys
 import time
 
@@ -246,6 +256,36 @@ def dump(st):
     return lines, layers
 
 
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+KEYMAP = os.path.join(REPO, "config", "corne.keymap")
+HEADER = "# keymap: "
+
+
+def keymap_blob():
+    """git blob id of the current config/corne.keymap (same as in git)."""
+    r = subprocess.run(["git", "hash-object", KEYMAP], capture_output=True, text=True)
+    return r.stdout.strip()[:12] or "unknown"
+
+
+def mismatch_help(ref_blob, ref_file):
+    now = keymap_blob()
+    refresh = (f"    scripts/studio_check.py --save {os.path.relpath(ref_file, REPO)}\n"
+               f"    (или scripts/flash-all.sh --check-only --update-ref), затем закоммить эталон")
+    if ref_blob is None:
+        return ("Эталон старого формата (без хеша раскладки): не понять, менялась ли\n"
+                "раскладка после него. Если ты менял config/corne.keymap после снятия\n"
+                "эталона, расхождение ожидаемо: проверь, что diff выше = твои изменения,\n"
+                "и обнови эталон:\n" + refresh)
+    if ref_blob != now:
+        return (f"Эталон снят с другой раскладки ({ref_blob}, сейчас {now}): раскладку\n"
+                "меняли после него, расхождение ожидаемо. Проверь, что diff выше = твои\n"
+                "изменения, и обнови эталон:\n" + refresh)
+    return ("Эталон снят с этой же раскладки, а клавиатура отвечает иначе:\n"
+            "  - прошита другая сборка: сравни коммит в firmware/*.info с текущим,\n"
+            "    пересобери (scripts/zmk-docker.sh build ...) и прошей central;\n"
+            "  - или клавиши меняли в ZMK Studio: там «Restore Stock Settings».")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--port")
@@ -289,19 +329,26 @@ def main():
     text = "\n".join(lines) + "\n"
     if a.save:
         os.makedirs(os.path.dirname(a.save) or ".", exist_ok=True)
-        open(a.save, "w").write(text)
-        print(f"\nsaved to {a.save}")
+        open(a.save, "w").write(HEADER + keymap_blob() + "\n" + text)
+        print(f"\nsaved to {a.save} (keymap {keymap_blob()})")
+    differs = None
     if a.check:
         import difflib
-        old = open(a.check).read()
-        d = list(difflib.unified_diff(old.splitlines(), text.splitlines(),
+        old = open(a.check).read().splitlines()
+        ref_blob = old[0][len(HEADER):].strip() if old and old[0].startswith(HEADER) else None
+        old = [l for l in old if not l.startswith(HEADER)]
+        d = list(difflib.unified_diff(old, text.splitlines(),
                                       "expected", "keyboard", lineterm=""))
         if d:
-            problems.append("differs from " + a.check + ":\n" + "\n".join(d))
+            differs = ("differs from " + a.check + ":\n" + "\n".join(d)
+                       + "\n\n" + mismatch_help(ref_blob, a.check))
 
     if problems:
-        print("\nPROBLEMS:\n- " + "\n- ".join(problems))
+        print("\nPROBLEMS:\n- " + "\n- ".join(problems + ([differs] if differs else [])))
         sys.exit(1)
+    if differs:
+        print("\nKEYMAP DIFFERS FROM THE REFERENCE:\n" + differs)
+        sys.exit(2)
     print("\nOK: keyboard answers Studio RPC and the keymap looks as expected")
 
 

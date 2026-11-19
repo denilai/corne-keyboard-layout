@@ -1,3 +1,4 @@
+# keymap: db15a10f35b7
 device: Corne
 layout* 6 Column: 42 keys
 layout  5 Column: 36 keys

@@ -8,12 +8,20 @@
 #                                           # (если половины не соединяются с central)
 #   scripts/flash-all.sh --no-reset         # не сбрасывать, даже если схема сменилась
 #   scripts/flash-all.sh --skip-check       # без проверки через Studio в конце
+#   scripts/flash-all.sh --check-only       # только проверка Studio, без прошивки
+#   scripts/flash-all.sh --update-ref       # в конце сохранить прочитанную раскладку
+#                                           # как эталон (после намеренных изменений)
 #   scripts/flash-all.sh --os linux         # ОС центральной части: mac | linux
 #                                           # (по умолчанию ОС этого компьютера)
 #
 # Схемы и их части описаны в scripts/firmware.py. Схема последней прошивки
 # запоминается (.git/corne-flashed-mode); при смене схемы сброс включается
 # сам: половины хранят пару со старым central и к новому не подключатся.
+#
+# Проверка Studio: читает раскладку с central по USB и сравнивает с эталоном
+# tests/hardware/keymap.<ос>.txt. Эталон помнит хеш config/corne.keymap, с
+# которого снят: при расхождении scripts/studio_check.py говорит, устарел ли
+# эталон (раскладку меняли — обнови его: --update-ref) или прошита не та сборка.
 #
 # Каждый шаг: подсказка что сделать -> Enter -> ожидание флешки -> запись ->
 # ожидание перезагрузки. Прошивки берутся из firmware/
@@ -24,7 +32,7 @@ REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 FLASH="$REPO/scripts/flash.sh"
 export FLASH_TIMEOUT="${FLASH_TIMEOUT:-600}"
 
-mode=dongle reset=0 no_reset=0 check=1 os=""
+mode=dongle reset=0 no_reset=0 check=1 os="" check_only=0 update_ref=0
 case "$(uname)" in Darwin) os=mac ;; Linux) os=linux ;; esac
 while [ $# -gt 0 ]; do
     a="$1"; shift
@@ -35,7 +43,9 @@ while [ $# -gt 0 ]; do
     --reset) reset=1 ;;
     --no-reset) no_reset=1 ;;
     --skip-check) check=0 ;;
-    -h | --help) sed -n '2,22p' "$0"; exit 0 ;;
+    --check-only) check_only=1 ;;
+    --update-ref) update_ref=1 ;;
+    -h | --help) sed -n '2,30p' "$0"; exit 0 ;;
     *) echo "неизвестный аргумент: $a" >&2; exit 2 ;;
     esac
 done
@@ -84,6 +94,49 @@ step() { # step <номер> <part> <текст подсказки>
     "$FLASH" "${args[@]}" || die "шаг $num ($part) не удался. Повтори: scripts/flash.sh ${args[*]}"
     ok "шаг $num готов"
 }
+
+studio_step() {
+    say "Проверка Studio"
+    echo "Жду порт Studio..."
+    local port="" ref args rc
+    for _ in $(seq 60); do
+        port="$(studio_port)" && [ -n "$port" ] && break
+        sleep 1
+    done
+    [ -n "$port" ] || die "порт Studio не появился за 60 с: central подключён по USB?"
+    ok "порт: $port"
+
+    echo "Набери что-нибудь на клавиатуре: половины должны печатать."
+    echo "Затем разблокируй Studio: зажми BSPC (правый thumb, средняя) + правая верхняя клавиша."
+    ref="$REPO/tests/hardware/keymap.$os.txt"
+    args=(--port "$port" --wait-unlock 300)
+    if [ $update_ref = 1 ]; then
+        args+=(--save "$ref")
+    elif [ -f "$ref" ]; then
+        args+=(--check "$ref")
+    else
+        args+=(--save "$ref")
+        warn "эталона $ref нет: сохраню прочитанную раскладку, проверь её и закоммить"
+    fi
+    rc=0
+    python3 "$REPO/scripts/studio_check.py" "${args[@]}" || rc=$?
+    case $rc in
+    0)
+        if [ $update_ref = 1 ]; then
+            ok "эталон обновлён: проверь git diff tests/hardware/ и закоммить"
+        else
+            ok "клавиатура отвечает, раскладка совпадает с эталоном (или сохранена как эталон)"
+        fi
+        ;;
+    2) die "раскладка отличается от эталона: что делать — в выводе выше (обновить эталон: scripts/flash-all.sh --check-only --update-ref)" ;;
+    *) die "Studio не отвечает или раскладка не та (см. выше). Если половины не печатают: scripts/flash-all.sh --reset" ;;
+    esac
+}
+
+if [ $check_only = 1 ]; then
+    studio_step
+    exit 0
+fi
 
 # ---- проверки перед началом ----------------------------------------------
 say "Проверка"
@@ -165,28 +218,4 @@ else
 fi
 [ $check = 1 ] || exit 0
 
-say "Проверка Studio"
-echo "Жду порт Studio..."
-port=""
-for _ in $(seq 60); do
-    port="$(studio_port)" && [ -n "$port" ] && break
-    sleep 1
-done
-[ -n "$port" ] || die "порт Studio не появился за 60 с: central подключён по USB?"
-ok "порт: $port"
-
-echo "Набери что-нибудь на клавиатуре: половины должны печатать."
-echo "Затем разблокируй Studio: зажми BSPC (правый thumb, средняя) + правая верхняя клавиша."
-ref="$REPO/tests/hardware/keymap.$os.txt"
-args=(--port "$port" --wait-unlock 300)
-if [ -f "$ref" ]; then
-    args+=(--check "$ref")
-else
-    args+=(--save "$ref")
-    warn "эталона $ref нет: сохраню прочитанную раскладку, проверь её и закоммить"
-fi
-if python3 "$REPO/scripts/studio_check.py" "${args[@]}"; then
-    ok "клавиатура отвечает, раскладка совпадает с эталоном (или сохранена как эталон)"
-else
-    die "проверка не прошла (см. вывод выше). Если половины не печатают: scripts/flash-all.sh --reset"
-fi
+studio_step

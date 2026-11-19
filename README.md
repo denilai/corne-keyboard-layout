@@ -500,7 +500,17 @@ scripts/studio_check.py --check tests/hardware/keymap.mac.txt   # diff against t
 ```
 
 `tests/hardware/keymap.<os>.txt` is the keymap read from the keyboard flashed
-with that OS build (`--save` to refresh it after intentional changes).
+with that OS build. Its first line, `# keymap: <blob>`, is the git blob of
+`config/corne.keymap` it was taken from, so on a mismatch the script says
+which case it is (exit code 2):
+
+| Reference taken from | Means | Do |
+|---|---|---|
+| another keymap (blob differs) | the keymap changed since; expected | check that the diff is your change, then refresh: `scripts/flash-all.sh --check-only --update-ref`, commit the file |
+| the same keymap | the keyboard runs another build, or keys were changed in Studio | flash the current build (compare `firmware/*.info`), or Studio → "Restore Stock Settings" |
+
+Exit code 1 is a real problem: no Studio answer, wrong layers or key count.
+`scripts/flash-all.sh --check-only` runs only this check, without flashing.
 
 ## Keymap tests
 
