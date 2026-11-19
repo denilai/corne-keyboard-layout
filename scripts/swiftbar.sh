@@ -5,7 +5,7 @@
 #   scripts/swiftbar.sh status      # what is installed, running, allowed, connected
 #   scripts/swiftbar.sh show        # run the plugin here: prints what the menu bar shows
 #   scripts/swiftbar.sh refresh     # refresh the menu bar item now
-#   scripts/swiftbar.sh rebuild     # rebuild CorneBattery.app (after editing battery-mac.swift)
+#   scripts/swiftbar.sh rebuild     # rebuild after editing battery-mac.swift / corne-watch.swift
 #   scripts/swiftbar.sh start|stop  # start / quit SwiftBar
 #   scripts/swiftbar.sh uninstall [--all]
 #                                   # remove the plugin link, CorneBattery.app and its
@@ -16,8 +16,11 @@
 #   ~/Applications/CorneBattery.app scripts/battery-mac.swift as a background app
 #                                   with its own Bluetooth permission (SwiftBar has
 #                                   none, a plugin it starts may not use Bluetooth)
-#   ~/.config/swiftbar/             plugin folder, link to macos/swiftbar/corne-battery.2m.sh
-#                                   (edits of the plugin apply on the next refresh)
+#   ~/Library/Application Support/CorneBattery/corne-watch
+#                                   scripts/corne-watch.swift: reports when the Corne
+#                                   connects / disconnects (wakes / sleeps), plus ticks
+#   ~/.config/swiftbar/             plugin folder, link to macos/swiftbar/corne-battery.sh
+#                                   (streamable: runs all the time; edits apply on refresh)
 # Start at login: SwiftBar → Preferences → "Launch at Login" (not set by this script).
 set -euo pipefail
 
@@ -25,7 +28,9 @@ REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 APPS="$HOME/Applications"
 APP="$APPS/CorneBattery.app"
 BUNDLE_ID=local.corne.battery
-PLUGIN="$REPO/macos/swiftbar/corne-battery.2m.sh"
+PLUGIN="$REPO/macos/swiftbar/corne-battery.sh"
+WATCH_DIR="$HOME/Library/Application Support/CorneBattery"
+WATCH="$WATCH_DIR/corne-watch"
 NAME=corne-battery            # plugin name for swiftbar:// URLs
 DOMAIN=com.ameba.SwiftBar
 
@@ -47,6 +52,23 @@ plugin_dir() {
 }
 
 running() { pgrep -qx SwiftBar; }
+
+build_watch() {
+    mkdir -p "$WATCH_DIR"
+    swiftc -O "$REPO/scripts/corne-watch.swift" -o "$WATCH"
+    ok "built $WATCH"
+}
+
+# Rebuild CorneBattery.app only when its source changed: a new binary may make
+# macOS ask for the Bluetooth permission again.
+build_app_if_changed() {
+    if [ -x "$APP/Contents/MacOS/corne-battery" ] &&
+        [ ! "$REPO/scripts/battery-mac.swift" -nt "$APP/Contents/MacOS/corne-battery" ]; then
+        ok "CorneBattery.app is up to date"
+    else
+        build_app
+    fi
+}
 
 build_app() {
     mkdir -p "$APP/Contents/MacOS"
@@ -83,8 +105,10 @@ install)
     else
         brew install --cask --appdir="$APPS" swiftbar
     fi
-    build_app
+    build_app_if_changed
+    build_watch
     dir="$(plugin_dir)"
+    rm -f "$dir"/corne-battery.*.sh 2>/dev/null || true   # links of older versions
     if [ -z "$dir" ]; then
         dir="$HOME/.config/swiftbar"
         defaults write "$DOMAIN" PluginDirectory -string "$dir"
@@ -100,7 +124,8 @@ install)
     echo "  - SwiftBar → Preferences → Launch at Login"
     ;;
 rebuild)
-    build_app
+    build_app_if_changed
+    build_watch
     refresh || true
     ;;
 refresh)
@@ -109,7 +134,7 @@ refresh)
     ok "refresh sent"
     ;;
 show)
-    "$PLUGIN"
+    CORNE_ONCE=1 "$PLUGIN"
     ;;
 start)
     open -g -a "$(swiftbar_app)"
@@ -138,20 +163,29 @@ status)
     else
         bad "CorneBattery.app missing: scripts/swiftbar.sh install"
     fi
+    if [ -x "$WATCH" ]; then
+        if [ "$REPO/scripts/corne-watch.swift" -nt "$WATCH" ]; then
+            bad "corne-watch is older than corne-watch.swift: scripts/swiftbar.sh rebuild"
+        else
+            ok "corne-watch built"
+        fi
+    else
+        bad "corne-watch missing: scripts/swiftbar.sh install"
+    fi
     if tccutil list -b "$BUNDLE_ID" 2>/dev/null | grep -qx BluetoothAlways; then
         ok "Bluetooth allowed for CorneBattery"
     else
         bad "Bluetooth not allowed for CorneBattery yet (asked on first read; or Privacy & Security → Bluetooth)"
     fi
     echo "${b}Plugin output:${n}"
-    "$PLUGIN" | sed 's/^/  /'
+    CORNE_ONCE=1 "$PLUGIN" | sed 's/^/  /'
     ;;
 uninstall)
     dir="$(plugin_dir)"
     [ -n "$dir" ] && rm -f "$dir/$(basename "$PLUGIN")"
-    rm -rf "$APP"
+    rm -rf "$APP" "$WATCH_DIR"
     tccutil reset BluetoothAlways "$BUNDLE_ID" >/dev/null 2>&1 || true
-    ok "removed the plugin link, CorneBattery.app and its Bluetooth permission"
+    ok "removed the plugin link, CorneBattery.app, corne-watch and the Bluetooth permission"
     if [ "${1:-}" = --all ]; then
         osascript -e 'quit app "SwiftBar"' 2>/dev/null || true
         brew uninstall --cask swiftbar || true

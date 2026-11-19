@@ -238,24 +238,42 @@ right half: 73%
 
 ### Menu bar indicator (macOS)
 
-The menu bar shows `⌨ 57·74`: left half · right half, in %. The dropdown has
-both levels, the time of the last read, "Refresh" and a link to the Bluetooth
+The menu bar shows `⌨ 57·74`: left half · right half, in %; `⌨ zz` while the
+keyboard is asleep or off. The dropdown has both levels, the time of the read
+(or of the last read while asleep), "Refresh" and a link to the Bluetooth
 settings. Below 20 % the title turns red and one notification comes (again only
 after the half was charged above 20 %).
 
+When it reads the battery:
+
+| Event | Reaction |
+|---|---|
+| the left half wakes up / connects | read 5 s later (connection and the right half settle) |
+| it falls asleep / disconnects | `⌨ zz` at once, no reading |
+| connected, nothing happens | read every 2 minutes |
+| not connected | try every 5 minutes (in case an event was missed) |
+
+Reading does not count as key activity: it does not keep the halves awake.
+
 How it works:
 
-- [SwiftBar](https://github.com/swiftbar/SwiftBar) runs every script in its
-  plugin folder on a timer and shows its output: the first line in the menu
-  bar, lines after `---` in the dropdown, `| color=… refresh=… href=…` set the
-  look and actions. The timer is in the file name: `.2m.` = every 2 minutes.
-- Plugin: `macos/swiftbar/corne-battery.2m.sh`. The plugin folder is
-  `~/.config/swiftbar`; it holds a link to the file in the repo, so edits of
-  the plugin apply on the next refresh.
+- [SwiftBar](https://github.com/swiftbar/SwiftBar) shows the output of plugin
+  scripts from its plugin folder: the first line in the menu bar, lines after
+  `---` in the dropdown, `| color=… refresh=… href=…` set the look and actions.
+  `macos/swiftbar/corne-battery.sh` is a *streamable* plugin
+  (`<swiftbar.type>streamable</swiftbar.type>`): it runs all the time and each
+  `~~~` line replaces the menu with what follows.
+- Events come from `corne-watch` (`scripts/corne-watch.swift`): the Corne
+  (VID 0x1D50, PID 0x615E) appears in the IOKit registry as a HID device when
+  it connects and goes away when it disconnects; IOKit notifications report
+  that at once, with no permission. The watcher prints `connected`,
+  `disconnected` and `tick` (timer), the plugin reacts to each line.
 - SwiftBar has no Bluetooth permission, and macOS kills a process it starts
   that uses Bluetooth. So `scripts/battery-mac.swift` is compiled into
   `~/Applications/CorneBattery.app`, a background app (no Dock icon) with its
   own permission; the plugin starts it with `open` and reads its output.
+- The plugin folder is `~/.config/swiftbar`; it holds a link to the plugin in
+  the repo, so edits apply on the next "Refresh" (it restarts the plugin).
 
 Everything is done with `scripts/swiftbar.sh`:
 
@@ -264,13 +282,13 @@ scripts/swiftbar.sh install     # SwiftBar, CorneBattery.app, plugin link, start
 scripts/swiftbar.sh status      # installed / running / linked / built / Bluetooth allowed + plugin output
 scripts/swiftbar.sh show        # run the plugin here: what the menu bar shows
 scripts/swiftbar.sh refresh     # refresh the menu bar item now
-scripts/swiftbar.sh rebuild     # rebuild CorneBattery.app after editing battery-mac.swift
+scripts/swiftbar.sh rebuild     # rebuild after editing battery-mac.swift / corne-watch.swift
 scripts/swiftbar.sh start|stop  # start / quit SwiftBar
 scripts/swiftbar.sh uninstall [--all]   # --all: also SwiftBar and its settings
 ```
 
 `install` installs SwiftBar with Homebrew into `~/Applications` (no sudo), builds and
-signs (ad hoc) `CorneBattery.app`, sets the plugin folder if SwiftBar has none,
+signs (ad hoc) `CorneBattery.app` (only if its source changed), builds `corne-watch`, sets the plugin folder if SwiftBar has none,
 links the plugin and starts SwiftBar. Then:
 
 1. Allow Bluetooth for "CorneBattery" when macOS asks (or System Settings →
@@ -282,9 +300,9 @@ Maintain:
 
 | Task | How |
 |---|---|
-| Changed `battery-mac.swift` | `scripts/swiftbar.sh rebuild` (Bluetooth permission may be asked again) |
+| Changed `battery-mac.swift` / `corne-watch.swift` | `scripts/swiftbar.sh rebuild` (a new CorneBattery.app may ask for Bluetooth again) |
 | Changed the plugin | nothing, it is a link; `scripts/swiftbar.sh refresh` to see it now |
-| Other interval | `scripts/swiftbar.sh uninstall`, rename the plugin (`.10m.` = 10 minutes) and `PLUGIN=` in `scripts/swiftbar.sh`, then `install` |
+| Other intervals | `CONNECTED_S`, `ASLEEP_S`, `SETTLE` in the plugin, then "Refresh" |
 | Other threshold | `LOW=` in the plugin |
 | Update SwiftBar | its own updater (SwiftBar → Check for Updates), or `brew upgrade --cask swiftbar` |
 | Check everything | `scripts/swiftbar.sh status` |
@@ -293,10 +311,10 @@ Troubleshooting (what the menu bar shows):
 
 | Title | Dropdown says | Fix |
 |---|---|---|
-| `⌨ –` | Corne is not connected over Bluetooth | keyboard asleep (press a key), off, or in the dongle setup (USB: no battery to read) |
+| `⌨ zz` | Corne not connected: asleep or off | press a key; with the dongle there is no Bluetooth battery to read |
 | `⌨ –` | no Bluetooth access | System Settings → Privacy & Security → Bluetooth → CorneBattery on |
 | `⌨ –` | timeout after 15 s | the left half is reconnecting after sleep: "Refresh" in a few seconds |
-| `⌨ ?` | CorneBattery.app is missing | `scripts/swiftbar.sh install` |
+| `⌨ ?` | CorneBattery.app or corne-watch is missing | `scripts/swiftbar.sh install` |
 | no `⌨` at all | | `scripts/swiftbar.sh status`: SwiftBar not running or plugin not linked |
 
 Remove: `scripts/swiftbar.sh uninstall` (plugin link, CorneBattery.app, its
