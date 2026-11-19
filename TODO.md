@@ -8,7 +8,7 @@
   настройках macOS и запустить `scripts/karabiner-setup.sh` (README «Moving a
   Mac to the macOS build»). Снять эталон Studio `tests/hardware/keymap.mac.txt`
   (`flash-all.sh` сохранит его сам).
-- [ ] Проверить на Mac: `KP_N1..3` (`.` `,` `?` в ABC и Russian – PC), тильду,
+- [ ] Проверить на Mac: `KP_N1..3` (`,` `.` `?` в ABC и Russian – PC), тильду,
   F10, Utils (блокировка, скриншоты, яркость, громкость), Nav (Mission
   Control, рабочие столы, буфер), Hyper+буква.
 - [ ] Привязать приложения к Hyper+буква и записать список в README.

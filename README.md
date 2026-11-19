@@ -171,10 +171,10 @@ The dongle only enters the bootloader by double-tapping its reset.
 ## macOS: punctuation in any input source
 
 The keyboard sends key codes, the input source turns them into characters, so
-`.` `,` `?` sit on different keys in ABC and Russian – PC. The thumb keys of the
+`,` `.` `?` sit on different keys in ABC and Russian – PC. The thumb keys of the
 Num layer send keypad `1` `2` `3` (`KP_N1..3`), and
 [Karabiner-Elements](https://karabiner-elements.pqrs.org) turns them into
-`.` `,` `?` for the current input source. On other systems they stay keypad digits.
+`,` `.` `?` for the current input source. On other systems they stay keypad digits.
 
 ```sh
 scripts/karabiner-setup.sh --diff   # what would change in ~/.config/karabiner/karabiner.json

@@ -140,8 +140,8 @@ parse_config:
       t: DEL
       h: Hyper
     # keypad 1 2 3: Karabiner turns them into . , ? on macOS (macos/karabiner)
-    "&kp KP_N1": .
-    "&kp KP_N2": ","
+    "&kp KP_N1": ","
+    "&kp KP_N2": .
     "&kp KP_N3": "?"
     "&mm_grescm":
       t: ⎋
