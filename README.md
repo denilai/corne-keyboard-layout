@@ -315,17 +315,21 @@ scripts/swiftbar.sh show        # run the plugin here: what the menu bar shows
 scripts/swiftbar.sh refresh     # refresh the menu bar item now
 scripts/swiftbar.sh rebuild     # rebuild after editing battery-mac.swift / corne-watch.swift
 scripts/swiftbar.sh start|stop  # start / quit SwiftBar
+scripts/swiftbar.sh autostart [on|off]  # start SwiftBar at login; no argument: show the state
 scripts/swiftbar.sh uninstall [--all]   # --all: also SwiftBar and its settings
 ```
 
 `install` installs SwiftBar with Homebrew into `~/Applications` (no sudo), builds and
 signs (ad hoc) `CorneBattery.app` (only if its source changed), builds `corne-watch`, sets the plugin folder if SwiftBar has none,
-links the plugin and starts SwiftBar. Then:
+links the plugin, starts SwiftBar and turns on autostart. Then allow
+Bluetooth for "CorneBattery" when macOS asks (or System Settings → Privacy &
+Security → Bluetooth).
 
-1. Allow Bluetooth for "CorneBattery" when macOS asks (or System Settings →
-   Privacy & Security → Bluetooth).
-2. Start at login: click the SwiftBar item → SwiftBar → Preferences →
-   "Launch at Login" (the script does not change login items).
+Autostart is a LaunchAgent, `~/Library/LaunchAgents/local.corne.swiftbar.plist`:
+at login it runs `open -g -a SwiftBar`. macOS shows it in System Settings →
+General → Login Items & Extensions → "Allow in the Background" (as `open`); the
+switch there turns it off too. SwiftBar's own "Launch at Login" is not needed
+(both together do no harm).
 
 Maintain:
 

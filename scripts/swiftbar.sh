@@ -7,6 +7,8 @@
 #   scripts/swiftbar.sh refresh     # refresh the menu bar item now
 #   scripts/swiftbar.sh rebuild     # rebuild after editing battery-mac.swift / corne-watch.swift
 #   scripts/swiftbar.sh start|stop  # start / quit SwiftBar
+#   scripts/swiftbar.sh autostart [on|off]
+#                                   # start SwiftBar at login (LaunchAgent); no argument: show
 #   scripts/swiftbar.sh uninstall [--all]
 #                                   # remove the plugin link, CorneBattery.app and its
 #                                   # Bluetooth permission; --all also SwiftBar and its settings
@@ -21,7 +23,9 @@
 #                                   connects / disconnects (wakes / sleeps), plus ticks
 #   ~/.config/swiftbar/             plugin folder, link to macos/swiftbar/corne-battery.sh
 #                                   (streamable: runs all the time; edits apply on refresh)
-# Start at login: SwiftBar → Preferences → "Launch at Login" (not set by this script).
+#   ~/Library/LaunchAgents/local.corne.swiftbar.plist
+#                                   autostart: at login runs `open -g -a SwiftBar`
+#                                   (install turns it on; macOS lists it in Login Items)
 set -euo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -33,6 +37,8 @@ WATCH_DIR="$HOME/Library/Application Support/CorneBattery"
 WATCH="$WATCH_DIR/corne-watch"
 NAME=corne-battery            # plugin name for swiftbar:// URLs
 DOMAIN=com.ameba.SwiftBar
+AGENT_LABEL=local.corne.swiftbar
+AGENT="$HOME/Library/LaunchAgents/$AGENT_LABEL.plist"
 
 [ "$(uname)" = Darwin ] || { echo "macOS only" >&2; exit 1; }
 
@@ -93,6 +99,40 @@ PLIST
     ok "built $APP"
 }
 
+autostart_on() {
+    mkdir -p "$(dirname "$AGENT")"
+    cat >"$AGENT" <<PLIST
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key><string>$AGENT_LABEL</string>
+    <key>ProgramArguments</key>
+    <array><string>/usr/bin/open</string><string>-g</string><string>-a</string><string>$(swiftbar_app)</string></array>
+    <key>RunAtLoad</key><true/>
+</dict>
+</plist>
+PLIST
+    # Register it now (it runs open once: no-op if SwiftBar is already running).
+    launchctl bootout "gui/$(id -u)/$AGENT_LABEL" 2>/dev/null || true
+    launchctl bootstrap "gui/$(id -u)" "$AGENT"
+    ok "autostart on: $AGENT"
+}
+
+autostart_off() {
+    launchctl bootout "gui/$(id -u)/$AGENT_LABEL" 2>/dev/null || true
+    rm -f "$AGENT"
+    ok "autostart off"
+}
+
+autostart_state() {
+    if [ -f "$AGENT" ] && launchctl print "gui/$(id -u)/$AGENT_LABEL" >/dev/null 2>&1; then
+        ok "autostart on ($AGENT)"
+    else
+        bad "autostart off: scripts/swiftbar.sh autostart on"
+    fi
+}
+
 refresh() {
     running && open -g "swiftbar://refreshplugin?name=$NAME"
 }
@@ -117,11 +157,11 @@ install)
     ln -sfn "$PLUGIN" "$dir/$(basename "$PLUGIN")"
     ok "plugin: $dir/$(basename "$PLUGIN") -> $PLUGIN"
     open -g -a "$(swiftbar_app)"
+    autostart_on
     refresh || true
     echo
     echo "${b}Menu bar: ⌨ <left>·<right>.${n} Left to do by hand:"
     echo "  - allow Bluetooth for CorneBattery when macOS asks"
-    echo "  - SwiftBar → Preferences → Launch at Login"
     ;;
 rebuild)
     build_app_if_changed
@@ -136,6 +176,14 @@ refresh)
 show)
     CORNE_ONCE=1 "$PLUGIN"
     ;;
+autostart)
+    case "${1:-}" in
+    on) autostart_on ;;
+    off) autostart_off ;;
+    "") autostart_state ;;
+    *) echo "autostart on|off" >&2; exit 2 ;;
+    esac
+    ;;
 start)
     open -g -a "$(swiftbar_app)"
     ok "SwiftBar started"
@@ -147,6 +195,7 @@ stop)
 status)
     if app="$(swiftbar_app)"; then ok "SwiftBar installed: $app"; else bad "SwiftBar not installed: scripts/swiftbar.sh install"; fi
     if running; then ok "SwiftBar running"; else bad "SwiftBar not running: scripts/swiftbar.sh start"; fi
+    autostart_state
     dir="$(plugin_dir)"
     link="$dir/$(basename "$PLUGIN")"
     if [ -n "$dir" ] && [ "$(readlink "$link" 2>/dev/null)" = "$PLUGIN" ]; then
@@ -183,6 +232,7 @@ status)
 uninstall)
     dir="$(plugin_dir)"
     [ -n "$dir" ] && rm -f "$dir/$(basename "$PLUGIN")"
+    autostart_off
     rm -rf "$APP" "$WATCH_DIR"
     tccutil reset BluetoothAlways "$BUNDLE_ID" >/dev/null 2>&1 || true
     ok "removed the plugin link, CorneBattery.app, corne-watch and the Bluetooth permission"
