@@ -39,7 +39,7 @@ SYMBOLS = [
     ("⌃", "Ctrl (Super in the Linux build)"),
     ("⎇", "Opt / Alt"),
     ("⇧", "Shift"),
-    ("Hyper", "⌃⎇⇧⌘ at once: app launch shortcuts"),
+    ("Hyper", "⌃⎇⇧⌘ at once (hold Enter or Del): window manager, app shortcuts"),
     ("⎋", "Esc; with ⇧ or ⌘ held: ` ~"),
     ("⏎ ↹ ⎵", "Enter, Tab, Space"),
     ("⌫ ⌦", "Backspace, Delete (forward)"),
