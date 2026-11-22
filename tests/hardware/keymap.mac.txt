@@ -1,8 +1,8 @@
-# keymap: db15a10f35b7
+# keymap: ab71a3218004
 device: Corne
 layout* 6 Column: 42 keys
 layout  5 Column: 36 keys
-behaviors: ARROW_FUNC, ARROW_FUNC_TAP, Bluetooth, Bootloader, Caps Word, EMDSH, Grave/Escape, Key Press, Key Repeat, Key Toggle, Layer-Tap, Mod-Tap, Momentary Layer, Mouse Key Press, None, Output Selection, Reset, Sticky Key, Sticky Layer, Studio Unlock, To Layer, Toggle Layer, Transparent, UNDERSPACE, left_balanced_homerow_mods, mouse_move, mouse_scroll, right_balanced_homerow_mods, squote_lctrl
+behaviors: ARROW_FUNC, ARROW_FUNC_TAP, Bluetooth, Bootloader, Caps Word, EMDSH, Grave/Escape, Key Press, Key Repeat, Key Toggle, Layer-Tap, Mod-Tap, Momentary Layer, Mouse Key Press, None, Output Selection, Reset, Sticky Key, Sticky Layer, Studio Unlock, To Layer, Toggle Layer, Transparent, UNDERSPACE, caps_lock, left_balanced_homerow_mods, mouse_move, mouse_scroll, right_balanced_homerow_mods, squote_lctrl
 layers: 4 used, 2 free
 
 [Base] (42 keys)
@@ -12,9 +12,9 @@ layers: 4 used, 2 free
                                                LGUI | Layer-Tap  | MT LCTRL/R | UNDERSPACE | Layer-Tap  | MT LA(LS(L
 
 [Nav] (42 keys)
-  mouse_move | mouse_move | mouse_move | mouse_move | Mouse Key  | Mouse Key  | mouse_move | mouse_move | mouse_move | mouse_move | Mouse Key  | Mouse Key 
+  mouse_move | mouse_move | mouse_move | mouse_move | Mouse Key  | Mouse Key  |       None |      PG_UP |   LA(LEFT) |  LA(RIGHT) |   LG(LEFT) |        DEL
         LEFT |       DOWN |         UP |      RIGHT |     LC(UP) |   LC(DOWN) |       LEFT |       DOWN |         UP |      RIGHT |   LC(LEFT) |  LC(RIGHT)
-  Mouse Key  |      LG(Z) |      LG(X) |      LG(C) |      LG(V) |  LG(LS(Z)) | Mouse Key  |       HOME |      PG_DN |      PG_UP |        END | Mouse Key 
+  Mouse Key  |      LG(Z) |      LG(X) |      LG(C) |      LG(V) |  LG(LS(Z)) | Mouse Key  |      PG_DN |     LG(UP) |   LG(DOWN) |  LG(RIGHT) | Mouse Key 
                                          Transparen | Transparen | Transparen | Transparen | Transparen | Transparen
 
 [Num] (42 keys)
