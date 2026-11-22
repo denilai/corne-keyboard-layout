@@ -14,3 +14,7 @@ if git diff --cached --name-only |
     scripts/draw-keymap.sh
     git add img/keymap-img/corne.yaml img/keymap-img/corne.svg
 fi
+# Warn (never block) when the Studio reference was not taken from this keymap.
+if git diff --cached --name-only | grep -qx 'config/corne\.keymap'; then
+    scripts/check-studio-reference.sh || true
+fi
