@@ -182,7 +182,8 @@ sticky, layer keys, combos) and the symbols.
 scripts/draw-keymap.sh           # updates img/keymap-img/corne.{yaml,svg}
 scripts/draw-keymap.sh --check   # fails if the images are outdated
 git config core.hooksPath .githooks   # once per clone: pre-commit hook re-renders
-                                      # and stages the images when the keymap is committed
+                                      # and stages the images when the keymap, the drawer
+                                      # config or scripts/keymap_legend.py is committed
 ```
 
 If a global `core.hooksPath` dispatches to `.git/hooks/<name>`, link the hook

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Regenerate build.yaml when scripts/firmware.py is committed, and re-render
-# the keymap drawing when the keymap or the drawer config is committed; add
-# the results to the same commit. Enable once per clone:
+# the keymap drawing when the keymap, the drawer config or the legend script is
+# committed; add the results to the same commit. Enable once per clone:
 #   git config core.hooksPath .githooks
 # Renders from the working tree: stage the whole keymap file, not parts of it.
 set -euo pipefail
@@ -10,7 +10,7 @@ if git diff --cached --name-only | grep -qxE 'scripts/firmware\.py|build\.yaml';
     git add build.yaml
 fi
 if git diff --cached --name-only |
-    grep -qxE 'config/corne\.keymap|img/keymap-img/keymap_drawer\.config\.yaml'; then
+    grep -qxE 'config/corne\.keymap|img/keymap-img/keymap_drawer\.config\.yaml|scripts/keymap_legend\.py'; then
     scripts/draw-keymap.sh
     git add img/keymap-img/corne.yaml img/keymap-img/corne.svg
 fi
