@@ -183,12 +183,19 @@ scripts/draw-keymap.sh           # updates img/keymap-img/corne.{yaml,svg}
 scripts/draw-keymap.sh --check   # fails if the images are outdated
 git config core.hooksPath .githooks   # once per clone: pre-commit hook re-renders
                                       # and stages the images when the keymap, the drawer
-                                      # config or scripts/keymap_legend.py is committed
+                                      # config, scripts/keymap_legend.py or draw-keymap.sh is
+                                      # committed; it also warns when the Studio reference
+                                      # was not taken from this keymap
 ```
 
-If a global `core.hooksPath` dispatches to `.git/hooks/<name>`, link the hook
+The pre-push hook (`.githooks/pre-push`) runs `scripts/draw-keymap.sh --check` and stops
+the push if the picture is outdated (needs Docker or keymap-drawer; without them it only
+warns), and repeats the Studio reference warning.
+
+If a global `core.hooksPath` dispatches to `.git/hooks/<name>`, link the hooks
 there instead, so the global hooks keep working:
-`ln -s ../../.githooks/pre-commit .git/hooks/pre-commit`.
+`ln -s ../../.githooks/pre-commit .git/hooks/pre-commit` and
+`ln -s ../../.githooks/pre-push .git/hooks/pre-push`.
 
 ## Setups: with or without the dongle
 
