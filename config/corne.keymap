@@ -98,6 +98,10 @@
 #define APP_WINS    LC(DOWN)            /* App windows (App Exposé) */
 #define DESK_PREV   LC(LEFT)            /* previous Space */
 #define DESK_NEXT   LC(RIGHT)           /* next Space */
+/* Switch input source: F18, unused on macOS. Karabiner turns it into the
+ * Globe key (macos/karabiner/corne-lang-switch.json): macOS ignores the
+ * consumer usage that stands for Globe on other keyboards (0x029D). */
+#define LANG_NEXT   F18
 #define WORD_PREV   LA(LEFT)
 #define WORD_NEXT   LA(RIGHT)
 #define LINE_START  LG(LEFT)            /* Home/End scroll the document on macOS */
@@ -119,6 +123,7 @@
 #define APP_WINS    LG(A)               /* app grid: GNOME has no app-windows view */
 #define DESK_PREV   LC(LA(LEFT))
 #define DESK_NEXT   LC(LA(RIGHT))
+#define LANG_NEXT   LG(SPACE)           /* GNOME: next input source */
 #define WORD_PREV   LC(LEFT)
 #define WORD_NEXT   LC(RIGHT)
 #define LINE_START  HOME
@@ -262,15 +267,22 @@
             timeout-ms = <30>;
         };
 
+        // Caps word (G+H) and Caps Lock (T+Y): one key of each hand, and both
+        // pairs roll in ordinary words ("right", "pretty"). Same timing as the
+        // language combo: a short window, and only after a pause in typing.
         combo_caps_word {
             bindings = <&caps_word>;
             key-positions = <17 18>;
+            timeout-ms = <30>;
+            require-prior-idle-ms = <150>;
             layers = <0>;
         };
 
         combo_caps_lock {
             bindings = <&caps_lock>;
             key-positions = <5 6>;
+            timeout-ms = <30>;
+            require-prior-idle-ms = <150>;
             layers = <0>;
         };
 
@@ -283,6 +295,17 @@
             layers = <0>;
         };
 
+
+        // Switch input source: E + I (top row, one key of each hand). Fast
+        // typing rolls e and i of words like "their" within the timeout, so
+        // the combo fires only after a pause in typing.
+        combo_lang {
+            bindings = <&kp LANG_NEXT>;
+            key-positions = <3 8>;
+            timeout-ms = <30>;
+            require-prior-idle-ms = <150>;
+            layers = <0>;
+        };
 
         combo_gt {
             bindings = <&kp GREATER_THAN>;

@@ -1,0 +1,9 @@
+# @os linux
+# Комбо E+I = смена языка: Super+Space (GNOME по умолчанию)
+press E
+press I
+release E
+release I
+---
+press SPACE [LGUI]
+release SPACE [LGUI]

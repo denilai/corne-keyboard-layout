@@ -1,0 +1,17 @@
+# Перекат e и i при быстром наборе («their») не включает смену языка:
+# перед E была клавиша менее 150 мс назад
+press T
+release T
+wait 20
+press E
+wait 10
+press I
+release E
+release I
+---
+press T
+release T
+press E
+press I
+release E
+release I

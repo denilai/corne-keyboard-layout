@@ -1,0 +1,16 @@
+{
+  "title": "Corne: switch input source",
+  "rules": [
+    {
+      "description": "Corne: F18 = Globe key, switch input source (combo E+I)",
+      "manipulators": [
+        { "type": "basic",
+          "from": { "key_code": "f18", "modifiers": { "optional": ["any"] } },
+          "to": [{ "apple_vendor_top_case_key_code": "keyboard_fn" }],
+          "conditions": [
+            { "type": "device_if", "identifiers": [{ "vendor_id": 7504, "product_id": 24926 }] }
+          ] }
+      ]
+    }
+  ]
+}

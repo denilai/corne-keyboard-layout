@@ -1,0 +1,9 @@
+# @os mac
+# Комбо E+I = смена языка: F18, Karabiner делает из неё Globe
+press E
+press I
+release E
+release I
+---
+press F18
+release F18

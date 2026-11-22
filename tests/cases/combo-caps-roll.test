@@ -1,0 +1,27 @@
+# Перекат g+h и t+y внутри слова («right», «pretty») не включает caps word
+# и Caps Lock: перед парой была клавиша менее 150 мс назад
+press R
+release R
+wait 20
+press G
+wait 10
+press H
+release G
+release H
+wait 20
+press T
+wait 10
+press Y
+release T
+release Y
+---
+press R
+release R
+press G
+press H
+release G
+release H
+press T
+press Y
+release T
+release Y

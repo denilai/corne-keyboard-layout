@@ -485,16 +485,22 @@ path.combo {
 <text x="420" y="105" class="combo tap">Keymap</text>
 </g>
 <g class="combo combopos-18">
+<path d="M420,28 l-205,0" class="combo" />
+<path d="M420,28 l205,0" class="combo" />
+<rect rx="6" ry="6" x="406" y="15" width="28" height="26" class="combo" />
+<text x="420" y="28" class="combo tap">F18</text>
+</g>
+<g class="combo combopos-19">
 <rect rx="6" ry="6" x="602" y="130" width="28" height="26" class="combo" />
 <text x="616" y="144" class="combo tap">&gt;</text>
 </g>
-<g class="combo combopos-19">
+<g class="combo combopos-20">
 <rect rx="6" ry="6" x="798" y="64" width="28" height="26" class="combo" />
 <text x="812" y="77" class="combo tap">
 <tspan x="812" dy="-0.6em">VOL</tspan><tspan x="812" dy="1.2em">UP</tspan>
 </text>
 </g>
-<g class="combo combopos-20">
+<g class="combo combopos-21">
 <rect rx="6" ry="6" x="798" y="120" width="28" height="26" class="combo" />
 <text x="812" y="133" class="combo tap">
 <tspan x="812" dy="-0.6em">VOL</tspan><tspan x="812" dy="1.2em">DOWN</tspan>

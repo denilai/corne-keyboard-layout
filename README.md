@@ -18,6 +18,9 @@ do it. Each exception is listed here, kept in this repo and applied by a script:
 - macOS, punctuation in any input source: Karabiner-Elements (see
   [below](#macos-punctuation-in-any-input-source)). The keyboard cannot know the
   active input source, so it cannot pick the key for `.` or `,`.
+- macOS, switching the input source: the `E`+`I` combo sends F18, Karabiner
+  turns it into the Globe key. macOS ignores the consumer usage that stands
+  for Globe on other keyboards (0x029D), so the firmware cannot send it.
 - App launch shortcuts: the keymap sends a fixed chord (Hyper+letter), the OS
   binds it to an app (see [App launch](#app-launch-hyper)). The firmware cannot
   start programs.
@@ -97,7 +100,9 @@ So if a key stops working, check that its shortcut is still enabled in the OS
 | Delete forward | Nav + `[` | Del | none | same |
 | Hyper (app launch) | hold Del thumb | ⌃⌥⇧⌘ + letter | Shortcuts app, see below | Ctrl+Alt+Shift+Super |
 | `,` `.` `?` | Num + right thumbs | keypad 1 2 3 | Karabiner, see below | keypad 1 2 3 |
-| Caps Lock | combo T+Y | Caps Lock held 300 ms | none | same |
+| Caps Lock | combo T+Y (after a 150 ms pause in typing) | Caps Lock held 300 ms | none | same |
+| Caps word | combo G+H (after a 150 ms pause in typing) | letters in capitals until Space | none | same |
+| Switch input source | combo `E`+`I` (after a 150 ms pause in typing) | F18, Karabiner turns it into the Globe key (see [below](#macos-punctuation-in-any-input-source)) | Keyboard → "Press 🌐 key to" → Change Input Source | Super+Space |
 
 "Keyboard Shortcuts" is System Settings → Keyboard → Keyboard Shortcuts…
 Utils is held on the Backspace thumb, Nav on the Space thumb, Num on the Tab
