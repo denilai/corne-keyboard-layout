@@ -45,7 +45,7 @@ Modifiers are named by role:
 | Role | macOS | Linux | Keys |
 |---|---|---|---|
 | `SC`, shortcut modifier (copy, paste, save) | Cmd | Ctrl | A, ; (hold, pinkies), left thumb, outer left key |
-| `OT`, the other one | Ctrl | Super | F, J (hold, index fingers), Enter thumb (hold) |
+| `OT`, the other one | Ctrl | Super | F, J (hold, index fingers) |
 
 So copy is the same physical chord on both systems (`SC`+C), and nothing is
 remapped in the OS.
@@ -101,7 +101,7 @@ So if a key stops working, check that its shortcut is still enabled in the OS
 | Line start / end | Nav + P / `/` | ⌘← / ⌘→ | text standard | Home / End |
 | Document start / end | Nav + `,` / `.` | ⌘↑ / ⌘↓ | text standard | Ctrl+Home / End |
 | Delete forward | Nav + `[` | Del | none | same |
-| Hyper (app launch) | hold Del thumb | ⌃⌥⇧⌘ + letter | Shortcuts app, see below | Ctrl+Alt+Shift+Super |
+| Hyper (app launch, AeroSpace) | hold Del thumb (right) or Enter thumb (left; tap = Enter) | ⌃⌥⇧⌘ + letter | Shortcuts app, see below | Ctrl+Alt+Shift+Super |
 | `,` `.` `?` | Num + right thumbs | keypad 1 2 3 | Karabiner, see below | keypad 1 2 3 |
 | Caps Lock | combo T+Y (after a 150 ms pause in typing) | Caps Lock held 300 ms | none | same |
 | Caps word | combo G+H (after a 150 ms pause in typing) | letters in capitals until Space | none | same |
@@ -125,7 +125,8 @@ brightness are separate consumer keys, so no Fn key is needed.
 
 ### App launch: Hyper
 
-Hold the Del thumb and press a letter: Hyper+letter is free on both systems.
+Hold the Del thumb (right) or the Enter thumb (left) and press a letter, so the
+letters of both halves are reachable: Hyper+letter is free on both systems.
 Bind it in the OS:
 
 - macOS: Shortcuts app → new shortcut → action "Open App" → shortcut details

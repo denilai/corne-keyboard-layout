@@ -72,8 +72,8 @@
  *   SC   the shortcut modifier (copy, paste, save...): Cmd on macOS,
  *        Ctrl on Linux. Pinky (A, ;) and the left thumb: pinky + thumb
  *        gives SC+Tab / SC+Space / SC+Backspace.
- *   OT   the other one: Ctrl on macOS, Super on Linux. Index finger (F, J)
- *        and the hold of the Enter thumb.
+ *   OT   the other one: Ctrl on macOS, Super on Linux. Index finger (F, J).
+ *        (The hold of the Enter thumb is Hyper, not OT.)
  * Home-row mods resolve as hold with a key of the other hand or with any
  * thumb key (hold-trigger-key-positions), so pinky + thumb of one hand works.
  *
@@ -140,8 +140,9 @@
 #define COPY        SC(C)
 #define PASTE       SC(V)
 #define REDO        SC(LS(Z))
-/* Hyper = all four modifiers: free on both systems, for app launch shortcuts
- * bound in the OS (README: "App launch shortcuts"). */
+/* Hyper = all four modifiers: free on both systems, for shortcuts bound in the
+ * OS or in AeroSpace (README: "App launch shortcuts"). Held on either thumb:
+ * Del (right) or Enter (left), so letters of both halves are reachable. */
 #define HYPER       LC(LA(LS(LGUI)))
 
 
@@ -429,7 +430,7 @@
 &gresc     &kp Q         &kp W            &kp E              &kp R         &kp T        &kp Y           &kp U            &kp I               &kp O            &kp P                 &kp LEFT_BRACKET
 &kp SC_L   &lbhm SC_L A  &lbhm LALT S  &lbhm LEFT_SHIFT D  &lbhm OT_L F   &kp G        &kp H           &rbhm OT_L J      &rbhm RSHIFT K  &rbhm LALT L  &rbhm SC_R SEMICOLON  &sqtctrl
 &sk LSHFT  &kp Z         &kp X            &kp C              &kp V         &kp B        &kp N           &kp M            &kp COMMA           &kp DOT          &kp FSLH              &sk RSHIFT
-                                          &kp SC_L           &lt 2 TAB     &mt OT_L RET &underspace     &lt 3 BACKSPACE  &mt HYPER DEL
+                                          &kp SC_L           &lt 2 TAB     &mt HYPER RET &underspace     &lt 3 BACKSPACE  &mt HYPER DEL
             >;
         };
         nav_layer {

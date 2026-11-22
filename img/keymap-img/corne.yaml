@@ -39,7 +39,7 @@ layers:
   - {t: ⇧, h: sticky}
   - ⌘
   - {t: ↹, h: Num}
-  - {t: ⏎, h: ⌃}
+  - {t: ⏎, h: Meh+⌘}
   - {t: ⎵, h: Nav, s: _}
   - {t: ⌫, h: Utils}
   - {t: ⌦, h: Hyper}

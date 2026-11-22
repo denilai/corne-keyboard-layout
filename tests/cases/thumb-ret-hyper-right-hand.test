@@ -1,0 +1,10 @@
+# T3 (левый Enter thumb) + клавиша правой руки (P) = Hyper+P: левый Hyper нужен для букв правой руки
+press T3
+wait 250
+tap P
+release T3
+---
+press LGUI [LALT+LCTRL+LSHIFT]
+press P
+release P
+release LGUI [LALT+LCTRL+LSHIFT]

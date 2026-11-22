@@ -1,10 +1,11 @@
-# T3: удержание = OT (Super на Linux, Ctrl на Mac)
+# T3 (левый Enter thumb): удержание = Hyper (Ctrl+Alt+Shift+Cmd/Super), как правый Del thumb:
+# буквы обеих половин доступны с обоими Hyper
 press T3
 wait 250
-tap C
+tap T
 release T3
 ---
-press OT
-press C
-release C
-release OT
+press LGUI [LALT+LCTRL+LSHIFT]
+press T
+release T
+release LGUI [LALT+LCTRL+LSHIFT]
