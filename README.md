@@ -115,8 +115,15 @@ in small text on top.
 
 On this Mac (checked 2026-11-19) all of these shortcuts are at the macOS
 defaults; "Move left / right a space" are set explicitly and enabled. There
-are no app-specific shortcuts (`NSUserKeyEquivalents`) and no Hyper bindings
-yet.
+are no app-specific shortcuts (`NSUserKeyEquivalents`).
+
+Since then the tiling window manager AeroSpace (config in the dotfiles repo,
+`.aerospace.toml`) is installed and uses the keyboard in two ways. Hyper+letter
+bindings drive its workspaces, windows and modes. It also intercepts ⌃←/→/↑/↓, which
+the Nav layer sends on `;` `'` `F` `G`: they now switch to the previous / next
+AeroSpace workspace, make the window fullscreen and float it, instead of macOS
+Spaces, Mission Control and App Exposé (real Ctrl+arrows in apps no longer
+arrive). The firmware is unchanged.
 
 The MacBook keyboard backlight has no HID usage for an external keyboard: use
 Control Center. F1–F12 are plain F-keys on both systems (macOS applies the
