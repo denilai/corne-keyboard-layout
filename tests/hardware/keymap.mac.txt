@@ -1,4 +1,4 @@
-# keymap: ab71a3218004
+# keymap: fcde2b04c9d9
 device: Corne
 layout* 6 Column: 42 keys
 layout  5 Column: 36 keys
