@@ -238,6 +238,9 @@ combos:
 - p: [12, 23]
   k: Keymap
   l: [Base]
+- p: [24, 35]
+  k: F20
+  l: [Base]
 - p: [3, 8]
   k: F18
   l: [Base]

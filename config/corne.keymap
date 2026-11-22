@@ -295,6 +295,15 @@
             layers = <0>;
         };
 
+        // Show / hide the AeroSpace cheat sheet: the two outer keys of the
+        // bottom row (sticky Shifts). F20 is unused on both systems; AeroSpace
+        // binds it in ~/.aerospace.toml (dotfiles repo) to a script.
+        combo_aerospace_sheet {
+            bindings = <&kp F20>;
+            key-positions = <24 35>;
+            layers = <0>;
+        };
+
 
         // Switch input source: E + I (top row, one key of each hand). Fast
         // typing rolls e and i of words like "their" within the timeout, so

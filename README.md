@@ -21,6 +21,9 @@ do it. Each exception is listed here, kept in this repo and applied by a script:
 - macOS, switching the input source: the `E`+`I` combo sends F18, Karabiner
   turns it into the Globe key. macOS ignores the consumer usage that stands
   for Globe on other keyboards (0x029D), so the firmware cannot send it.
+- AeroSpace cheat sheet (macOS): the combo of the two outer sticky Shift keys
+  sends F20, AeroSpace binds it in `~/.aerospace.toml` to a script from the
+  dotfiles repo. The firmware cannot open a window.
 - App launch shortcuts: the keymap sends a fixed chord (Hyper+letter), the OS
   binds it to an app (see [App launch](#app-launch-hyper)). The firmware cannot
   start programs.
@@ -103,6 +106,7 @@ So if a key stops working, check that its shortcut is still enabled in the OS
 | Caps Lock | combo T+Y (after a 150 ms pause in typing) | Caps Lock held 300 ms | none | same |
 | Caps word | combo G+H (after a 150 ms pause in typing) | letters in capitals until Space | none | same |
 | Switch input source | combo `E`+`I` (after a 150 ms pause in typing) | F18, Karabiner turns it into the Globe key (see [below](#macos-punctuation-in-any-input-source)) | Keyboard → "Press 🌐 key to" → Change Input Source | Super+Space |
+| AeroSpace cheat sheet | combo of the two outer sticky Shift keys (bottom row) | F20, AeroSpace runs `aerospace-cheatsheet.sh` from the dotfiles repo | binding `f20` in `~/.aerospace.toml` | nothing bound |
 
 "Keyboard Shortcuts" is System Settings → Keyboard → Keyboard Shortcuts…
 Utils is held on the Backspace thumb, Nav on the Space thumb, Num on the Tab
@@ -153,7 +157,9 @@ combo sends F19, unused on both systems, and the OS runs
   (`scripts/keymap-view.swift`, built by the setup), in front of other windows
   and focused; Esc or Cmd+W also closes it. Quick Look is not used: started
   from the background it opens without focus. The viewer draws the SVG with
-  WebKit, as a browser does.
+  WebKit, as a browser does. With AeroSpace (dotfiles repo) the window stays
+  floating on the current workspace: the script moves it there and gives the
+  focus back, and closing it does not jump to another workspace.
 - GNOME: Settings → Keyboard → View and Customize Shortcuts → Custom
   Shortcuts → `+`, command `<repo>/scripts/keymap-view.sh`, shortcut: press the
   combo. The picture opens in the image viewer (Loupe or eog).
