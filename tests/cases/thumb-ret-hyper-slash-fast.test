@@ -1,0 +1,10 @@
+# Левый Enter thumb + / быстро (/ нажат через 50 мс, до конца tapping-term): всё равно Hyper+/
+press T3
+wait 50
+tap FSLH
+release T3
+---
+press LGUI [LALT+LCTRL+LSHIFT]
+press FSLH
+release FSLH
+release LGUI [LALT+LCTRL+LSHIFT]

@@ -1,0 +1,10 @@
+# Правый Del thumb удержан + / (та же рука) = Hyper+/
+press T6
+wait 250
+tap FSLH
+release T6
+---
+press LGUI [LALT+LCTRL+LSHIFT]
+press FSLH
+release FSLH
+release LGUI [LALT+LCTRL+LSHIFT]
