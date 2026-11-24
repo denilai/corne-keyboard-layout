@@ -2,13 +2,65 @@
     {
         "key": "cmd+c",
         "command": "workbench.action.terminal.sendSequence",
-        "args": { "text": "\u0003" },
+        "args": {
+            "text": "\u0003"
+        },
         "when": "terminalFocus && !terminalTextSelected"
     },
     {
         "key": "cmd+w",
         "command": "workbench.action.terminal.sendSequence",
-        "args": { "text": "\u0017" },
+        "args": {
+            "text": "\u0017"
+        },
+        "when": "terminalFocus"
+    },
+    {
+        "key": "cmd+a",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": {
+            "text": "\u0001"
+        },
+        "when": "terminalFocus"
+    },
+    {
+        "key": "cmd+e",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": {
+            "text": "\u0005"
+        },
+        "when": "terminalFocus"
+    },
+    {
+        "key": "cmd+u",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": {
+            "text": "\u0015"
+        },
+        "when": "terminalFocus"
+    },
+    {
+        "key": "cmd+k",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": {
+            "text": "\u000b"
+        },
+        "when": "terminalFocus"
+    },
+    {
+        "key": "cmd+r",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": {
+            "text": "\u0012"
+        },
+        "when": "terminalFocus"
+    },
+    {
+        "key": "cmd+l",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": {
+            "text": "\f"
+        },
         "when": "terminalFocus"
     }
 ]

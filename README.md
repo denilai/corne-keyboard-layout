@@ -475,15 +475,26 @@ habit. In terminals Cmd+C interrupts, everywhere else it copies as usual:
   `macos/karabiner/corne-terminal-sigint.json`, Corne only, Terminal.app only:
   Cmd+C = Ctrl+C, Cmd+Shift+C = copy (as Ctrl+Shift+C in Linux terminals).
 
-Cmd+W works the same way: in terminals it is Ctrl+W (delete the word before the
-cursor, as in Linux terminals) and does not close the window or tab; everywhere
-else Cmd+W closes as usual.
+In terminals Cmd+W, A, E, U, K, R, L send the Ctrl letter, so the readline keys
+work as in Linux terminals (where the shortcut modifier is Ctrl); everywhere else
+they keep their macOS meaning (Cmd+W closes, Cmd+A selects all, and so on):
 
-| Where | Cmd+W | Set up by |
-|---|---|---|
-| VS Code / Cursor terminal | Ctrl+W (`"when": "terminalFocus"`) | `scripts/vscode-setup.sh` |
-| VS Code / Cursor editor, other apps | close the tab / window | nothing to set |
-| Terminal.app | Ctrl+W, Corne only: `macos/karabiner/corne-terminal-delete-word.json` | `scripts/karabiner-setup.sh` |
+| Cmd+ | Sends | Does in the shell | macOS meaning outside terminals |
+|---|---|---|---|
+| W | Ctrl+W | delete the word before the cursor | close the window / tab |
+| A | Ctrl+A | start of the line | select all |
+| E | Ctrl+E | end of the line | (none / app specific) |
+| U | Ctrl+U | delete to the start of the line | (app specific) |
+| K | Ctrl+K | delete to the end of the line | clear the buffer (Terminal.app), chord prefix (VS Code) |
+| R | Ctrl+R | search the history | reload / refresh |
+| L | Ctrl+L | clear the screen | (app specific, e.g. address bar) |
+
+| Where | Set up by |
+|---|---|
+| VS Code / Cursor terminal (`"when": "terminalFocus"`) | `scripts/vscode-setup.sh` |
+| Terminal.app, Corne only: `macos/karabiner/corne-terminal-delete-word.json` (W), `corne-terminal-readline.json` (A E U K R L) | `scripts/karabiner-setup.sh` |
+
+In the VS Code terminal Cmd+K stops being the first key of VS Code chords (Cmd+K Cmd+S and so on) while the terminal has focus.
 
 ## Terminal: Shift+arrows select in the command line (zsh)
 
