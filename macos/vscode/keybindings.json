@@ -4,5 +4,11 @@
         "command": "workbench.action.terminal.sendSequence",
         "args": { "text": "\u0003" },
         "when": "terminalFocus && !terminalTextSelected"
+    },
+    {
+        "key": "cmd+w",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": { "text": "\u0017" },
+        "when": "terminalFocus"
     }
 ]

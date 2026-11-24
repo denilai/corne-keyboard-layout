@@ -27,8 +27,8 @@ do it. Each exception is listed here, kept in this repo and applied by a script:
 - App launch shortcuts: the keymap sends a fixed chord (Hyper+letter), the OS
   binds it to an app (see [App launch](#app-launch-hyper)). The firmware cannot
   start programs.
-- Cmd+C interrupts in terminals (macOS): VS Code keybinding and a Karabiner
-  rule for Terminal.app. The firmware does not know the app, the focus or the
+- Cmd+C interrupts and Cmd+W deletes a word in terminals (macOS): VS Code keybindings and Karabiner
+  rules for Terminal.app. The firmware does not know the app, the focus or the
   selection (see [below](#macos-cmdc-interrupts-in-terminals)).
 
 ## Target OS: one keymap, a build per OS
@@ -474,6 +474,16 @@ habit. In terminals Cmd+C interrupts, everywhere else it copies as usual:
 - Terminal.app cannot tell whether text is selected: Karabiner rule
   `macos/karabiner/corne-terminal-sigint.json`, Corne only, Terminal.app only:
   Cmd+C = Ctrl+C, Cmd+Shift+C = copy (as Ctrl+Shift+C in Linux terminals).
+
+Cmd+W works the same way: in terminals it is Ctrl+W (delete the word before the
+cursor, as in Linux terminals) and does not close the window or tab; everywhere
+else Cmd+W closes as usual.
+
+| Where | Cmd+W | Set up by |
+|---|---|---|
+| VS Code / Cursor terminal | Ctrl+W (`"when": "terminalFocus"`) | `scripts/vscode-setup.sh` |
+| VS Code / Cursor editor, other apps | close the tab / window | nothing to set |
+| Terminal.app | Ctrl+W, Corne only: `macos/karabiner/corne-terminal-delete-word.json` | `scripts/karabiner-setup.sh` |
 
 ## Terminal: Shift+arrows select in the command line (zsh)
 

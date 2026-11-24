@@ -1,0 +1,17 @@
+{
+  "title": "Corne: Terminal.app, Cmd+W = delete word",
+  "rules": [
+    {
+      "description": "Corne: Terminal.app, Cmd+W = Ctrl+W (delete word back, as in Linux terminals), does not close the window",
+      "manipulators": [
+        { "type": "basic",
+          "from": { "key_code": "w", "modifiers": { "mandatory": ["command"] } },
+          "to": [{ "key_code": "w", "modifiers": ["left_control"] }],
+          "conditions": [
+            { "type": "frontmost_application_if", "bundle_identifiers": ["^com\\.apple\\.Terminal$"] },
+            { "type": "device_if", "identifiers": [{ "vendor_id": 7504, "product_id": 24926 }] }
+          ] }
+      ]
+    }
+  ]
+}
