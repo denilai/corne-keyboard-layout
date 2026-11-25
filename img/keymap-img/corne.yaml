@@ -13,7 +13,7 @@ layers:
   - O
   - P
   - '['
-  - ⌘
+  - ↹
   - {t: A, h: ⌘}
   - {t: S, h: ⎇}
   - {t: D, h: ⇧}
@@ -39,7 +39,7 @@ layers:
   - {t: ⇧, h: sticky}
   - ⌘
   - {t: ↹, h: Num}
-  - {t: ⏎, h: ⌃}
+  - {t: ⏎, h: Hyper}
   - {t: ⎵, h: Nav, s: _}
   - {t: ⌫, h: Utils}
   - {t: ⌦, h: Hyper}
@@ -238,8 +238,11 @@ combos:
 - p: [12, 23]
   k: Keymap
   l: [Base]
+- p: [24, 35]
+  k: AeroSpace
+  l: [Base]
 - p: [3, 8]
-  k: F18
+  k: Lang
   l: [Base]
 - p: [31, 32]
   k: '>'

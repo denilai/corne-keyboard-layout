@@ -21,11 +21,14 @@ do it. Each exception is listed here, kept in this repo and applied by a script:
 - macOS, switching the input source: the `E`+`I` combo sends F18, Karabiner
   turns it into the Globe key. macOS ignores the consumer usage that stands
   for Globe on other keyboards (0x029D), so the firmware cannot send it.
+- AeroSpace cheat sheet (macOS): the combo of the two outer sticky Shift keys
+  sends F20, AeroSpace binds it in `~/.aerospace.toml` to a script from the
+  dotfiles repo. The firmware cannot open a window.
 - App launch shortcuts: the keymap sends a fixed chord (Hyper+letter), the OS
   binds it to an app (see [App launch](#app-launch-hyper)). The firmware cannot
   start programs.
-- Cmd+C interrupts in terminals (macOS): VS Code keybinding and a Karabiner
-  rule for Terminal.app. The firmware does not know the app, the focus or the
+- Cmd+C interrupts and Cmd+W deletes a word in terminals (macOS): VS Code keybindings and Karabiner
+  rules for Terminal.app. The firmware does not know the app, the focus or the
   selection (see [below](#macos-cmdc-interrupts-in-terminals)).
 
 ## Target OS: one keymap, a build per OS
@@ -42,7 +45,7 @@ Modifiers are named by role:
 | Role | macOS | Linux | Keys |
 |---|---|---|---|
 | `SC`, shortcut modifier (copy, paste, save) | Cmd | Ctrl | A, ; (hold, pinkies), left thumb, outer left key |
-| `OT`, the other one | Ctrl | Super | F, J (hold, index fingers), Enter thumb (hold) |
+| `OT`, the other one | Ctrl | Super | F, J (hold, index fingers) |
 
 So copy is the same physical chord on both systems (`SC`+C), and nothing is
 remapped in the OS.
@@ -98,11 +101,12 @@ So if a key stops working, check that its shortcut is still enabled in the OS
 | Line start / end | Nav + P / `/` | ⌘← / ⌘→ | text standard | Home / End |
 | Document start / end | Nav + `,` / `.` | ⌘↑ / ⌘↓ | text standard | Ctrl+Home / End |
 | Delete forward | Nav + `[` | Del | none | same |
-| Hyper (app launch) | hold Del thumb | ⌃⌥⇧⌘ + letter | Shortcuts app, see below | Ctrl+Alt+Shift+Super |
+| Hyper (app launch, AeroSpace) | hold Del thumb (right) or Enter thumb (left; tap = Enter) | ⌃⌥⇧⌘ + letter | Shortcuts app, see below | Ctrl+Alt+Shift+Super |
 | `,` `.` `?` | Num + right thumbs | keypad 1 2 3 | Karabiner, see below | keypad 1 2 3 |
 | Caps Lock | combo T+Y (after a 150 ms pause in typing) | Caps Lock held 300 ms | none | same |
 | Caps word | combo G+H (after a 150 ms pause in typing) | letters in capitals until Space | none | same |
 | Switch input source | combo `E`+`I` (after a 150 ms pause in typing) | F18, Karabiner turns it into the Globe key (see [below](#macos-punctuation-in-any-input-source)) | Keyboard → "Press 🌐 key to" → Change Input Source | Super+Space |
+| AeroSpace cheat sheet | combo of the two outer sticky Shift keys (bottom row) | F20, AeroSpace runs `aerospace-cheatsheet.sh` from the dotfiles repo | binding `f20` in `~/.aerospace.toml` | nothing bound |
 
 "Keyboard Shortcuts" is System Settings → Keyboard → Keyboard Shortcuts…
 Utils is held on the Backspace thumb, Nav on the Space thumb, Num on the Tab
@@ -111,8 +115,15 @@ in small text on top.
 
 On this Mac (checked 2026-11-19) all of these shortcuts are at the macOS
 defaults; "Move left / right a space" are set explicitly and enabled. There
-are no app-specific shortcuts (`NSUserKeyEquivalents`) and no Hyper bindings
-yet.
+are no app-specific shortcuts (`NSUserKeyEquivalents`).
+
+Since then the tiling window manager AeroSpace (config in the dotfiles repo,
+`.aerospace.toml`) is installed and uses the keyboard in two ways. Hyper+letter
+bindings drive its workspaces, windows and modes. It also intercepts ⌃←/→/↑/↓, which
+the Nav layer sends on `;` `'` `F` `G`: they now switch to the previous / next
+AeroSpace workspace, make the window fullscreen and float it, instead of macOS
+Spaces, Mission Control and App Exposé (real Ctrl+arrows in apps no longer
+arrive). The firmware is unchanged.
 
 The MacBook keyboard backlight has no HID usage for an external keyboard: use
 Control Center. F1–F12 are plain F-keys on both systems (macOS applies the
@@ -121,7 +132,8 @@ brightness are separate consumer keys, so no Fn key is needed.
 
 ### App launch: Hyper
 
-Hold the Del thumb and press a letter: Hyper+letter is free on both systems.
+Hold the Del thumb (right) or the Enter thumb (left) and press a letter, so the
+letters of both halves are reachable: Hyper+letter is free on both systems.
 Bind it in the OS:
 
 - macOS: Shortcuts app → new shortcut → action "Open App" → shortcut details
@@ -153,7 +165,9 @@ combo sends F19, unused on both systems, and the OS runs
   (`scripts/keymap-view.swift`, built by the setup), in front of other windows
   and focused; Esc or Cmd+W also closes it. Quick Look is not used: started
   from the background it opens without focus. The viewer draws the SVG with
-  WebKit, as a browser does.
+  WebKit, as a browser does. With AeroSpace (dotfiles repo) the window stays
+  floating on the current workspace: the script moves it there and gives the
+  focus back, and closing it does not jump to another workspace.
 - GNOME: Settings → Keyboard → View and Customize Shortcuts → Custom
   Shortcuts → `+`, command `<repo>/scripts/keymap-view.sh`, shortcut: press the
   combo. The picture opens in the image viewer (Loupe or eog).
@@ -175,12 +189,20 @@ sticky, layer keys, combos) and the symbols.
 scripts/draw-keymap.sh           # updates img/keymap-img/corne.{yaml,svg}
 scripts/draw-keymap.sh --check   # fails if the images are outdated
 git config core.hooksPath .githooks   # once per clone: pre-commit hook re-renders
-                                      # and stages the images when the keymap is committed
+                                      # and stages the images when the keymap, the drawer
+                                      # config, scripts/keymap_legend.py or draw-keymap.sh is
+                                      # committed; it also warns when the Studio reference
+                                      # was not taken from this keymap
 ```
 
-If a global `core.hooksPath` dispatches to `.git/hooks/<name>`, link the hook
+The pre-push hook (`.githooks/pre-push`) runs `scripts/draw-keymap.sh --check` and stops
+the push if the picture is outdated (needs Docker or keymap-drawer; without them it only
+warns), and repeats the Studio reference warning.
+
+If a global `core.hooksPath` dispatches to `.git/hooks/<name>`, link the hooks
 there instead, so the global hooks keep working:
-`ln -s ../../.githooks/pre-commit .git/hooks/pre-commit`.
+`ln -s ../../.githooks/pre-commit .git/hooks/pre-commit` and
+`ln -s ../../.githooks/pre-push .git/hooks/pre-push`.
 
 ## Setups: with or without the dongle
 
@@ -452,6 +474,27 @@ habit. In terminals Cmd+C interrupts, everywhere else it copies as usual:
 - Terminal.app cannot tell whether text is selected: Karabiner rule
   `macos/karabiner/corne-terminal-sigint.json`, Corne only, Terminal.app only:
   Cmd+C = Ctrl+C, Cmd+Shift+C = copy (as Ctrl+Shift+C in Linux terminals).
+
+In terminals Cmd+W, A, E, U, K, R, L send the Ctrl letter, so the readline keys
+work as in Linux terminals (where the shortcut modifier is Ctrl); everywhere else
+they keep their macOS meaning (Cmd+W closes, Cmd+A selects all, and so on):
+
+| Cmd+ | Sends | Does in the shell | macOS meaning outside terminals |
+|---|---|---|---|
+| W | Ctrl+W | delete the word before the cursor | close the window / tab |
+| A | Ctrl+A | start of the line | select all |
+| E | Ctrl+E | end of the line | (none / app specific) |
+| U | Ctrl+U | delete to the start of the line | (app specific) |
+| K | Ctrl+K | delete to the end of the line | clear the buffer (Terminal.app), chord prefix (VS Code) |
+| R | Ctrl+R | search the history | reload / refresh |
+| L | Ctrl+L | clear the screen | (app specific, e.g. address bar) |
+
+| Where | Set up by |
+|---|---|
+| VS Code / Cursor terminal (`"when": "terminalFocus"`) | `scripts/vscode-setup.sh` |
+| Terminal.app, Corne only: `macos/karabiner/corne-terminal-delete-word.json` (W), `corne-terminal-readline.json` (A E U K R L) | `scripts/karabiner-setup.sh` |
+
+In the VS Code terminal Cmd+K stops being the first key of VS Code chords (Cmd+K Cmd+S and so on) while the terminal has focus.
 
 ## Terminal: Shift+arrows select in the command line (zsh)
 

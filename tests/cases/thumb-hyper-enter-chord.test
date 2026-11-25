@@ -1,0 +1,11 @@
+# Правый Del thumb (Hyper) зажат, левый Enter thumb нажат коротко = Enter: Hyper+Enter (fullscreen в AeroSpace)
+# работает, хотя Enter thumb сам умеет быть Hyper
+press T6
+wait 250
+tap T3
+release T6
+---
+press LGUI [LALT+LCTRL+LSHIFT]
+press RET
+release RET
+release LGUI [LALT+LCTRL+LSHIFT]

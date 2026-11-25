@@ -1,0 +1,10 @@
+# Левый Enter thumb удержан + / (правая рука) = Hyper+/: прошивка отдаёт аккорд верно (до AeroSpace ⌃⌥⇧⌘/ не доходит, тайлы там на Hyper+V)
+press T3
+wait 250
+tap FSLH
+release T3
+---
+press LGUI [LALT+LCTRL+LSHIFT]
+press FSLH
+release FSLH
+release LGUI [LALT+LCTRL+LSHIFT]

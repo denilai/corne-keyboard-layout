@@ -1,0 +1,9 @@
+# Комбо двух крайних sticky Shift третьего ряда = F20: AeroSpace показывает /
+# прячет шпаргалку (скрипт в репозитории dotfiles)
+press LSFT
+press RSFT
+release LSFT
+release RSFT
+---
+press F20
+release F20

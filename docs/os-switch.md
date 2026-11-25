@@ -28,7 +28,7 @@
 Что лежит в слое Mac (позиции, где отличаются Linux и Mac):
 
 - модификаторы `SC` / `OT`: outer left (`SC_L`), A и `;` (`OT`), F и J (`SC`),
-  левый thumb (`SC_L`), Enter thumb (`OT`);
+  левый thumb (`SC_L`); удержание Enter thumb (Hyper) от ОС не зависит и в слой Mac не входит;
 - `'` с двойным тапом `SC(RET)`;
 - в Num: `OT(F11)` / `OT(F12)` и hold-tap'ы цифр с `SC` / `OT`.
 

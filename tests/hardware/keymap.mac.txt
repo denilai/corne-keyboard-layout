@@ -1,4 +1,4 @@
-# keymap: ab71a3218004
+# keymap: 44f400b280da
 device: Corne
 layout* 6 Column: 42 keys
 layout  5 Column: 36 keys
@@ -7,9 +7,9 @@ layers: 4 used, 2 free
 
 [Base] (42 keys)
   Grave/Esca |          Q |          W |          E |          R |          T |          Y |          U |          I |          O |          P |       LBKT
-        LGUI | left_balan | left_balan | left_balan | left_balan |          G |          H | right_bala | right_bala | right_bala | right_bala | squote_lct
+         TAB | left_balan | left_balan | left_balan | left_balan |          G |          H | right_bala | right_bala | right_bala | right_bala | squote_lct
   Sticky Key |          Z |          X |          C |          V |          B |          N |          M |      COMMA |        DOT |       FSLH | Sticky Key
-                                               LGUI | Layer-Tap  | MT LCTRL/R | UNDERSPACE | Layer-Tap  | MT LA(LS(L
+                                               LGUI | Layer-Tap  | MT LA(LS(L | UNDERSPACE | Layer-Tap  | MT LA(LS(L
 
 [Nav] (42 keys)
   mouse_move | mouse_move | mouse_move | mouse_move | Mouse Key  | Mouse Key  |       None |      PG_UP |   LA(LEFT) |  LA(RIGHT) |   LG(LEFT) |        DEL

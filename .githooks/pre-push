@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Перед пушем: картинка раскладки должна совпадать с keymap, конфигом и легендой
+# (scripts/draw-keymap.sh --check, несовпадение блокирует пуш), эталон Studio сверяется
+# с keymap (только предупреждение). Нужен Docker или установленный keymap-drawer;
+# без них проверка картинки пропускается с предупреждением. Подключение:
+#   ln -s ../../.githooks/pre-push .git/hooks/pre-push
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+
+if command -v keymap >/dev/null 2>&1 || docker info >/dev/null 2>&1; then
+    if ! scripts/draw-keymap.sh --check >/dev/null 2>&1; then
+        echo "✘ Картинка раскладки устарела: scripts/draw-keymap.sh, затем закоммитить img/keymap-img/." >&2
+        exit 1
+    fi
+else
+    echo "⚠ Нет Docker и keymap-drawer: актуальность картинки раскладки не проверена." >&2
+fi
+scripts/check-studio-reference.sh || true

@@ -148,6 +148,9 @@ parse_config:
     "&mt LC(LA(LS(LGUI))) DEL":
       t: ⌦
       h: Hyper
+    "&mt LC(LA(LS(LGUI))) RET":
+      t: ⏎
+      h: Hyper
     "&gresc": {t: ⎋, s: "` ~"}
     "&sqtctrl": {t: "'", s: 2× ⌘⏎}
     "&mkp RCLK": RClk
@@ -214,6 +217,8 @@ parse_config:
       Word
     "&caps_word": ⇪ WORD
     "&kp F19": Keymap
+    "&kp F20": AeroSpace
+    "&kp F18": Lang
     "&caps_lock": ⇪ LOCK
     "&CAPS_LOCK": ⇪ LOCK
     "&td_shift_l": ⇧

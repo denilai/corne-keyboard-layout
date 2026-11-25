@@ -45,11 +45,35 @@ PLIST
         codesign --force --sign - "$APP" 2>/dev/null
     }
     is_open() { pgrep -x KeymapView >/dev/null; }
+    # With AeroSpace (tiling window manager) the window must stay floating on the
+    # current workspace: put it there and give the focus back, otherwise AeroSpace
+    # jumps to the workspace of the last active window when this one is empty.
+    # The floating rule is in the dotfiles repo (.aerospace.toml); no AeroSpace: skip.
+    AS="$(command -v aerospace || true)"
+    [ -x /opt/homebrew/bin/aerospace ] && AS=/opt/homebrew/bin/aerospace
+    focused_ws() { [ -n "$AS" ] && "$AS" list-workspaces --focused 2>/dev/null || true; }
     open_it() {
+        local ws id="" i
         [ -x "$BIN" ] && [ ! "$SRC" -nt "$BIN" ] || build
+        ws="$(focused_ws)"
         open -n "$APP" --args "$IMG"
+        [ -n "$ws" ] || return 0
+        for i in $(seq 1 30); do
+            id="$("$AS" list-windows --monitor all --app-bundle-id local.corne.keymapview --format '%{window-id}' 2>/dev/null | head -1)"
+            [ -n "$id" ] && break
+            sleep 0.1
+        done
+        [ -n "$id" ] || return 0
+        "$AS" move-node-to-workspace --window-id "$id" "$ws" >/dev/null 2>&1 || true
+        "$AS" workspace "$ws" >/dev/null 2>&1 || true
+        "$AS" focus --window-id "$id" >/dev/null 2>&1 || true
     }
-    close_it() { pkill -x KeymapView || true; }
+    close_it() {
+        local ws
+        ws="$(focused_ws)"
+        pkill -x KeymapView || true
+        if [ -n "$ws" ]; then sleep 0.2; "$AS" workspace "$ws" >/dev/null 2>&1 || true; fi
+    }
     ;;
 Linux)
     viewer="$(command -v loupe || command -v eog || true)"
